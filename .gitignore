@@ -104,4 +104,4 @@ dist
 .tern-port
 
 # configurations and secret keys
-./Backend/configs
+Backend/configs

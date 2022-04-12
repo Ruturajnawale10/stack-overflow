@@ -1,0 +1,25 @@
+{
+  "name": "stack-overflow",
+  "version": "1.0.0",
+  "description": "This is a clone of stack overflow using MERN stack",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ruturajnawale10/stack-overflow.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Ruturajnawale10/stack-overflow/issues"
+  },
+  "homepage": "https://github.com/Ruturajnawale10/stack-overflow#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.17.3",
+    "express-session": "^1.17.2"
+  },
+  "type": "module"
+}

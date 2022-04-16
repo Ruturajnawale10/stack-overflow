@@ -3,7 +3,7 @@ import express from "express";
 var app = express();
 import session from "express-session";
 import cors from "cors";
-import { localhost } from "./configs/localhost.js";
+import config from "./configs/config.js";
 
 app.set("view engine", "ejs");
 
@@ -11,7 +11,7 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb" }));
 
 //use cors to allow cross origin resource sharing
-app.use(cors({ origin: localhost, credentials: true }));
+app.use(cors({ origin: config.localhost, credentials: true }));
 
 //use express session to maintain session data
 app.use(
@@ -27,7 +27,7 @@ app.use(express.json());
 
 //Allow Access Control
 app.use(function (req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", localhost);
+  res.setHeader("Access-Control-Allow-Origin", config.localhost);
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",

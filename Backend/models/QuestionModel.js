@@ -20,7 +20,7 @@ var QuestionSchema = new Schema(
     answers: { type: [AnswerModel.schema] },
     acceptedAnswerID: { type: String },
     isWaitingForReview: { type: Boolean },
-    activity: { type: ActivityModel.schema },
+    activity: { type: [ActivityModel.schema] },
   },
   {
     versionKey: false,

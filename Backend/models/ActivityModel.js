@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import ActivityModel from "./ActivityModel.js";
 const Schema = mongoose.Schema;
 
 var ActivitySchema = new Schema(

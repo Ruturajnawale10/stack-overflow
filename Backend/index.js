@@ -43,8 +43,10 @@ app.use(function (req, res, next) {
 
 //Route to handle Post Request Call
 import UserSession from "./routes/UserSession.js";
+import Question from "./routes/Question.js";
 
 app.use("/user", UserSession);
+app.use("/question", Question);
 
 //start the server on port 3001
 app.listen(3001);

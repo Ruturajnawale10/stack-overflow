@@ -20,12 +20,19 @@ function QuestionsOverview() {
   const [description, setDescription] = useState(null);
   const [viewCount, setViewCount] = useState(null);
   const [askedDate, setAskedDate] = useState(null);
-  let userID = "mock_user_id_123";
+  const [isBookMark, setisBookMark] = useState(false);
+  let userID = "626798764096f05e749e8de8";
 
   let noVote = "#a9acb0";
   let vote = "darkorange";
   const [voteUpStatus, setVoteUpStatus] = useState(noVote);
   const [voteDownStatus, setVoteDownStatus] = useState(noVote);
+
+  let noBookMark = "#a9acb0";
+  let bookMark = "#ebac46";
+  const [bookMarkStatus, setBookMarkStatus] = useState(noBookMark);
+  let questionID = "62679caa6a5ff0b364718083";
+  const [voteCount, setVoteCount] = useState(0);
 
   useEffect(() => {
     //axios.defaults.headers.common["authorization"] =
@@ -33,7 +40,7 @@ function QuestionsOverview() {
     axios
       .get("/question/overview", {
         params: {
-          questionID: "62679caa6a5ff0b364718083",
+          questionID: questionID,
         },
       })
       .then((response) => {
@@ -41,6 +48,11 @@ function QuestionsOverview() {
         setTitle(response.data.title);
         setViewCount(response.data.viewCount);
         setAnswerCount(response.data.answers.length);
+        setVoteCount(
+          Math.abs(
+            response.data.upVotes.length - response.data.downVotes.length
+          )
+        );
         //let askedDate1 = new Date(response.data.creationDate);
         //let currDate = new Date();
         //let askedDiff = currDate.getYear() - askedDate1.getYear();
@@ -75,27 +87,109 @@ function QuestionsOverview() {
           </div>
         );
       });
+
+    axios
+      .get("/question/bookmark/status", {
+        params: {
+          questionID: questionID,
+          userID: userID,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          if (response.data === "IS BOOKMARK") {
+            setBookMarkStatus(bookMark);
+          }
+        }
+      });
+
+    axios
+      .get("/question/vote/status", {
+        params: {
+          questionID: questionID,
+          userID: userID,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          if (response.data === "UPVOTE") {
+            setVoteUpStatus(vote);
+          } else if (response.data === "DOWNVOTE") {
+            setVoteDownStatus(vote);
+          }
+        }
+      });
   }, []);
 
   const changeVoteUpStatus = (e) => {
     if (voteUpStatus === noVote) {
+      axios.post("/question/vote/upvote", {
+        questionID: questionID,
+        userID: userID,
+      });
       setVoteUpStatus(vote);
+      setVoteCount(voteCount + 1);
       if (voteDownStatus === vote) {
+        axios.post("/question/vote/removedownvote", {
+          questionID: questionID,
+          userID: userID,
+        });
         setVoteDownStatus(noVote);
+        setVoteCount(voteCount + 2);
       }
     } else {
+      axios.post("/question/vote/removeupvote", {
+        questionID: questionID,
+        userID: userID,
+      });
       setVoteUpStatus(noVote);
+      setVoteCount(voteCount - 1);
     }
   };
 
   const changeVoteDownStatus = (e) => {
     if (voteDownStatus === noVote) {
+      axios.post("/question/vote/downvote", {
+        questionID: questionID,
+        userID: userID,
+      });
       setVoteDownStatus(vote);
+      setVoteCount(voteCount - 1);
       if (voteUpStatus === vote) {
+        axios.post("/question/vote/removeupvote", {
+          questionID: questionID,
+          userID: userID,
+        });
         setVoteUpStatus(noVote);
+        setVoteCount(voteCount - 2);
       }
     } else {
+      axios.post("/question/vote/removedownvote", {
+        questionID: questionID,
+        userID: userID,
+      });
       setVoteDownStatus(noVote);
+      setVoteCount(voteCount + 1);
+    }
+  };
+
+  const changeBookMarkStatus = (e) => {
+    // axios.defaults.headers.common["authorization"] =
+    //   localStorage.getItem("token");
+    if (isBookMark) {
+      setisBookMark(false);
+      setBookMarkStatus(noBookMark);
+      axios.post("/question/bookmark/remove", {
+        questionID: questionID,
+        userID: userID,
+      });
+    } else {
+      setisBookMark(true);
+      setBookMarkStatus(bookMark);
+      axios.post("/question/bookmark/add", {
+        questionID: questionID,
+        userID: userID,
+      });
     }
   };
 
@@ -124,7 +218,7 @@ function QuestionsOverview() {
             </div>
 
             <div class="row">
-              <p id="vote">0</p>
+              <p id="vote"> {voteCount} </p>
             </div>
 
             <div
@@ -136,10 +230,15 @@ function QuestionsOverview() {
               <TiArrowSortedDown size={60} fill={voteDownStatus} />
             </div>
 
-            <div class="row">
+            <div
+              class="row"
+              onClick={() => {
+                changeBookMarkStatus();
+              }}
+            >
               <BsBookmarkStarFill
                 size={30}
-                fill={"#a9acb0"}
+                fill={bookMarkStatus}
                 style={{ marginTop: "15px" }}
               />
             </div>

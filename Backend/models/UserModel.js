@@ -11,7 +11,7 @@ var usersSchema = new Schema(
     location: {type: String},
     profileImageName: { type: String },
     reputation: {type: Number},
-    bookmarkedQuestionID: {type: String},
+    bookmarkedQuestionID: {type: [String]},
     goldBadges: {type: [String]},
     silverBadges: {type: [String]},
     bronzeBadges: {type: [String]},

@@ -4,6 +4,7 @@ var app = express();
 import session from "express-session";
 import cors from "cors";
 import config from "./configs/config.js";
+import mongoose from "mongoose";
 
 app.set("view engine", "ejs");
 
@@ -19,7 +20,7 @@ app.use(
     secret: "stack-overflow-application",
     resave: false, // Forces the session to be saved back to the session store, even if the session was never modified during the request
     saveUninitialized: false, // Force to save uninitialized session to db. A session is uninitialized when it is new but not modified.
-    duration:30* 24* 60* 60* 1000, // Duration of Session :  1 month
+    duration: 30 * 24 * 60 * 60 * 1000, // Duration of Session :  1 month
   })
 );
 
@@ -41,12 +42,34 @@ app.use(function (req, res, next) {
   next();
 });
 
+var options = {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+};
+
+mongoose.connect(
+  config.mongo.mongoDBURL,
+  { maxPoolSize: 10 },
+  options,
+  (err, res) => {
+    if (err) {
+      console.log(err);
+      console.log("MongoDB connection Failed");
+    } else {
+      console.log("MongoDB connected");
+    }
+  }
+);
+
 //Route to handle Post Request Call
 import UserSession from "./routes/UserSession.js";
 import Question from "./routes/Question.js";
 import Tags from "./routes/Tags.js";
+import Vote from "./routes/Vote.js";
+
 
 app.use("/user", UserSession);
+app.use("/question/vote", Vote);
 app.use("/question", Question);
 app.use("/tags",  Tags);
 

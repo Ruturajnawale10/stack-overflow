@@ -49,9 +49,7 @@ function QuestionsOverview() {
         setViewCount(response.data.viewCount);
         setAnswerCount(response.data.answers.length);
         setVoteCount(
-          Math.abs(
-            response.data.upVotes.length - response.data.downVotes.length
-          )
+          response.data.upVotes.length - response.data.downVotes.length
         );
         //let askedDate1 = new Date(response.data.creationDate);
         //let currDate = new Date();
@@ -61,7 +59,7 @@ function QuestionsOverview() {
           <div class="row">
             {response.data.answers.map((answer) => (
               <div key={answer} id="answercard">
-                <AnswerCard answer={answer} />
+                <AnswerCard answer={{...answer, questionID: questionID} } />
               </div>
             ))}
           </div>
@@ -104,7 +102,7 @@ function QuestionsOverview() {
       });
 
     axios
-      .get("/question/vote/status", {
+      .get("/vote/question/status", {
         params: {
           questionID: questionID,
           userID: userID,
@@ -123,14 +121,14 @@ function QuestionsOverview() {
 
   const changeVoteUpStatus = (e) => {
     if (voteUpStatus === noVote) {
-      axios.post("/question/vote/upvote", {
+      axios.post("/vote/question/upvote", {
         questionID: questionID,
         userID: userID,
       });
       setVoteUpStatus(vote);
       setVoteCount(voteCount + 1);
       if (voteDownStatus === vote) {
-        axios.post("/question/vote/removedownvote", {
+        axios.post("/vote/question/removedownvote", {
           questionID: questionID,
           userID: userID,
         });
@@ -138,7 +136,7 @@ function QuestionsOverview() {
         setVoteCount(voteCount + 2);
       }
     } else {
-      axios.post("/question/vote/removeupvote", {
+      axios.post("/vote/question/removeupvote", {
         questionID: questionID,
         userID: userID,
       });
@@ -149,14 +147,14 @@ function QuestionsOverview() {
 
   const changeVoteDownStatus = (e) => {
     if (voteDownStatus === noVote) {
-      axios.post("/question/vote/downvote", {
+      axios.post("/vote/question/downvote", {
         questionID: questionID,
         userID: userID,
       });
       setVoteDownStatus(vote);
       setVoteCount(voteCount - 1);
       if (voteUpStatus === vote) {
-        axios.post("/question/vote/removeupvote", {
+        axios.post("/vote/question/removeupvote", {
           questionID: questionID,
           userID: userID,
         });
@@ -164,7 +162,7 @@ function QuestionsOverview() {
         setVoteCount(voteCount - 2);
       }
     } else {
-      axios.post("/question/vote/removedownvote", {
+      axios.post("/vote/question/removedownvote", {
         questionID: questionID,
         userID: userID,
       });

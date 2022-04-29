@@ -67,7 +67,7 @@ import Question from "./routes/Question.js";
 import Vote from "./routes/Vote.js";
 
 app.use("/user", UserSession);
-app.use("/question/vote", Vote);
+app.use("/vote", Vote);
 app.use("/question", Question);
 
 //start the server on port 3001

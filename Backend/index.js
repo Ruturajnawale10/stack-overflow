@@ -69,7 +69,7 @@ import Vote from "./routes/Vote.js";
 
 
 app.use("/user", UserSession);
-app.use("/question/vote", Vote);
+app.use("/vote", Vote);
 app.use("/question", Question);
 app.use("/tags",  Tags);
 

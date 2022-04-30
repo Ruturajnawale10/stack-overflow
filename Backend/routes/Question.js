@@ -4,6 +4,7 @@ const router = express.Router();
 import Questions from "../models/QuestionModel.js";
 import Users from "../models/UserModel.js";
 import Views from "../models/ViewsModel.js";
+import kafka from "../kafka/client.js";
 
 router.get("/", function (req, res) {
   console.log("Inside All Questions GET Request");
@@ -11,7 +12,6 @@ router.get("/", function (req, res) {
 
 router.get("/overview", function (req, res) {
   console.log("Inside Questions Overview GET Request");
-  let clientIPAddress = req.socket.remoteAddress;
   let questionID = req.query.questionID;
 
   Questions.findOne({ _id: questionID }, function (error, question) {
@@ -85,42 +85,9 @@ router.post("/addasviewed", function (req, res) {
   console.log("Inside Add as viewed question POST Request");
   let questionID = req.body.questionID;
   let userID = req.body.userID;
-  let clientIdentity = "";
-  userID = "";
-  //if userID is present, consider the client identity as userID + questionID
-  if (userID !== "") {
-    clientIdentity = userID + questionID;
-  } else {
-    let clientIPAddress = req.socket.remoteAddress;
-    clientIdentity = clientIPAddress + questionID;
-  }
+  let data = { questionID: questionID, userID: userID };
 
-  Views.findOne(
-    {
-      questionID: questionID,
-    },
-    function (error, views) {
-      if (error) {
-        res.status(401).send(error);
-      } else {
-        if (views.clientIdentity.includes(clientIdentity)) {
-          res.end();
-        } else {
-          console.log(
-            "Adding this client IP address/userID in question's views"
-          );
-          Views.updateOne(
-            { questionID: questionID },
-            { $push: { clientIdentity: clientIdentity } },
-            { upsert: true },
-            function (error, views) {
-              res.end();
-            }
-          );
-        }
-      }
-    }
-  );
+  kafka("question_views", data);
 });
 
 router.get("/viewcount", function (req, res) {

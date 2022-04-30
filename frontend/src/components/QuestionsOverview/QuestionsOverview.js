@@ -34,6 +34,26 @@ function QuestionsOverview() {
   let questionID = "62679caa6a5ff0b364718083";
   const [voteCount, setVoteCount] = useState(0);
 
+  var DateDiff = {
+    inDays: function (d1, d2) {
+      var t2 = d2.getTime();
+      var t1 = d1.getTime();
+
+      return Math.floor((t2 - t1) / (24 * 3600 * 1000));
+    },
+
+    inMonths: function (d1, d2) {
+      var d1M = d1.getMonth();
+      var d2M = d2.getMonth();
+
+      return d2M - d1M;
+    },
+
+    inYears: function (d1, d2) {
+      return d2.getFullYear() - d1.getFullYear();
+    },
+  };
+
   useEffect(() => {
     //axios.defaults.headers.common["authorization"] =
     //localStorage.getItem("token");
@@ -46,20 +66,40 @@ function QuestionsOverview() {
       .then((response) => {
         setDescription(<p>{response.data.description}</p>);
         setTitle(response.data.title);
-        setViewCount(response.data.viewCount);
+        // setViewCount(response.data.viewCount);
         setAnswerCount(response.data.answers.length);
         setVoteCount(
           response.data.upVotes.length - response.data.downVotes.length
         );
-        //let askedDate1 = new Date(response.data.creationDate);
-        //let currDate = new Date();
-        //let askedDiff = currDate.getYear() - askedDate1.getYear();
-        //setAskedDate(askedDiff);
+        let askedDate1 = new Date(response.data.creationDate);
+
+        let currDate = new Date(Date.now());
+        let yearsDiff = DateDiff.inYears(askedDate1, currDate);
+        let monthsDiff = DateDiff.inMonths(askedDate1, currDate);
+        let daysDiff = DateDiff.inDays(askedDate1, currDate);
+        let diffDate = "";
+        if (yearsDiff === 0) {
+          if (monthsDiff === 0) {
+            diffDate += daysDiff + " days";
+          } else {
+            diffDate += monthsDiff + " months";
+          }
+        } else {
+          if (monthsDiff === 0) {
+            diffDate += yearsDiff + " years ago";
+          } else if (monthsDiff > 0) {
+            diffDate += yearsDiff + " years, " + monthsDiff + " months";
+          } else {
+            diffDate +=
+              yearsDiff - 1 + " years, " + (monthsDiff + 12) + " months";
+          }
+        }
+        setAskedDate(diffDate);
         setAnswers(
           <div class="row">
             {response.data.answers.map((answer) => (
               <div key={answer} id="answercard">
-                <AnswerCard answer={{...answer, questionID: questionID} } />
+                <AnswerCard answer={{ ...answer, questionID: questionID }} />
               </div>
             ))}
           </div>
@@ -117,6 +157,23 @@ function QuestionsOverview() {
           }
         }
       });
+
+    axios
+      .get("/question/viewcount", {
+        params: {
+          questionID: questionID,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          setViewCount(response.data);
+        }
+      });
+
+    axios.post("/question/addasviewed", {
+      questionID: questionID,
+      userID: userID,
+    });
   }, []);
 
   const changeVoteUpStatus = (e) => {
@@ -198,10 +255,19 @@ function QuestionsOverview() {
           <h2> {title} </h2>
         </div>
         <div class="row">
-          <div class="col-md-2">Asked 12 years, 9 months ago</div>
-          {/* {askedDate} */}
-          <div class="col-md-2">Modified 8 days ago</div>
-          <div class="col-md-2">Viewed {viewCount} times</div>
+          <div class="col-md-3" style={{ display: "flex" }}>
+            <p id="date">Asked</p>
+            <p style={{ marginLeft: "10px" }}>{askedDate} ago</p>
+          </div>
+
+          <div class="col-md-2" style={{ display: "flex" }}>
+            <p id="date">Modified</p>{" "}
+            <p style={{ marginLeft: "10px" }}>8 days ago</p>
+          </div>
+          <div class="col-md-2" style={{ display: "flex" }}>
+            <p id="date">Viewed </p>
+            <p style={{ marginLeft: "10px" }}>{viewCount} times </p>
+          </div>
         </div>
 
         <div class="row" style={{ marginTop: "10px" }}>

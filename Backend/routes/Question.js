@@ -4,6 +4,7 @@ const router = express.Router();
 import Questions from "../models/QuestionModel.js";
 import Users from "../models/UserModel.js";
 import Views from "../models/ViewsModel.js";
+import Comments from "../models/CommentModel.js";
 import kafka from "../kafka/client.js";
 
 router.get("/", function (req, res) {
@@ -104,6 +105,63 @@ router.get("/viewcount", function (req, res) {
       } else {
         let viewCount = views.clientIdentity.length;
         res.status(200).send(JSON.stringify(viewCount));
+      }
+    }
+  );
+});
+
+router.post("/comment/add", function (req, res) {
+  console.log("Inside Add comment to question POST Request");
+  let questionID = req.body.questionID;
+  let userID = req.body.userID;
+  let userName = "Kushina";
+  let comment = req.body.comment;
+  //let data = { questionID: questionID, userID: userID };
+
+  const commentData = new Comments({
+    description: comment,
+    commentByUserName: userName,
+    commentByUserID: userID,
+    commentDate: Date.now(),
+  });
+
+  Questions.updateOne(
+    { _id: questionID },
+    { $push: { comments: commentData } },
+    function (error) {
+      if (error) {
+        res.end();
+      } else {
+        res.end();
+      }
+    }
+  );
+});
+
+router.post("/answer/comment/add", function (req, res) {
+  console.log("Inside Add comment to answer POST Request");
+  let questionID = req.body.questionID;
+  let userID = req.body.userID;
+  let answerID = req.body.answerID;
+  let userName = "Madara";
+  let comment = req.body.comment;
+  //let data = { questionID: questionID, userID: userID };
+
+  const commentData = new Comments({
+    description: comment,
+    commentByUserName: userName,
+    commentByUserID: userID,
+    commentDate: Date.now(),
+  });
+
+  Questions.updateOne(
+    { _id: questionID, "answers._id": answerID },
+    { $push: { "answers.$.comments": commentData } },
+    function (error) {
+      if (error) {
+        res.end();
+      } else {
+        res.end();
       }
     }
   );

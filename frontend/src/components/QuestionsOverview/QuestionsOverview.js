@@ -4,6 +4,7 @@ import AnswerCard from "./AnswerCard";
 import Tag from "./Tag";
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
+import AddCommentQuestion from "./AddCommentQuestion";
 import "../../App.css";
 import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -14,6 +15,7 @@ function QuestionsOverview() {
   const [answers, setAnswers] = useState(null);
   const [answerCount, setAnswerCount] = useState(null);
   const [comment, setComment] = useState(null);
+  const [commentSection, setCommentSection] = useState(null);
   const [tags, setTags] = useState(null);
   const [profile, setProfile] = useState(null);
   const [title, setTitle] = useState(null);
@@ -335,6 +337,19 @@ function QuestionsOverview() {
             <hr class="solid" />
             <div class="row" style={{ marginTop: "10px" }}>
               <p>{comment}</p>
+
+              {commentSection}
+              <button
+                type="button"
+                id="comment-button"
+                class="btn btn-link d-flex justify-content-left"
+                style={{ color: "grey" }}
+                onClick={() => {
+                  setCommentSection(<AddCommentQuestion question={{userID: userID, questionID: questionID}}/>);
+                }}
+              >
+                Add a comment
+              </button>
             </div>
           </div>
         </div>

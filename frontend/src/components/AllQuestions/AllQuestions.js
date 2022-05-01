@@ -15,8 +15,9 @@ function AllQuestions() {
   const [comment, setComment] = useState(null);
   const [tags, setTags] = useState(null);
   const [profile, setProfile] = useState(null);
-
+  const [alenght, setAlength] = useState(null);
   let answersData='';
+ //var alenght=0;
   useEffect(() => {
 
     axios.get('http://localhost:3001/question/',{data:"hi"})
@@ -26,6 +27,7 @@ function AllQuestions() {
         if(res){
             console.log(res.data)
              answersData = res.data;
+            setAlength(res.data.length) 
             setAnswers(
               <div class="row">
                 {answersData.map((answer) => (
@@ -177,7 +179,7 @@ function AllQuestions() {
         <hr class="solid" />
 
         <div class="row" style={{ marginTop: "10px" }}>
-          <h4>1</h4>
+          <h4>{alenght}</h4>
           {answers}
 
         </div>

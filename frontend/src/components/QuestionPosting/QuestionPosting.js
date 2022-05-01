@@ -34,7 +34,7 @@ const QuestionPosting = () => {
         ).then((response) => {
             if(response.status === 201){
                 //on successful creation of question redirect to that question page
-                navigate(`/question/${response.data._id}`);
+                navigate(`/questions/${response.data._id}`);
             }
         })
     }

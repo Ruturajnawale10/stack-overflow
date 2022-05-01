@@ -15,7 +15,7 @@ class Main extends Component {
                 <Routes>
                     <Route exact path="/" element={<Navbar/>}/>
                     <Route exact path="/login" element={<Login/>}/>
-                    <Route path="/questions" element={<QuestionsOverview/>}/>
+                    <Route path="/questions/:id" element={<QuestionsOverview/>}/>
                     <Route path="/questions/ask" element={<QuestionPosting/>}/>
                     <Route path="/tags" element={<TagOverview/>}/>
                 </Routes>

@@ -4,6 +4,7 @@ import Login from "./Login/Login";
 import Navbar from "./Navbar/Navbar";
 import QuestionsOverview from "../components/QuestionsOverview/QuestionsOverview.js";
 import TagOverview from "../components/Tags/TagOverview.js";
+import QuestionPosting from "../components/QuestionPosting/QuestionPosting.js";
 
 class Main extends Component {
     render() {
@@ -15,6 +16,7 @@ class Main extends Component {
                     <Route exact path="/" element={<Navbar/>}/>
                     <Route exact path="/login" element={<Login/>}/>
                     <Route path="/questions" element={<QuestionsOverview/>}/>
+                    <Route path="/questions/ask" element={<QuestionPosting/>}/>
                     <Route path="/tags" element={<TagOverview/>}/>
                 </Routes>
             </div>

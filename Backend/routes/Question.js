@@ -97,24 +97,18 @@ Questions.find( {},null,{sort:{'upVotes':-1}}, function (error, question) {
 router.get("/Unanswered", function (req, res) {
   console.log("Inside All Questions GET Request");
 // db.collectionName.find()
-Questions.findOne( {}, function (error, question) {
+Questions.find( {},null,{sort:{'answers':1}}, function (error, question) {
   if (error) {
+      console.log("error")
+      console.log(error)
+      console.log("error")
       res.status(400).send();
   } else {
-    let date = new Date().toLocaleDateString();
-   /*
-    const newQ = new Questions({
-      title:"how two add two int?",
-    description: " lsfkjlas laksdfj lkljl",
-    creationDate: date,
-    viewCount: 6,
-    tags: ['python','c++','int'],
-    askedByUserID: '231wdfd',
-    upVotes: ['adf','vcdcd','asdfdf'],
-    downVotes: []
-  
-    });*/
-  
+    console.log("Unanswered")
+    console.log(question)
+    console.log("Unanswered")
+
+
     res.status(200).send(question);
 
   }

@@ -130,7 +130,7 @@ function AllQuestions() {
     .then(res => {
         if(res){
             console.log(res.data)
-             answersData = [res.data];
+             answersData = res.data;
             setAnswers(
               <div class="row">
                 {answersData.map((answer) => (

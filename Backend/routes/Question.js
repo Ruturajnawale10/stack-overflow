@@ -38,24 +38,13 @@ Questions.find( {}, function (error, question) {
 router.get("/Interesting", function (req, res) {
   console.log("Inside All Questions GET Request");
 // db.collectionName.find()
-Questions.find({}).sort( {}, function (error, question) {
+Questions.find( {},null,{sort:'creationDate'}, function (error, question) {
   if (error) {
       res.status(400).send();
   } else {
-    let date = new Date().toLocaleDateString();
-   /*
-    const newQ = new Questions({
-      title:"how two add two int?",
-    description: " lsfkjlas laksdfj lkljl",
-    creationDate: date,
-    viewCount: 6,
-    tags: ['python','c++','int'],
-    askedByUserID: '231wdfd',
-    upVotes: ['adf','vcdcd','asdfdf'],
-    downVotes: []
-  
-    });*/
-  
+    console.log("hot")
+    console.log(question)
+    console.log("hot")
 
 
     res.status(200).send(question);
@@ -69,24 +58,13 @@ Questions.find({}).sort( {}, function (error, question) {
 router.get("/Hot", function (req, res) {
   console.log("Inside All Questions GET Request");
 // db.collectionName.find()
-Questions.findOne( {}).sort({"viewCount":1}, function (error, question) {
+Questions.find( {},null,{sort:'viewCount'}, function (error, question) {
   if (error) {
       res.status(400).send();
   } else {
-    let date = new Date().toLocaleDateString();
-   /*
-    const newQ = new Questions({
-      title:"how two add two int?",
-    description: " lsfkjlas laksdfj lkljl",
-    creationDate: date,
-    viewCount: 6,
-    tags: ['python','c++','int'],
-    askedByUserID: '231wdfd',
-    upVotes: ['adf','vcdcd','asdfdf'],
-    downVotes: []
-  
-    });*/;
-  
+    console.log("hot")
+    console.log(question)
+    console.log("hot")
 
 
     res.status(200).send(question);
@@ -100,24 +78,13 @@ Questions.findOne( {}).sort({"viewCount":1}, function (error, question) {
 router.get("/Score", function (req, res) {
   console.log("Inside All Questions GET Request");
 // db.collectionName.find()
-Questions.findOne( {}, function (error, question) {
+Questions.find( {},null,{sort:'upVotes'}, function (error, question) {
   if (error) {
       res.status(400).send();
   } else {
-    let date = new Date().toLocaleDateString();
-   /*
-    const newQ = new Questions({
-      title:"how two add two int?",
-    description: " lsfkjlas laksdfj lkljl",
-    creationDate: date,
-    viewCount: 6,
-    tags: ['python','c++','int'],
-    askedByUserID: '231wdfd',
-    upVotes: ['adf','vcdcd','asdfdf'],
-    downVotes: []
-  
-    });*/
-  
+    console.log("score")
+    console.log(question)
+    console.log("score")
 
 
     res.status(200).send(question);

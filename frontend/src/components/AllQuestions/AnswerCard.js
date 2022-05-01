@@ -13,24 +13,13 @@ function AnswerCard(props) {
   const [comment, setComment] = useState(null);
   const [tags, setTags] = useState(null);
   let isAccepted = true;
-  let tagnames = [
-    "javascript",
-    "arrays",
-    "sorting",
-    "comparison"
-  ];
-
+  let tagnames = props.item.tags;
+  
   useEffect(() => {
-    if (isAccepted) {
-      setTick(
-        <div class="row">
-          <img
-            src={check}
-            style={{ width: "63px", height: "40px", marginTop: "10px" }}
-          ></img>
-        </div>
-      );
-    }
+    console.log("Cards")
+console.log(props)
+console.log(props.item.tags)
+console.log("Cards")
    setTags(
       <div class="row">
         {tagnames.map((tagName) => (
@@ -38,17 +27,9 @@ function AnswerCard(props) {
         ))}
       </div>
     );
-    setProfile(<ProfileOverview />);
-    let commentData = [1, 2];
-    setComment(
-      <div class="row">
-        {commentData.map((comment) => (
-          <div key={comment} id="commentcard">
-            <CommentCard item={comment} />
-          </div>
-        ))}
-      </div>
-    );
+    setProfile(<ProfileOverview item={props} />);
+   
+
   }, []);
 
   return (
@@ -61,12 +42,10 @@ function AnswerCard(props) {
             class="col"
             style={{ marginTop: "10px", marginLeft: "20px" }}
           >
-            <h6>0 votes 0 answers 2 views</h6>
-            <h4><a href="#" id="link">How two add two ints</a></h4>
+            <h6>{props.item.upVotes.length} votes  {props.item.answers.length} answers {props.item.viewCount} views</h6>
+            <h4><a href="#" id="link">{props.item.title}</a></h4>
             <p>
-              If you'd like to render curly braces as plain text within a JSX
-              document simply use the HTML character codes. Left Curly Brace
-              &#123; : &#onetwothree; Right Curly Brace &#125; : &#onetwofive;
+            {props.item.description}
             </p>
             <div class="row" style={{ marginTop: "10px", marginLeft: "20px" }}>
               {tags}

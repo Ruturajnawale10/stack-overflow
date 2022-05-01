@@ -7,6 +7,7 @@ import AnswerCard from "./AnswerCard";
 import Tag from "./Tag";
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
+import axios from 'axios';
 import "../../App.css";
 import DataTable from 'react-data-table-component';
 function AllQuestions() {
@@ -14,44 +15,36 @@ function AllQuestions() {
   const [comment, setComment] = useState(null);
   const [tags, setTags] = useState(null);
   const [profile, setProfile] = useState(null);
-  let tagnames = [
-    "javascript",
-    "arrays",
-    "sorting"
-  ];
 
+  let answersData='';
   useEffect(() => {
-    let answersData = [1, 2, 3, 4,5,6,7,8,9];
-    setAnswers(
-      <div class="row">
-        {answersData.map((answer) => (
-          <div key={answer} id="answercard">
-            <AnswerCard item={answer} />
-          </div>
-        ))}
-      </div>
-    );
+    axios.get('http://localhost:3001/question/',{data:"hi"})
+    .then(res => {
+        if(res){
+            console.log(res.data)
+             answersData = [res.data];
+            setAnswers(
+              <div class="row">
+                {answersData.map((answer) => (
+                  <div key={answer} id="answercard">
+                    <AnswerCard item={answer} />
+                  </div>
+                ))}
+              </div>
+            );
+           
+        }else{
 
-    setTags(
-      <div class="row">
-        {tagnames.map((tagName) => (
-          <Tag tagName={tagName} />
-        ))}
-      </div>
-    );
+        }
+    });  
 
+
+    console.log("answerdata")
+    console.log(answersData)
+    console.log("answerdata")
     setProfile(<ProfileOverview />);
 
-    let commentData = [1, 2, 3, 4];
-    setComment(
-      <div class="row">
-        {commentData.map((comment) => (
-          <div key={comment} id="commentcard">
-            <CommentCard item={comment} />
-          </div>
-        ))}
-      </div>
-    );
+
   }, []);
 
   return (
@@ -74,13 +67,11 @@ function AllQuestions() {
 
         <div class="col float-end">
         <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-  <button type="button" class="btn btn-outline-secondary">Newest</button>
-  <button type="button" class="btn btn-outline-secondary">Active</button>
-  <button type="button" class="btn btn-outline-secondary">Bountied</button>
+  <button type="button" class="btn btn-outline-secondary">Interesting</button>
+  <button type="button" class="btn btn-outline-secondary">Hot</button>
+  <button type="button" class="btn btn-outline-secondary">Score</button>
   <button type="button" class="btn btn-outline-secondary">Unanswered</button>
-<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-  Filter
-</button>
+
 </div>
 </div>
         </div>
@@ -88,7 +79,7 @@ function AllQuestions() {
         <hr class="solid" />
 
         <div class="row" style={{ marginTop: "10px" }}>
-          <h4>22 questions</h4>
+          <h4>1</h4>
           {answers}
 
         </div>

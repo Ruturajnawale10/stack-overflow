@@ -38,13 +38,13 @@ Questions.find( {}, function (error, question) {
 router.get("/Interesting", function (req, res) {
   console.log("Inside All Questions GET Request");
 // db.collectionName.find()
-Questions.find( {},null,{sort:'creationDate'}, function (error, question) {
+Questions.find( {},null,{sort:{'creationDate':-1}}, function (error, question) {
   if (error) {
       res.status(400).send();
   } else {
-    console.log("hot")
+    console.log("interesting")
     console.log(question)
-    console.log("hot")
+    console.log("interesting")
 
 
     res.status(200).send(question);
@@ -58,7 +58,7 @@ Questions.find( {},null,{sort:'creationDate'}, function (error, question) {
 router.get("/Hot", function (req, res) {
   console.log("Inside All Questions GET Request");
 // db.collectionName.find()
-Questions.find( {},null,{sort:'viewCount'}, function (error, question) {
+Questions.find( {},null,{sort:{'viewCount':-1}}, function (error, question) {
   if (error) {
       res.status(400).send();
   } else {
@@ -78,7 +78,7 @@ Questions.find( {},null,{sort:'viewCount'}, function (error, question) {
 router.get("/Score", function (req, res) {
   console.log("Inside All Questions GET Request");
 // db.collectionName.find()
-Questions.find( {},null,{sort:'upVotes'}, function (error, question) {
+Questions.find( {},null,{sort:{'upVotes':-1}}, function (error, question) {
   if (error) {
       res.status(400).send();
   } else {

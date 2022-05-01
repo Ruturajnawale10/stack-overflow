@@ -54,8 +54,10 @@ function AllQuestions() {
     axios.get('http://localhost:3001/question/Interesting',{data:"hi"})
     .then(res => {
         if(res){
+          console.log("Interesting")
             console.log(res.data)
-             answersData = [res.data];
+            console.log("Interesting")
+             answersData = res.data;
             setAnswers(
               <div class="row">
                 {answersData.map((answer) => (

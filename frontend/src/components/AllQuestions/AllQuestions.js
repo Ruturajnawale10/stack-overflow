@@ -43,9 +43,97 @@ function AllQuestions() {
     console.log(answersData)
     console.log("answerdata")
     setProfile(<ProfileOverview />);
-
+ 
 
   }, []);
+
+  const handleInteresting =(e)=>{
+    axios.get('http://localhost:3001/question/',{data:"hi"})
+    .then(res => {
+        if(res){
+            console.log(res.data)
+             answersData = [res.data];
+            setAnswers(
+              <div class="row">
+                {answersData.map((answer) => (
+                  <div key={answer} id="answercard">
+                    <AnswerCard item={answer} />
+                  </div>
+                ))}
+              </div>
+            );
+           
+        }else{
+
+        }
+    });
+  }
+
+  const handleHot =(e)=>{
+    axios.get('http://localhost:3001/question/Hot',{data:"hi"})
+    .then(res => {
+        if(res){
+            console.log(res.data)
+             answersData = [res.data];
+            setAnswers(
+              <div class="row">
+                {answersData.map((answer) => (
+                  <div key={answer} id="answercard">
+                    <AnswerCard item={answer} />
+                  </div>
+                ))}
+              </div>
+            );
+           
+        }else{
+
+        }
+    });
+  }
+
+  const handleScore =(e)=>{
+    axios.get('http://localhost:3001/question/Score',{data:"hi"})
+    .then(res => {
+        if(res){
+            console.log(res.data)
+             answersData = [res.data];
+            setAnswers(
+              <div class="row">
+                {answersData.map((answer) => (
+                  <div key={answer} id="answercard">
+                    <AnswerCard item={answer} />
+                  </div>
+                ))}
+              </div>
+            );
+           
+        }else{
+
+        }
+    });
+  }
+
+  const handleUnanswered =(e)=>{
+    axios.get('http://localhost:3001/question/Unanswered',{data:"hi"})
+    .then(res => {
+        if(res){
+            console.log(res.data)
+             answersData = [res.data];
+            setAnswers(
+              <div class="row">
+                {answersData.map((answer) => (
+                  <div key={answer} id="answercard">
+                    <AnswerCard item={answer} />
+                  </div>
+                ))}
+              </div>
+            );
+           
+        }else{
+
+        }
+    });
+  }
 
   return (
     
@@ -67,10 +155,10 @@ function AllQuestions() {
 
         <div class="col float-end">
         <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-  <button type="button" class="btn btn-outline-secondary">Interesting</button>
-  <button type="button" class="btn btn-outline-secondary">Hot</button>
-  <button type="button" class="btn btn-outline-secondary">Score</button>
-  <button type="button" class="btn btn-outline-secondary">Unanswered</button>
+  <button onClick={handleInteresting}  type="button" class="btn btn-outline-secondary">Interesting</button>
+  <button onClick={handleHot} type="button" class="btn btn-outline-secondary">Hot</button>
+  <button  onClick={handleScore} type="button" class="btn btn-outline-secondary">Score</button>
+  <button onClick={handleUnanswered} type="button" class="btn btn-outline-secondary">Unanswered</button>
 
 </div>
 </div>

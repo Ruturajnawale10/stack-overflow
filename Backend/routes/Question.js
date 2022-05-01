@@ -11,6 +11,7 @@ Questions.findOne( {}, function (error, question) {
       res.status(400).send();
   } else {
     let date = new Date().toLocaleDateString();
+   /*
     const newQ = new Questions({
       title:"how two add two int?",
     description: " lsfkjlas laksdfj lkljl",
@@ -21,7 +22,7 @@ Questions.findOne( {}, function (error, question) {
     upVotes: ['adf','vcdcd','asdfdf'],
     downVotes: []
   
-    });
+    });*/
   
 
 

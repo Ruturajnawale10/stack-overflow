@@ -18,11 +18,14 @@ function AllQuestions() {
 
   let answersData='';
   useEffect(() => {
+
     axios.get('http://localhost:3001/question/',{data:"hi"})
     .then(res => {
+
+        console.log(res)
         if(res){
             console.log(res.data)
-             answersData = [res.data];
+             answersData = res.data;
             setAnswers(
               <div class="row">
                 {answersData.map((answer) => (
@@ -48,7 +51,7 @@ function AllQuestions() {
   }, []);
 
   const handleInteresting =(e)=>{
-    axios.get('http://localhost:3001/question/',{data:"hi"})
+    axios.get('http://localhost:3001/question/Interesting',{data:"hi"})
     .then(res => {
         if(res){
             console.log(res.data)
@@ -73,8 +76,10 @@ function AllQuestions() {
     axios.get('http://localhost:3001/question/Hot',{data:"hi"})
     .then(res => {
         if(res){
+          console.log("hot")
             console.log(res.data)
-             answersData = [res.data];
+            console.log("hot")
+             answersData = res.data;
             setAnswers(
               <div class="row">
                 {answersData.map((answer) => (
@@ -92,6 +97,9 @@ function AllQuestions() {
   }
 
   const handleScore =(e)=>{
+    console.log("score")
+    console.log(e)
+    console.log("score")
     axios.get('http://localhost:3001/question/Score',{data:"hi"})
     .then(res => {
         if(res){

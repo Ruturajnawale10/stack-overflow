@@ -1,4 +1,7 @@
 import React, { useState, useEffect } from "react";
+import MDEditor from '@uiw/react-md-editor';
+import {Button} from 'react-bootstrap';
+import {useParams} from "react-router-dom";
 import axios from "axios";
 import AnswerCard from "./AnswerCard";
 import Tag from "./Tag";
@@ -12,6 +15,7 @@ import { BsBookmarkStarFill } from "react-icons/bs";
 import { MdOutlineHistory } from "react-icons/md";
 
 function QuestionsOverview() {
+  const [answer, setAnswer] = useState('');
   const [answers, setAnswers] = useState(null);
   const [answerCount, setAnswerCount] = useState(null);
   const [comment, setComment] = useState(null);
@@ -33,7 +37,13 @@ function QuestionsOverview() {
   let noBookMark = "#a9acb0";
   let bookMark = "#ebac46";
   const [bookMarkStatus, setBookMarkStatus] = useState(noBookMark);
-  let questionID = "62679caa6a5ff0b364718083";
+
+  //let questionID = "62679caa6a5ff0b364718083";
+  let {questionID} = useParams();
+  if(!questionID){
+    questionID = "62679caa6a5ff0b364718083";
+  }
+
   const [voteCount, setVoteCount] = useState(0);
 
   var DateDiff = {
@@ -66,7 +76,7 @@ function QuestionsOverview() {
         },
       })
       .then((response) => {
-        setDescription(<p>{response.data.description}</p>);
+        setDescription(response.data.description);
         setTitle(response.data.title);
         // setViewCount(response.data.viewCount);
         setAnswerCount(response.data.answers.length);
@@ -254,6 +264,18 @@ function QuestionsOverview() {
     }
   };
 
+  const submitAnswerHandler = (e) => {
+    //TODO: Post to backend
+    const request = {
+      description: answer,    
+      questionID: questionID,
+      userID: userID,
+    }
+    console.log('submitAnswerHandler:', request)
+    //POST
+  };
+
+
   return (
     <div>
       <div class="container">
@@ -325,7 +347,12 @@ function QuestionsOverview() {
             class="col-md-10"
             style={{ marginTop: "10px", marginLeft: "20px" }}
           >
-            <p>{description}</p>
+            <div>
+              <MDEditor.Markdown 
+                source={description} 
+                //rehypePlugins={[[rehypeSanitize]]}
+              />
+            </div>
 
             <div class="row" style={{ marginTop: "10px", marginLeft: "20px" }}>
               {tags}
@@ -360,6 +387,25 @@ function QuestionsOverview() {
           <h4>{answerCount} answers</h4>
           {answers}
         </div>
+        <br/>
+        <div class="row" style={{ marginTop: "10px" }}>
+          <h3>Your Answer</h3>
+          <MDEditor
+            value={answer}
+            onChange={setAnswer}
+          />
+
+          <Button
+            type="button"
+            id="answer-button"
+            class="btn d-flex justify-content-left"
+           
+            onClick={submitAnswerHandler}
+          >
+            Post your Answer
+          </Button>
+        </div>
+
       </div>
     </div>
   );

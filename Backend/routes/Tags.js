@@ -1,7 +1,7 @@
 "use strict";
 import express from "express";
 import mysql from 'mysql';
-// import connPool from "../Utils/mysql";
+import connPool from "../Utils/mysql.js";
 const router = express.Router();
 // const connPool = require("../Utils/mysql");
 // var mysql = require("mysql");

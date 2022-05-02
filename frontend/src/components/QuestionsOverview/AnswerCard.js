@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
+import AddCommentAnswer from "./AddCommentAnswer";
 import "../../App.css";
 import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -12,6 +13,7 @@ function AnswerCard(props) {
   let [tick, setTick] = useState(null);
   const [profile, setProfile] = useState(null);
   const [comment, setComment] = useState(null);
+  const [commentSection, setCommentSection] = useState(null);
   let userID = "626798764096f05e749e8de8";
   let questionID = "62679caa6a5ff0b364718083";
 
@@ -124,7 +126,6 @@ function AnswerCard(props) {
     <div>
       <div class="container">
         <div class="row" style={{ marginTop: "10px" }}>
-          {props.answer.description}
           <div class="col-md-1" style={{ marginTop: "10px" }}>
             <div
               class="row"
@@ -170,6 +171,23 @@ function AnswerCard(props) {
 
             <div class="row" style={{ marginTop: "10px" }}>
               <p>{comment}</p>
+
+              {commentSection}
+              <button
+                type="button"
+                id="comment-button"
+                class="btn btn-link d-flex justify-content-left"
+                style={{ color: "grey" }}
+                onClick={() => {
+                  setCommentSection(
+                    <AddCommentAnswer
+                      answer={{ userID: userID, questionID: questionID, answerID: props.answer._id }}
+                    />
+                  );
+                }}
+              >
+                Add a comment
+              </button>
             </div>
           </div>
         </div>

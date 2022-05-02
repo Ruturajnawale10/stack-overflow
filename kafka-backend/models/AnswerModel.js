@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 
 var AnswerSchema = new Schema(
   {
-    questionID: { type: String },
     description: { type: String },
     upVotes: { type: [String] },
     downVotes: { type: [String] },

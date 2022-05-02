@@ -103,7 +103,7 @@ router.get("/viewcount", function (req, res) {
       if (error) {
         res.status(401).send(error);
       } else {
-        let viewCount = views.clientIdentity.length;
+        let viewCount = views?.clientIdentity.length;
         res.status(200).send(JSON.stringify(viewCount));
       }
     }

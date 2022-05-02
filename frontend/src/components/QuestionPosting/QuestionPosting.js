@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {Button, Container, Row, Col, Form, Card} from "react-bootstrap";
+import {Alert, Button, Container, Row, Col, Form, Card} from "react-bootstrap";
 import {useNavigate } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
 
@@ -12,6 +12,7 @@ const QuestionPosting = () => {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [tags, setTags] = useState([]);
+    const [warning, setWarning] = useState(false);
     
     const [userID, setUserID] = useState(null);
 
@@ -21,30 +22,41 @@ const QuestionPosting = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-
         const question = {
             userID: userID,
             title: title,
             body: body,
             tags: tags
         };
-    
-        axios.post("/question/post_question", 
-            question
-        ).then((response) => {
-            if(response.status === 201){
-                //on successful creation of question redirect to that question page
-                navigate(`/question/${response.data._id}`);
-            }
-        })
+        
+        if(title === '' || body === ''){
+            setWarning(true);
+        }else{
+            setWarning(false);
+            axios.post("/question/post_question", 
+                question
+            ).then((response) => {
+                if(response.status === 201){
+                    //on successful creation of question redirect to that question page
+                    navigate(`/questions/${response.data._id}`);
+                }
+            })
+        }
+
     }
 
     return(
         <div style={{backgroundColor: "whitesmoke"}}>
+
             <Container >
                 <Row>
                     <h2>Ask a public question</h2>
                 </Row>
+                {warning &&
+                <Alert variant="warning">
+                    Please fill both Title and Body!
+                </Alert>
+                }
                 <Form onSubmit={submitHandler}>  
                     <Container style={{backgroundColor: "white"}} className="mt-5 mb-5 pt-3 pb-4">
                     

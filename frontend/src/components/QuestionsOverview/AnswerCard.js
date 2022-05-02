@@ -126,7 +126,6 @@ function AnswerCard(props) {
     <div>
       <div class="container">
         <div class="row" style={{ marginTop: "10px" }}>
-          {props.answer.description}
           <div class="col-md-1" style={{ marginTop: "10px" }}>
             <div
               class="row"

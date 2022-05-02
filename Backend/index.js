@@ -64,9 +64,14 @@ mongoose.connect(
 //Route to handle Post Request Call
 import UserSession from "./routes/UserSession.js";
 import Question from "./routes/Question.js";
+import Tags from "./routes/Tags.js";
+import Vote from "./routes/Vote.js";
+
 
 app.use("/user", UserSession);
+app.use("/vote", Vote);
 app.use("/question", Question);
+app.use("/tags",  Tags);
 
 //start the server on port 3001
 app.listen(3001);

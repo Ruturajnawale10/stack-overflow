@@ -1,91 +1,170 @@
 import React, { useState, useEffect } from "react";
-import upArrow from "../../images/upArrow.png";
-import downArrow from "../../images/downArrow.png";
-import activity from "../../images/clock-rotate-left-solid.svg";
-import check from "../../images/check.png";
+import axios from "axios";
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
+import AddCommentAnswer from "./AddCommentAnswer";
 import "../../App.css";
+import { TiArrowSortedUp } from "react-icons/ti";
+import { TiArrowSortedDown } from "react-icons/ti";
+import { MdOutlineHistory } from "react-icons/md";
+import { FaCheck } from "react-icons/fa";
 
 function AnswerCard(props) {
   let [tick, setTick] = useState(null);
   const [profile, setProfile] = useState(null);
   const [comment, setComment] = useState(null);
+  const [commentSection, setCommentSection] = useState(null);
+  let userID = "626798764096f05e749e8de8";
+  let questionID = "62679caa6a5ff0b364718083";
+
+  let noVote = "#a9acb0";
+  let vote = "darkorange";
+  const [voteUpStatus, setVoteUpStatus] = useState(noVote);
+  const [voteDownStatus, setVoteDownStatus] = useState(noVote);
+  const [voteCount, setVoteCount] = useState(0);
+
   let isAccepted = true;
 
   useEffect(() => {
+    setVoteCount(props.answer.upVotes.length - props.answer.downVotes.length);
     if (isAccepted) {
       setTick(
         <div class="row">
-          <img
-            src={check}
-            style={{ width: "63px", height: "40px", marginTop: "10px" }}
-          ></img>
+          <FaCheck size={35} fill="darkgreen" />
         </div>
       );
     }
     setProfile(<ProfileOverview />);
-    let commentData = [1, 2];
     setComment(
       <div class="row">
-        {commentData.map((comment) => (
+        {props.answer.comments.map((comment) => (
           <div key={comment} id="commentcard">
-            <CommentCard item={comment} />
+            <CommentCard comment={comment} />
           </div>
         ))}
       </div>
     );
+
+    axios
+      .get("/vote/answer/status", {
+        params: {
+          questionID: questionID,
+          userID: userID,
+          answerID: props.answer._id,
+        },
+      })
+      .then((response) => {
+        if (response.status === 200) {
+          if (response.data === "UPVOTE") {
+            setVoteUpStatus(vote);
+          } else if (response.data === "DOWNVOTE") {
+            setVoteDownStatus(vote);
+          }
+        }
+      });
   }, []);
+
+  const changeVoteUpStatus = (e) => {
+    if (voteUpStatus === noVote) {
+      setVoteUpStatus(vote);
+      setVoteCount(voteCount + 1);
+      axios.post("/vote/answer/upvote", {
+        questionID: props.answer.questionID,
+        userID: userID,
+        answerID: props.answer._id,
+      });
+      if (voteDownStatus === vote) {
+        setVoteDownStatus(noVote);
+        setVoteCount(voteCount + 2);
+        axios.post("/vote/answer/removedownvote", {
+          questionID: props.answer.questionID,
+          userID: userID,
+          answerID: props.answer._id,
+        });
+      }
+    } else {
+      setVoteUpStatus(noVote);
+      setVoteCount(voteCount - 1);
+      axios.post("/vote/answer/removeupvote", {
+        questionID: props.answer.questionID,
+        userID: userID,
+        answerID: props.answer._id,
+      });
+    }
+  };
+
+  const changeVoteDownStatus = (e) => {
+    if (voteDownStatus === noVote) {
+      setVoteDownStatus(vote);
+      setVoteCount(voteCount - 1);
+      axios.post("/vote/answer/downvote", {
+        questionID: props.answer.questionID,
+        userID: userID,
+        answerID: props.answer._id,
+      });
+      if (voteUpStatus === vote) {
+        setVoteUpStatus(noVote);
+        setVoteCount(voteCount - 2);
+        axios.post("/vote/answer/removeupvote", {
+          questionID: props.answer.questionID,
+          userID: userID,
+          answerID: props.answer._id,
+        });
+      }
+    } else {
+      setVoteDownStatus(noVote);
+      setVoteCount(voteCount + 1);
+      axios.post("/vote/answer/removedownvote", {
+        questionID: props.answer.questionID,
+        userID: userID,
+        answerID: props.answer._id,
+      });
+    }
+  };
 
   return (
     <div>
       <div class="container">
         <div class="row" style={{ marginTop: "10px" }}>
+          {props.answer.description}
           <div class="col-md-1" style={{ marginTop: "10px" }}>
-            <div class="row">
-              <img
-                src={upArrow}
-                style={{ width: "63px", height: "40px" }}
-              ></img>
+            <div
+              class="row"
+              onClick={() => {
+                changeVoteUpStatus();
+              }}
+            >
+              <TiArrowSortedUp size={60} fill={voteUpStatus} />
             </div>
 
             <div class="row">
-              <p
-                style={{
-                  fontSize: "30px",
-                  marginLeft: "8px",
-                  marginTop: "3px",
-                }}
-              >
-                0
-              </p>
+              <p id="vote"> {voteCount} </p>
             </div>
 
-            <div class="row">
-              <img
-                src={downArrow}
-                style={{ width: "63px", height: "40px" }}
-              ></img>
+            <div
+              class="row"
+              onClick={() => {
+                changeVoteDownStatus();
+              }}
+            >
+              <TiArrowSortedDown size={60} fill={voteDownStatus} />
             </div>
 
             {tick}
 
             <div class="row">
-              <img
-                src={activity}
-                style={{ width: "60px", height: "50px", marginTop: "20px" }}
-              ></img>
+              <MdOutlineHistory
+                size={39}
+                fill="#a9acb0"
+                style={{ marginTop: "10px" }}
+              />
             </div>
           </div>
           <div
             class="col-md-10"
             style={{ marginTop: "10px", marginLeft: "20px" }}
           >
-            <p>
-              If you'd like to render curly braces as plain text within a JSX
-              document simply use the HTML character codes. Left Curly Brace
-              &#123; : &#onetwothree; Right Curly Brace &#125; : &#onetwofive;
-            </p>
+            <p>{props.answer.description}</p>
 
             <div class="row" style={{ marginTop: "30px", marginLeft: "65%" }}>
               {profile}
@@ -93,6 +172,23 @@ function AnswerCard(props) {
 
             <div class="row" style={{ marginTop: "10px" }}>
               <p>{comment}</p>
+
+              {commentSection}
+              <button
+                type="button"
+                id="comment-button"
+                class="btn btn-link d-flex justify-content-left"
+                style={{ color: "grey" }}
+                onClick={() => {
+                  setCommentSection(
+                    <AddCommentAnswer
+                      answer={{ userID: userID, questionID: questionID, answerID: props.answer._id }}
+                    />
+                  );
+                }}
+              >
+                Add a comment
+              </button>
             </div>
           </div>
         </div>

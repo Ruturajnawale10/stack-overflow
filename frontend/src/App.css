@@ -8,24 +8,24 @@
 }
 
 .tagblock {
-  background-color:rgb(193, 225, 239);
+  background-color: rgb(193, 225, 239);
   margin-left: 10px;
   text-align: center;
-  padding:0.2px;
+  padding: 0.2px;
   border: none;
   border-radius: 3px;
 }
 
-.tagblock a{
+.tagblock a {
   color: #0f4972;
   margin-bottom: 3px;
 }
 
 .userblock {
-  background-color:rgb(221, 235, 245);
+  background-color: rgb(221, 235, 245);
   margin-left: 10px;
   text-align: center;
-  padding:0.2px;
+  padding: 0.2px;
   border: none;
   border-radius: 3px;
 }
@@ -48,4 +48,15 @@
   color: #252728;
   font-weight: bold;
   margin-bottom: 3px;
+}
+
+#vote {
+  color: #87868a;
+  font-weight: 630;
+  font-size: 25px;
+  margin-left: 33px;
+}
+
+#date {
+  color: #717073;
 }

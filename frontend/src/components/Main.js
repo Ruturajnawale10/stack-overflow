@@ -6,6 +6,8 @@ import QuestionsOverview from "../components/QuestionsOverview/QuestionsOverview
 import TagOverview from "../components/Tags/TagOverview.js";
 import QuestionPosting from "../components/QuestionPosting/QuestionPosting.js";
 import AddTag from "./Admin/AddTags";
+import ApprovalQuestions from "./Admin/ApprovalQuestions/ApprovalQuestions";
+import QuestionsReview from "./Admin/ApprovalQuestions/QuestionsReview";
 
 class Main extends Component {
     render() {
@@ -21,6 +23,8 @@ class Main extends Component {
                     <Route path="/questions/ask" element={<QuestionPosting/>}/>
                     <Route path="/tags" element={<TagOverview/>}/>
                     <Route path="/admin/tags/add" element={<AddTag/>}/>
+                    <Route path="/admin/questions/approval" element={<ApprovalQuestions/>}/>
+                    <Route path="/admin/questions/approval/:questionID" element={<QuestionsReview/>}/>
                 </Routes>
             </div>
         );

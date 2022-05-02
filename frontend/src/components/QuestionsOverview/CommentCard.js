@@ -8,7 +8,7 @@ function CommentCard(props) {
     <div>
       <div class="container">
         <div class="row" style={{ marginTop: "10px" }}>
-          <p>
+          <a>
             {" "}
             {props.comment.description} &emsp; - &emsp;
             <span style={{ color: "#146aa7" }}>
@@ -19,7 +19,7 @@ function CommentCard(props) {
             </span>{" "}
             &emsp;
             <span style={{ color: "#8f9294" }}>{date}</span>
-          </p>
+          </a>
         </div>
       </div>
       <hr class="solid" />

@@ -67,8 +67,10 @@ import Question from "./routes/Question.js";
 import Tags from "./routes/Tags.js";
 import Vote from "./routes/Vote.js";
 import Admin from "./routes/Admin.js";
+import Answer from "./routes/Answer.js"
 
 app.use("/user", UserSession);
+app.use("/answer", Answer);
 app.use("/vote", Vote);
 app.use("/question", Question);
 app.use("/tags",  Tags);

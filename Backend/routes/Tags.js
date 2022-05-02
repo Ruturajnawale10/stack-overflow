@@ -3,8 +3,6 @@ import express from "express";
 import mysql from 'mysql';
 import connPool from "../Utils/mysql.js";
 const router = express.Router();
-// const connPool = require("../Utils/mysql");
-// var mysql = require("mysql");
 
 router.get("/", function (req, res) {
   console.log("Inside All Questions GET Request");

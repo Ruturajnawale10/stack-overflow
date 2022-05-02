@@ -51,6 +51,7 @@ function Product(props) {
             <i className="fa fa-times"></i>
           </span>
         </div>
+        <button class="col-md-auto tagblock"><p>{tag.tagName}</p></button>
         <h5 className="pt-2">{tag.tagName} </h5>
         <div>Description : {tag.description} </div>
         {/* <div>Available Quantity : {product.quantity}</div> */}

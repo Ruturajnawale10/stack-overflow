@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Col, Container, Row } from "react-bootstrap";
 import TagCard from "./TagCard";
-// import Tag from "./Tag";
-// import ProfileOverview from "./ProfileOverview";
-// import CommentCard from "./CommentCard";
+import axios from "axios";
 import "../../App.css";
 
 function TagOverview() {
@@ -26,21 +24,14 @@ function TagOverview() {
   ];
   const [tags, setTags] = useState(tempTags);
   const [profile, setProfile] = useState(null);
-  let tagnames = [
-    "javascript",
-    "arrays",
-    "sorting",
-    "comparison",
-    "javascript",
-    "arrays",
-    "sorting",
-    "comparison",
-    "javascript",
-    "arrays",
-  ];
+  const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-      
+    axios.get("/tags/getTags").then((response, err)=>{
+        console.log("data from getTags is : " + JSON.stringify(response.data))
+        setTags(response.data)
+    });
+    //   window.location.reload(false);
   }, []);
 
   return (
@@ -56,30 +47,34 @@ function TagOverview() {
           </div>
         </div>
         <hr />
-        <div class="d-flex fw-wrap">
+        <div className="d-flex fw-wrap">
+        <div className="search-container">
+
+        </div>
           <form className="d-flex" ps-relative mb12>
             <input
               className="form-control me-4"
               type="search"
               placeholder="Filter by TagName"
               aria-label="Search"
+              value={searchValue}
             ></input>
             <button className="btn btn-outline-success" type="submit">
               Search
             </button>
           </form>
           <div
-            class="flex--item ml-auto mb12 d-flex s-btn-group js-filter-btn"
+            className="flex--item ml-auto mb12 d-flex s-btn-group js-filter-btn"
             role="group"
             aria-label="Basic example"
           >
-            <button type="button" class="btn btn-secondary">
+            <button type="button" className="btn btn-secondary">
               Popular
             </button>
-            <button type="button" class="btn btn-secondary">
+            <button type="button" className="btn btn-secondary">
               Name
             </button>
-            <button type="button" class="btn btn-secondary">
+            <button type="button" className="btn btn-secondary">
               New
             </button>
           </div>
@@ -104,6 +99,7 @@ function TagOverview() {
           </Row>
         )}
       </div>
+      
     </Container>
   );
 }

@@ -1,8 +1,4 @@
 import React, { useState, useEffect } from "react";
-import upArrow from "../../images/upArrow.png";
-import downArrow from "../../images/downArrow.png";
-import activity from "../../images/clock-rotate-left-solid.svg";
-import check from "../../images/check.png";
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
 import "../../App.css";

@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
-import upArrow from "../../images/upArrow.png";
-import downArrow from "../../images/downArrow.png";
-import bookmark from "../../images/bookmark-regular.svg";
-import activity from "../../images/clock-rotate-left-solid.svg";
 import AnswerCard from "./AnswerCard";
-import Tag from "./Tag";
 import ProfileOverview from "./ProfileOverview";
-import CommentCard from "./CommentCard";
+import { NavLink as Link } from 'react-router-dom';
 import axios from 'axios';
 import "../../App.css";
 import DataTable from 'react-data-table-component';
@@ -157,7 +152,7 @@ function AllQuestions() {
         <h2> All Questions</h2>
         <div class="col">
     <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-                     <button type="button" class="btn btn-primary m-2">Ask Question</button>
+                     <button type="button" class="btn btn-primary m-2" > <a href="./questions/ask">Ask Question</a> </button>
                      </div>
     </div>
     

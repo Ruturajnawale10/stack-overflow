@@ -2,24 +2,25 @@ import React, { useState, useEffect } from "react";
 import "../../App.css";
 
 function CommentCard(props) {
-  let date = new Date(props.comment.commentDate).toLocaleDateString();
+  let comment =
+    "This script allows you to do just that unless you want to write your own comparison function or sorter.";
+  let name = "Marco Demaio";
+  let date = new Date().toLocaleDateString();
 
   return (
     <div>
       <div class="container">
         <div class="row" style={{ marginTop: "10px" }}>
-          <a>
+          <p>
             {" "}
-            {props.comment.description} &emsp; - &emsp;
+            {comment} &emsp; - &emsp;
             <span style={{ color: "#146aa7" }}>
               {" "}
-              <a href="#" id="link">
-                {props.comment.commentByUserName}
-              </a>
+              <a href="#" id="link">{name}</a>
             </span>{" "}
             &emsp;
             <span style={{ color: "#8f9294" }}>{date}</span>
-          </a>
+          </p>
         </div>
       </div>
       <hr class="solid" />

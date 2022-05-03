@@ -1,12 +1,19 @@
-import React, {Component} from 'react';
+import React, {Component, useEffect} from 'react';
 import {Nav,NavBarLogoImage,NavbarSearch,NavbarLink,NavMenu,NavButton,NavButtonLink,SearchInput,SearchHelp,Top,Bottom,ColumnOne,ColumnTwo} from './NavbarElements';
 
 class Navbar extends Component {
     constructor(props){
         super(props);
-        this.state = {check:false}  
+        this.state = {check:false}
+        // window.addEventListener('click',(e)=>this.hideComponent(e));  
     }
 
+    hideComponent(e){
+        if(this.state.check===true){
+            this.setState({check:false})
+        }
+
+    }
     render(){
     return (
         <Nav>
@@ -28,7 +35,7 @@ class Navbar extends Component {
                         <p>collective:"Name" collective content</p>
                         </ColumnOne>    
                         <ColumnTwo>
-                        <p>answers:0 unanswered questions</p>
+                        <p>answers: 0 unanswered questions</p>
                         <p>score: 3 posts with a 3+ score</p>
                         <p>is: question type of post</p>
                         <p>isaccepted:yes search within status</p>

@@ -15,7 +15,7 @@ function AllQuestions() {
  //var alenght=0;
   useEffect(() => {
 
-    axios.get('http://localhost:3001/question/',{data:"hi"})
+    axios.get('/question/',{data:"hi"})
     .then(res => {
 
         console.log(res)
@@ -48,7 +48,7 @@ function AllQuestions() {
   }, []);
 
   const handleInteresting =(e)=>{
-    axios.get('http://localhost:3001/question/Interesting',{data:"hi"})
+    axios.get('/question/Interesting',{data:"hi"})
     .then(res => {
         if(res){
           console.log("Interesting")
@@ -72,7 +72,7 @@ function AllQuestions() {
   }
 
   const handleHot =(e)=>{
-    axios.get('http://localhost:3001/question/Hot',{data:"hi"})
+    axios.get('/question/Hot',{data:"hi"})
     .then(res => {
         if(res){
           console.log("hot")
@@ -99,7 +99,7 @@ function AllQuestions() {
     console.log("score")
     console.log(e)
     console.log("score")
-    axios.get('http://localhost:3001/question/Score',{data:"hi"})
+    axios.get('/question/Score',{data:"hi"})
     .then(res => {
         if(res){
             console.log(res.data)
@@ -121,7 +121,7 @@ function AllQuestions() {
   }
 
   const handleUnanswered =(e)=>{
-    axios.get('http://localhost:3001/question/Unanswered',{data:"hi"})
+    axios.get('/question/Unanswered',{data:"hi"})
     .then(res => {
         if(res){
             console.log(res.data)

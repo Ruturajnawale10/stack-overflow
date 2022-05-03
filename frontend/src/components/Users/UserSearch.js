@@ -19,7 +19,7 @@ class UserSearch extends Component {
   };
 
   componentDidMount() {
-    axios.post("http://localhost:3001/user/getProfiles").then((response) => {
+    axios.post("/user/getProfiles").then((response) => {
       if (response) {
         console.log(response);
         this.setState({

@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/Ruturajnawale10/stack-overflow#readme",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.3",
     "express-session": "^1.17.2",

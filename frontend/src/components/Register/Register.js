@@ -1,17 +1,16 @@
 import React, { Component } from "react";
 import { Form, Container } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
-
+import axios from "axios";
 class Register extends Component {
   
   constructor(props){
     super();
     this.state = {
-      firstName: "",
-      lastName: "",
+      displayName: "",
       email: "",
       password: "",
-      confirm_password: ""
+      confirmPassword: ""
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -30,10 +29,23 @@ class Register extends Component {
 
     event.preventDefault();
 
-    const {firstName, lastName, email, password, confirm_password} = this.state; 
+    const {displayName, email, password, confirmPassword} = this.state; 
 
-    const user = {firstName: firstName, lastName: lastName, email: email, password: password}
+    const user = {displayName: displayName, email: email, password: password}
     console.log(user)
+    axios.post("/user/register", {
+      email: email,
+      password: password,
+      displayName: displayName
+    }).then(response => {
+      if (response.status === 200) {
+      window.location = '/login';
+    }
+  })
+  .catch(error => {
+    console.log(error.response)
+  });;
+
   };
 
   render() {
@@ -51,7 +63,7 @@ class Register extends Component {
             <Form onSubmit={this.handleSubmit}>
             <Form.Group className="mb-3" controlId="formDisplayName">
               <Form.Label>Display name</Form.Label>
-              <Form.Control type="text" placeholder="Enter First Name" name="firstName" value={this.state.firstName} onChange={this.handleChange}  />
+              <Form.Control type="text" placeholder="Enter Display Name" name="displayName" value={this.state.displayName} onChange={this.handleChange}  />
             </Form.Group>
             <br/>
             <Form.Group className="mb-3" controlId="formBasicEmail">

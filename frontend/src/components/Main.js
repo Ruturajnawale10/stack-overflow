@@ -2,6 +2,7 @@ import React, {Component} from "react";
 import {Routes, Route} from "react-router-dom";
 import Login from "./Login/Login";
 import Navbar from "./Navbar/Navbar";
+//import Footer from "../Footer/Footer";
 import QuestionsOverview from "../components/QuestionsOverview/QuestionsOverview.js";
 import AllQuestions from "../components/AllQuestions/AllQuestions";
 import TagOverview from "../components/Tags/TagOverview.js";
@@ -24,7 +25,9 @@ class Main extends Component {
                     <Route path="/tags" element={<TagOverview/>}/>
                     <Route path="/admin/tags/add" element={<AddTag/>}/>
                 </Routes>
+                
             </div>
+           
         );
     }
 }

@@ -34,7 +34,6 @@ class UserSearch extends Component {
     //one row, three columns
     return (
       <div>
-        <h1>User Search</h1>
         <div>
           <h2>Users</h2>
         </div>

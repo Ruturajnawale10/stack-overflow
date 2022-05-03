@@ -212,7 +212,7 @@ router.get("/viewcount", function (req, res) {
       if (error) {
         res.status(401).send(error);
       } else {
-        let viewCount = views.clientIdentity.length;
+        let viewCount = views?.clientIdentity.length;
         res.status(200).send(JSON.stringify(viewCount));
       }
     }
@@ -275,5 +275,44 @@ router.post("/answer/comment/add", function (req, res) {
     }
   );
 });
+
+
+
+router.post("/post_question", function(req, res){
+  console.log("Inside Questions POST Request");
+  const {
+    userID,
+    title,
+    body,
+    tags,
+  } = req.body;
+
+  const question = new Questions({
+    title: title,
+    description: body,
+    creationDate: new Date(), 
+    modifiedDate: new Date(),
+    viewCount: 0,
+    tags: tags,
+    askedByUserID: userID,
+    upVotes: [], 
+    downVotes: [], 
+    comments: [],
+    answers: [],
+    acceptedAnswerID: null,
+    isWaitingForReview: true,
+    activity: [],
+  })
+
+  question.save(function (error) {
+    if (error) {
+        res.status(400).send();
+    } else {
+        res.status(201).send(question);
+    }
+});
+
+});
+
 
 export default router;

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../App.css";
+import MDEditor from '@uiw/react-md-editor';
 
 function AddCommentAnswer(props) {
-  const [comment, setComment] = useState(null);
+  const [comment, setComment] = useState('');
 
   const submitData = (e) => {
     axios.post("/question/answer/comment/add", {
@@ -17,13 +18,9 @@ function AddCommentAnswer(props) {
 
   return (
     <div class="container p-3" style={{ border: "3px solid #666666" }}>
-      <textarea
-        type="text"
-        id="comment"
-        class="form-control"
-        onChange={(e) => {
-          setComment(e.target.value);
-        }}
+       <MDEditor
+        value={comment}
+        onChange={setComment}
       />
       <div>
         <button

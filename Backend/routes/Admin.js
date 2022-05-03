@@ -1,6 +1,5 @@
 "use strict";
 import express from "express";
-import mysql from "mysql";
 import connPool from "../Utils/mysql.js";
 const router = express.Router();
 import Questions from "../models/QuestionModel.js";
@@ -38,6 +37,23 @@ router.get("/questions/approval", function (req, res) {
         res.status(400).send();
       } else {
         res.status(200).send(questions);
+      }
+    }
+  );
+});
+
+router.post("/question/approve", function (req, res) {
+  console.log("Inside Approve a question POST Request");
+  let questionID = req.body.questionID;
+
+  Questions.updateOne(
+    { _id: questionID },
+    { isWaitingForReview: false },
+    function (error) {
+      if (error) {
+        res.status(401).send();
+      } else {
+        res.status(200).send();
       }
     }
   );

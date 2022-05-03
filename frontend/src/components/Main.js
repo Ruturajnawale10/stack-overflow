@@ -12,6 +12,7 @@ import Sidebar from "./Sidebar/Sidebar";
 import LayoutComponent from "./LayoutComponent/LayoutComponent"
 import ApprovalQuestions from "./Admin/ApprovalQuestions/ApprovalQuestions";
 import QuestionsReview from "./Admin/ApprovalQuestions/QuestionsReview";
+import AnalyticsDashboard from "./Admin/Analytics/AnalyticsDashboard";
 
 class Main extends Component {
     render() {
@@ -33,6 +34,7 @@ class Main extends Component {
                     <Route path="/admin/tags/add" element={<AddTag/>}/>
                     <Route path="/admin/questions/approval" element={<ApprovalQuestions/>}/>
                     <Route path="/admin/questions/approval/:questionID" element={<QuestionsReview/>}/>
+                    <Route path="/admin/analytics" element={<AnalyticsDashboard/>}/>
                 </Routes>
                 </LayoutComponent>
             </div>

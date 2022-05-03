@@ -1,8 +1,8 @@
 "use strict";
 import express from "express";
-import connPool from "../Utils/mysql.js";
+import connPool from "../../Utils/mysql.js";
 const router = express.Router();
-import Questions from "../models/QuestionModel.js";
+import Questions from "../../models/QuestionModel.js";
 
 router.post("/tags/add", function (req, res) {
   console.log("Inside Add New Tag POST Request");

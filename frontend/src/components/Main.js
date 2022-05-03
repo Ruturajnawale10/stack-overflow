@@ -15,6 +15,7 @@ import QuestionsReview from "./Admin/ApprovalQuestions/QuestionsReview";
 import AnalyticsDashboard from "./Admin/Analytics/AnalyticsDashboard";
 import ProfileOverview from "./Profile/ProfileOverview";
 import UserSearch from "./Users/UserSearch";
+import Register from "./Register/Register";
 class Main extends Component {
   render() {
     return (
@@ -43,6 +44,7 @@ class Main extends Component {
             <Route path="/user" element={<UserSearch />} />
             <Route path="/profile" element={<ProfileOverview />} />
             <Route path="/admin/tags/add" element={<AddTag />} />
+            <Route exact path="/register" element={<Register/>}/>
             <Route
               path="/admin/questions/review"
               element={<ApprovalQuestions />}

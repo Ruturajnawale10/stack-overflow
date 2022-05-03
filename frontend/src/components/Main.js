@@ -32,8 +32,8 @@ class Main extends Component {
                     <Route path="/questions/ask" element={<QuestionPosting/>}/>
                     <Route path="/tags" element={<TagOverview/>}/>
                     <Route path="/admin/tags/add" element={<AddTag/>}/>
-                    <Route path="/admin/questions/approval" element={<ApprovalQuestions/>}/>
-                    <Route path="/admin/questions/approval/:questionID" element={<QuestionsReview/>}/>
+                    <Route path="/admin/questions/review" element={<ApprovalQuestions/>}/>
+                    <Route path="/admin/questions/review/:questionID" element={<QuestionsReview/>}/>
                     <Route path="/admin/analytics" element={<AnalyticsDashboard/>}/>
                 </Routes>
                 </LayoutComponent>

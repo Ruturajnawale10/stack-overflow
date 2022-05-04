@@ -5,34 +5,72 @@ import axios from "axios";
 import "../../App.css";
 
 function TagOverview() {
-  let tempTags = [
-    {
-      tagName: "javascript",
-      description: "For questions regarding programming in ECMAScript",
-      noOfQuestions: 100,
-    },
-    {
-      tagName: "python",
-      description: "For questions regarding programming in ECMAScript",
-      noOfQuestions: 100,
-    },
-    {
-      tagName: "node",
-      description: "For questions regarding programming in ECMAScript",
-      noOfQuestions: 100,
-    },
-  ];
-  const [tags, setTags] = useState(tempTags);
+  
+  const [tags, setTags] = useState();
   const [profile, setProfile] = useState(null);
   const [searchValue, setSearchValue] = useState("");
 
   useEffect(() => {
-    axios.get("/tags/getTags").then((response, err)=>{
-        console.log("data from getTags is : " + JSON.stringify(response.data))
-        setTags(response.data)
+    axios.get("/tags/getTags").then((response, err) => {
+      console.log("data from getTags is : " + JSON.stringify(response.data));
+      setTags(response.data);
     });
     //   window.location.reload(false);
   }, []);
+
+  const handlePopularSort =(e)=>{
+
+    axios.get('http://localhost:3001/tags/popular')
+    .then(res => {
+        if(res){
+            console.log("tags popular data is : " + JSON.stringify(res.data));
+            setTags(res.data)
+        }else{
+
+        }
+    });
+  }
+
+  const handleNameSort =(e)=>{
+      
+    axios.get('http://localhost:3001/tags/name',{type:"hi"})
+    .then(res => {
+        if(res){
+            console.log(res.data)
+            console.log("tags name data is : " + JSON.stringify(res.data));
+            setTags(res.data)
+        }else{
+
+        }
+    });
+  }
+
+  const handleNewSort =(e)=>{
+      
+    axios.get('http://localhost:3001/tags/new',{type:"hi"})
+    .then(res => {
+        if(res){
+            console.log(res.data)
+            console.log("tags new data is : " + JSON.stringify(res.data));
+            setTags(res.data)
+        }else{
+
+        }
+    });
+  }
+
+  const handleSearch =(e)=>{
+      
+    axios.get('http://localhost:3001/tags/tagSort',{type:"hi"})
+    .then(res => {
+        if(res){
+            console.log(res.data)
+            
+        }else{
+
+        }
+    });
+  }
 
   return (
     <Container>
@@ -47,10 +85,23 @@ function TagOverview() {
           </div>
         </div>
         <hr />
-        <div className="d-flex fw-wrap">
-        <div className="search-container">
-
+        <div
+          class="btn-group float-end"
+          role="group"
+          aria-label="Basic outlined example"
+        >
+          <button type="button" onClick={handlePopularSort} class="btn btn-outline-secondary">
+            Popular
+          </button>
+          <button type="button" onClick={handleNameSort} class="btn btn-outline-secondary">
+            Name
+          </button>
+          <button type="button" onClick={handleNewSort} class="btn btn-outline-secondary">
+            New
+          </button>
         </div>
+        <div className="d-flex fw-wrap">
+          <div className="search-container"></div>
           <form className="d-flex" ps-relative mb12>
             <input
               className="form-control me-4"
@@ -59,25 +110,10 @@ function TagOverview() {
               aria-label="Search"
               value={searchValue}
             ></input>
-            <button className="btn btn-outline-success" type="submit">
+            <button className="btn btn-outline-success" onClick={handleSearch} type="submit">
               Search
             </button>
           </form>
-          <div
-            className="flex--item ml-auto mb12 d-flex s-btn-group js-filter-btn"
-            role="group"
-            aria-label="Basic example"
-          >
-            <button type="button" className="btn btn-secondary">
-              Popular
-            </button>
-            <button type="button" className="btn btn-secondary">
-              Name
-            </button>
-            <button type="button" className="btn btn-secondary">
-              New
-            </button>
-          </div>
         </div>
 
         {tags && (
@@ -88,9 +124,6 @@ function TagOverview() {
                   {" "}
                   <TagCard
                     key={tag.id}
-                    id={tag.id}
-                    name={tag.name}
-                    price={tag.price}
                     tag={tag}
                   />
                 </Col>
@@ -99,7 +132,6 @@ function TagOverview() {
           </Row>
         )}
       </div>
-      
     </Container>
   );
 }

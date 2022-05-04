@@ -20,6 +20,7 @@ function Dashboard() {
       let days = Array(8).fill({});
 
       const today = new Date();
+      console.log(today);
       days[0] = {
         ...days[i],
         questionsPosted: res.data[0],
@@ -27,13 +28,13 @@ function Dashboard() {
       };
       for (var i = 1; i < 8; i++) {
         const yesterday = new Date(today);
+        yesterday.setDate(yesterday.getDate() - 1);
+        today.setDate(today.getDate() - 1);
         days[i] = {
           ...days[i],
           questionsPosted: res.data[i],
           day: yesterday.toDateString(),
         };
-        yesterday.setDate(yesterday.getDate() - 1);
-        today.setDate(today.getDate() - 1);
       }
 
       setquestions(

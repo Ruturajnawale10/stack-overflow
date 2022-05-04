@@ -5,6 +5,7 @@ import Questions from "../models/QuestionModel.js";
 import Users from "../models/UserModel.js";
 import Views from "../models/ViewsModel.js";
 import Comments from "../models/CommentModel.js";
+import Answer from "../models/AnswerModel.js"
 import kafka from "../kafka/client.js";
 
 router.get("/", function (req, res) {
@@ -274,6 +275,51 @@ router.post("/answer/comment/add", function (req, res) {
       }
     }
   );
+});
+
+router.post("/answer/add", function (req, res) {
+  console.log("Inside Add answer to question POST Request");
+  const {
+    description,
+    questionID,
+    userID,
+  } = req.body;
+
+  const answer = new Answer({
+      questionID: questionID,
+      description: description,
+      upVotes: [],
+      downVotes: [],
+      answerDate: new Date(),
+      comments: [],
+  })
+
+  console.log(answer);
+  answer.save(function (error) {
+    if (error) {
+        console.log('save issue')
+        res.status(400).send();
+    } else {
+
+      try{
+        Questions.updateOne(
+          { _id: questionID },
+          { $push: { "answers": answer} },
+          function (error) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              res.status(201).send(answer);
+            }
+          }
+        );
+        }catch(e){
+          console.log('error', error);
+          res.status(400).send();
+        }
+    }
+  });
+
 });
 
 

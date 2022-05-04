@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import MDEditor from '@uiw/react-md-editor';
-import {Button} from 'react-bootstrap';
-import {useParams} from "react-router-dom";
+import MDEditor from "@uiw/react-md-editor";
+import { Button } from "react-bootstrap";
+import { useParams } from "react-router-dom";
 import axios from "axios";
 import AnswerCard from "./AnswerCard";
 import Tag from "./Tag";
@@ -13,9 +13,10 @@ import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { BsBookmarkStarFill } from "react-icons/bs";
 import { MdOutlineHistory } from "react-icons/md";
+import { getDateDiff } from "../../Utils/DateDiff.js";
 
 function QuestionsOverview() {
-  const [answer, setAnswer] = useState('');
+  const [answer, setAnswer] = useState("");
   const [answers, setAnswers] = useState(null);
   const [answerCount, setAnswerCount] = useState(null);
   const [comment, setComment] = useState(null);
@@ -38,33 +39,12 @@ function QuestionsOverview() {
   let bookMark = "#ebac46";
   const [bookMarkStatus, setBookMarkStatus] = useState(noBookMark);
 
-  //let questionID = "62679caa6a5ff0b364718083";
-  let {questionID} = useParams();
-  if(!questionID){
+  let { questionID } = useParams();
+  if (!questionID) {
     questionID = "62679caa6a5ff0b364718083";
   }
 
   const [voteCount, setVoteCount] = useState(0);
-
-  var DateDiff = {
-    inDays: function (d1, d2) {
-      var t2 = d2.getTime();
-      var t1 = d1.getTime();
-
-      return Math.floor((t2 - t1) / (24 * 3600 * 1000));
-    },
-
-    inMonths: function (d1, d2) {
-      var d1M = d1.getMonth();
-      var d2M = d2.getMonth();
-
-      return d2M - d1M;
-    },
-
-    inYears: function (d1, d2) {
-      return d2.getFullYear() - d1.getFullYear();
-    },
-  };
 
   useEffect(() => {
     //axios.defaults.headers.common["authorization"] =
@@ -78,35 +58,15 @@ function QuestionsOverview() {
       .then((response) => {
         setDescription(response.data.description);
         setTitle(response.data.title);
-        // setViewCount(response.data.viewCount);
         setAnswerCount(response.data.answers.length);
         setVoteCount(
           response.data.upVotes.length - response.data.downVotes.length
         );
-        let askedDate1 = new Date(response.data.creationDate);
 
-        let currDate = new Date(Date.now());
-        let yearsDiff = DateDiff.inYears(askedDate1, currDate);
-        let monthsDiff = DateDiff.inMonths(askedDate1, currDate);
-        let daysDiff = DateDiff.inDays(askedDate1, currDate);
-        let diffDate = "";
-        if (yearsDiff === 0) {
-          if (monthsDiff === 0) {
-            diffDate += daysDiff + " days";
-          } else {
-            diffDate += monthsDiff + " months";
-          }
-        } else {
-          if (monthsDiff === 0) {
-            diffDate += yearsDiff + " years ago";
-          } else if (monthsDiff > 0) {
-            diffDate += yearsDiff + " years, " + monthsDiff + " months";
-          } else {
-            diffDate +=
-              yearsDiff - 1 + " years, " + (monthsDiff + 12) + " months";
-          }
-        }
+        let startDate = new Date(response.data.creationDate);
+        let diffDate = getDateDiff(startDate);
         setAskedDate(diffDate);
+
         setAnswers(
           <div class="row">
             {response.data.answers.map((answer) => (
@@ -265,25 +225,25 @@ function QuestionsOverview() {
   };
 
   const submitAnswerHandler = (e) => {
-    //TODO: Post to backend
+    //Todo: Check if user already has answer for this post
     const newAnswer = {
-      description: answer,    
+      description: answer,
       questionID: questionID,
       userID: userID,
+    };
+    //POST to /answer/_answer
+    console.log("submitAnswerHandler:", newAnswer);
+    if (answer.length != 0) {
+      axios.post("/question/answer/add", newAnswer).then((response) => {
+        if (response.status === 201) {
+          //on successful creation of answer refresh
+          //
+          window.location.reload(true);
+        }
+      });
     }
-    console.log('submitAnswerHandler:', newAnswer);
-    if(answer.length != 0){
-      axios.post("/answer/post_answer", 
-          newAnswer
-      ).then((response) => {
-          if(response.status === 201){
-              //on successful creation of answer refresh
-              window.location.reload(true);
-          }
-      })
-    }
+  
   };
-
 
   return (
     <div>
@@ -357,8 +317,8 @@ function QuestionsOverview() {
             style={{ marginTop: "10px", marginLeft: "20px" }}
           >
             <div>
-              <MDEditor.Markdown 
-                source={description} 
+              <MDEditor.Markdown
+                source={description}
                 //rehypePlugins={[[rehypeSanitize]]}
               />
             </div>
@@ -381,7 +341,11 @@ function QuestionsOverview() {
                 class="btn btn-link d-flex justify-content-left"
                 style={{ color: "grey" }}
                 onClick={() => {
-                  setCommentSection(<AddCommentQuestion question={{userID: userID, questionID: questionID}}/>);
+                  setCommentSection(
+                    <AddCommentQuestion
+                      question={{ userID: userID, questionID: questionID }}
+                    />
+                  );
                 }}
               >
                 Add a comment
@@ -396,25 +360,20 @@ function QuestionsOverview() {
           <h4>{answerCount} answers</h4>
           {answers}
         </div>
-        <br/>
+        <br />
         <div class="row" style={{ marginTop: "10px" }}>
           <h3>Your Answer</h3>
-          <MDEditor
-            value={answer}
-            onChange={setAnswer}
-          />
+          <MDEditor value={answer} onChange={setAnswer} />
 
           <Button
             type="button"
             id="answer-button"
             class="btn d-flex justify-content-left"
-           
             onClick={submitAnswerHandler}
           >
             Post your Answer
           </Button>
         </div>
-
       </div>
     </div>
   );

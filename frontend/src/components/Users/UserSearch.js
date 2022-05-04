@@ -19,7 +19,7 @@ class UserSearch extends Component {
   };
 
   componentDidMount() {
-    axios.post("http://localhost:3001/user/getProfiles").then((response) => {
+    axios.post("/user/getProfiles").then((response) => {
       if (response) {
         console.log(response);
         this.setState({
@@ -34,7 +34,6 @@ class UserSearch extends Component {
     //one row, three columns
     return (
       <div>
-        <h1>User Search</h1>
         <div>
           <h2>Users</h2>
         </div>

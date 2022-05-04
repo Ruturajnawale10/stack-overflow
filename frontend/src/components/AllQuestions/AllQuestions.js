@@ -15,7 +15,7 @@ function AllQuestions() {
  //var alenght=0;
   useEffect(() => {
 
-    axios.get('http://localhost:3001/question/',{data:"hi"})
+    axios.get('/question/',{data:"hi"})
     .then(res => {
 
         console.log(res)
@@ -48,7 +48,7 @@ function AllQuestions() {
   }, []);
 
   const handleInteresting =(e)=>{
-    axios.get('http://localhost:3001/question/Interesting',{data:"hi"})
+    axios.get('/question/Interesting',{data:"hi"})
     .then(res => {
         if(res){
           console.log("Interesting")
@@ -72,7 +72,7 @@ function AllQuestions() {
   }
 
   const handleHot =(e)=>{
-    axios.get('http://localhost:3001/question/Hot',{data:"hi"})
+    axios.get('/question/Hot',{data:"hi"})
     .then(res => {
         if(res){
           console.log("hot")
@@ -99,7 +99,7 @@ function AllQuestions() {
     console.log("score")
     console.log(e)
     console.log("score")
-    axios.get('http://localhost:3001/question/Score',{data:"hi"})
+    axios.get('/question/Score',{data:"hi"})
     .then(res => {
         if(res){
             console.log(res.data)
@@ -121,7 +121,7 @@ function AllQuestions() {
   }
 
   const handleUnanswered =(e)=>{
-    axios.get('http://localhost:3001/question/Unanswered',{data:"hi"})
+    axios.get('/question/Unanswered',{data:"hi"})
     .then(res => {
         if(res){
             console.log(res.data)
@@ -152,8 +152,10 @@ function AllQuestions() {
         <h2> All Questions</h2>
         <div class="col">
     <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-                     <button type="button" class="btn btn-primary m-2" > <a href="./questions/ask">Ask Question</a> </button>
-                     </div>
+          <form>
+            <button class="btn btn-primary m-2" formAction="./questions/ask"> Ask Question </button>
+          </form>
+    </div>
     </div>
     
 

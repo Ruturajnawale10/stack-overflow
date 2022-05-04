@@ -24,7 +24,7 @@ router.post("/tags/add", function (req, res) {
   });
 });
 
-router.get("/questions/approval", function (req, res) {
+router.get("/questions/review", function (req, res) {
   console.log("Inside Questions List Approval GET Request");
   let userID = "random1234";
   //todo: if userID is an admin, then only fetch the questions list

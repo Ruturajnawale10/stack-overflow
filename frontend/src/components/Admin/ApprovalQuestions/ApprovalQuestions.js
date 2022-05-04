@@ -8,7 +8,7 @@ function ApprovalQuestions() {
   useEffect(() => {
     //axios.defaults.headers.common["authorization"] =
     //localStorage.getItem("token");
-    axios.get("/admin/questions/approval").then((response) => {
+    axios.get("/admin/questions/review").then((response) => {
       setQuestions(
         <div class="row">
           {response.data.map((question) => (
@@ -24,6 +24,7 @@ function ApprovalQuestions() {
   return (
     <div style={{ marginTop: "40px" }}>
       <div class="container">
+      <h2>Questions Pending For Approval</h2>
         <hr class="solid" />
         {questions}
       </div>

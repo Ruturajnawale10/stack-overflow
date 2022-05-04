@@ -58,7 +58,7 @@ function QuestionsReview() {
       })
       .then(() => {
         setRedirectVar(
-          navigate("/admin/questions/approval", { replace: true })
+          navigate("/admin/questions/review", { replace: true })
         );
       });
   };

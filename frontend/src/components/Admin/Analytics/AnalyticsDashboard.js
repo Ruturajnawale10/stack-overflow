@@ -13,7 +13,7 @@ function Dashboard() {
 
   const handleMostViewed = (e) => {
     axios
-      .get("http://localhost:3001/admin/analytics/questions/mostviewed")
+      .get("/admin/analytics/questions/mostviewed")
       .then((res) => {
         if (res) {
           responseData = res.data;
@@ -45,7 +45,7 @@ function Dashboard() {
 
   const handleMostViewedTags = (e) => {
     axios
-      .get("http://localhost:3001/admin/analytics/tags/mostused")
+      .get("/admin/analytics/tags/mostused")
       .then((res) => {
         if (res) {
           responseData = res.data;

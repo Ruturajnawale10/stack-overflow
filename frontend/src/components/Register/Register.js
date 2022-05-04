@@ -57,7 +57,7 @@ class Register extends Component {
         <div class="container" style={{width:"40%"}}>
             <br />
         <div>
-            <h1>Join the Stack Overflow community</h1>
+            <h1 style={{textAlign: "center"}}>Join the Stack Overflow community</h1>
         </div>
         <br/>
             <Form onSubmit={this.handleSubmit}>
@@ -90,7 +90,7 @@ class Register extends Component {
         </div>
         <br />
         <br />
-        <div class="container" >
+        <div class="container" style={{textAlign:"center"}}>
         Already have an account? <a href="/">Log In </a>
         <br />
         <br />

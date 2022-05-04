@@ -141,7 +141,14 @@ function AllQuestions() {
         }
     });
   }
+  const columns = [
+    {
+        name: '',
+        selector: row => answers,
+        width: '100%'
+    },
 
+  ];
   return (
     
     <div>
@@ -177,7 +184,15 @@ function AllQuestions() {
 
         <div class="row" style={{ marginTop: "10px" }}>
           <h4>{alenght}</h4>
-          {answers}
+          <DataTable
+          columns={columns}
+          data={['a']}
+          pagination
+          paginationServer
+
+        />
+
+          {/*<!--answers-->*/}
 
         </div>
 

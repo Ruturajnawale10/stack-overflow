@@ -16,6 +16,8 @@ import AnalyticsDashboard from "./Admin/Analytics/AnalyticsDashboard";
 import ProfileOverview from "./Profile/ProfileOverview";
 import UserSearch from "./Users/UserSearch";
 import Register from "./Register/Register";
+import Logout from "./Logout";
+
 class Main extends Component {
   render() {
     return (
@@ -32,6 +34,7 @@ class Main extends Component {
           <Routes>
             {/* <Route exact path="/" element={<Navbar/>}/> */}
 
+            <Route path="/" element={<AllQuestions />} />
             <Route exact path="/login" element={<Login />} />
             <Route
               path="/questions/:questionID"
@@ -45,6 +48,7 @@ class Main extends Component {
             <Route path="/profile" element={<ProfileOverview />} />
             <Route path="/admin/tags/add" element={<AddTag />} />
             <Route exact path="/register" element={<Register/>}/>
+            <Route exact path="/logout" element={<Logout/>}/>
             <Route
               path="/admin/questions/review"
               element={<ApprovalQuestions />}

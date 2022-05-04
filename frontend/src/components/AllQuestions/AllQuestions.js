@@ -141,7 +141,14 @@ function AllQuestions() {
         }
     });
   }
+  const columns = [
+    {
+        name: '',
+        selector: row => answers,
+        width: '100%'
+    },
 
+  ];
   return (
     
     <div>
@@ -152,7 +159,7 @@ function AllQuestions() {
         <h2> All Questions</h2>
         <div class="col">
     <div class="btn-group float-end" role="group" aria-label="Basic outlined example">
-                     <button type="button" class="btn btn-primary m-2" > <a href="./questions/ask">Ask Question</a> </button>
+                     <button type="button" class="btn btn-primary m-2" > <a  href="./questions/ask">Ask Question</a> </button>
                      </div>
     </div>
     
@@ -175,7 +182,15 @@ function AllQuestions() {
 
         <div class="row" style={{ marginTop: "10px" }}>
           <h4>{alenght}</h4>
-          {answers}
+          <DataTable
+          columns={columns}
+          data={['a']}
+          pagination
+          paginationServer
+
+        />
+
+          {/*<!--answers-->*/}
 
         </div>
 

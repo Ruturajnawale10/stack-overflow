@@ -7,8 +7,7 @@ import "../../App.css";
 function TagOverview() {
   
   const [tags, setTags] = useState();
-  const [profile, setProfile] = useState(null);
-  const [searchValue, setSearchValue] = useState("");
+  const [searchValue, setSearchValue] = useState('');
 
   useEffect(() => {
     axios.get("/tags/getTags").then((response, err) => {
@@ -59,24 +58,19 @@ function TagOverview() {
     });
   }
 
-  const handleSearch =(e)=>{
-      
-    axios.get('http://localhost:3001/tags/tagSort',{type:"hi"})
-    .then(res => {
-        if(res){
-            console.log(res.data)
-            
-        }else{
+  const onChangeSearch = (e)=>{
+      setSearchValue(e.target.value);
+  }
 
-        }
-    });
+  const handleSearch =(searchTerm)=>{
+      console.log('serach', searchTerm);
   }
 
   return (
     <Container>
       <div>
         <div className="container bootstrap snippets bootdey">
-          <h1 className="text-primary">Tags Page</h1>
+          <h2 className="text-primary">Tags Page</h2>
           <hr />
           <div>
             A tag is a keyword or label that categorizes your question with
@@ -100,20 +94,27 @@ function TagOverview() {
             New
           </button>
         </div>
-        <div className="d-flex fw-wrap">
-          <div className="search-container"></div>
-          <form className="d-flex" ps-relative mb12>
+        <div className="d-flex fw-wrap search-container">
+          <div className="d-flex search-inner" ps-relative mb12>
             <input
               className="form-control me-4"
               type="search"
               placeholder="Filter by TagName"
               aria-label="Search"
               value={searchValue}
+              onChange={onChangeSearch}
             ></input>
-            <button className="btn btn-outline-success" onClick={handleSearch} type="submit">
+            {tags && <div className="dropdown">
+              {tags.map((tag)=>{
+                  <div className="dropdown-row">{tag.tagName}</div>
+              })}
+          </div>}
+            <button className="btn btn-outline-success" onClick={handleSearch(searchValue)} type="submit">
               Search
             </button>
-          </form>
+          </div>
+          
+          
         </div>
 
         {tags && (

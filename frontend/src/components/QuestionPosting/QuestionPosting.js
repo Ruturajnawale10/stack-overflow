@@ -48,7 +48,7 @@ const QuestionPosting = () => {
     return(
         <div style={{backgroundColor: "whitesmoke"}}>
 
-            <Container >
+            <Container  className="text-left" >
                 <Row>
                     <h2>Ask a public question</h2>
                 </Row>

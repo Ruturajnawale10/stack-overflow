@@ -225,21 +225,24 @@ function QuestionsOverview() {
   };
 
   const submitAnswerHandler = (e) => {
-    //TODO: Post to backend
+    //Todo: Check if user already has answer for this post
     const newAnswer = {
       description: answer,
       questionID: questionID,
       userID: userID,
     };
+    //POST to /answer/_answer
     console.log("submitAnswerHandler:", newAnswer);
     if (answer.length != 0) {
-      axios.post("/answer/post_answer", newAnswer).then((response) => {
+      axios.post("/question/answer/add", newAnswer).then((response) => {
         if (response.status === 201) {
           //on successful creation of answer refresh
+          //
           window.location.reload(true);
         }
       });
     }
+  
   };
 
   return (

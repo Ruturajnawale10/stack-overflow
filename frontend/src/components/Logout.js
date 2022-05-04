@@ -15,6 +15,7 @@ function Logout() {
     .then((response) => {
         console.log("Ohhho  ", response)
       setRedirectVar(navigate("/", { replace: true }, {}));
+      window.location.reload(false);
     });
 
   return <div>{redirectVar}1111</div>;

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import {Alert, Button, Container, Row, Col, Form, Card} from "react-bootstrap";
 import {useNavigate } from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
+import {FiAlertCircle} from "react-icons/fi"
 
 import InputTags from "./InputTags";
 import axios from "axios";
@@ -12,7 +13,9 @@ const QuestionPosting = () => {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [tags, setTags] = useState([]);
-    const [warning, setWarning] = useState(false);
+    const [titleWarning, setTitleWarning] = useState(false);
+    const [bodyWarning, setBodyWarning] = useState(false);
+    const [tagsWarning, setTagsWarning] = useState(false);
     
     const [userID, setUserID] = useState(null);
 
@@ -29,10 +32,27 @@ const QuestionPosting = () => {
             tags: tags
         };
         
-        if(title === '' || body === ''){
-            setWarning(true);
+        if(title.length < 15 || body.length < 30 || tags.length === 0){
+            if(title.length < 15){
+                setTitleWarning(true);
+            }else{
+                setTitleWarning(false);
+            }
+            if(body.length < 30){
+                setBodyWarning(true);
+            }else{
+                setBodyWarning(false);
+            }
+            if(tags.length === 0){
+                setTagsWarning(true);
+            }else{
+                setTagsWarning(false);
+            }
         }else{
-            setWarning(false);
+            setTitleWarning(false); 
+            setBodyWarning(false);
+            setTagsWarning(false);
+
             axios.post("/question/post_question", 
                 question
             ).then((response) => {
@@ -52,11 +72,6 @@ const QuestionPosting = () => {
                 <Row>
                     <h2>Ask a public question</h2>
                 </Row>
-                {warning &&
-                <Alert variant="warning">
-                    Please fill both Title and Body!
-                </Alert>
-                }
                 <Form onSubmit={submitHandler}>  
                     <Container style={{backgroundColor: "white"}} className="mt-5 mb-5 pt-3 pb-4">
                     
@@ -73,6 +88,7 @@ const QuestionPosting = () => {
                                 placeholder="e.g. Is there an R function for finding the index of an element in a vector?" 
                                 onChange={(e)=>{setTitle(e.target.value)}}
                             />
+                            {titleWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Title must be at least 15 characters.</div>}
                         </Form.Group>     
 
                         
@@ -84,11 +100,13 @@ const QuestionPosting = () => {
                                 <p>Include all the information someone would need to answer your question</p>
                             </Form.Text>
                             <div className="mb-3" >
-                            <MDEditor
-                                value={body}
-                                onChange={setBody}
-                                preview="edit"
-                            />
+                                <MDEditor
+                                    value={body}
+                                    onChange={setBody}
+                                    preview="edit"
+                                
+                                />
+                                {bodyWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Body must be at least 30 characters; you entered {body.length}.</div>}
                             </div>
                         </Form.Group>
 
@@ -102,11 +120,15 @@ const QuestionPosting = () => {
                                 <p>Add up to 5 tags to describe what your question is about</p>
                             </Form.Text>
                             <InputTags tags={tags} setTags={setTags}/>
+                            {tagsWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Please enter at least one tag. Tags are seperated by a space.</div>}
                         </Form.Group>
+                        
                     </Container>
                     <div className="pb-5">   
                         <Button type="submit" className="">Post your question</Button>
+                        { (titleWarning || bodyWarning || tagsWarning) && <div className="py-2" style={{color: 'red'}}><FiAlertCircle/>&emsp;Your question couldn't be submitted. Please see the errors above.</div>}
                     </div>
+                   
                 </Form>
                 
                 

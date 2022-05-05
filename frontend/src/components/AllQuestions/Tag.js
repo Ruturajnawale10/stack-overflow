@@ -4,8 +4,8 @@ import "../../App.css";
 function Tag(props) {
 
   return(
-  <button class="col-sm-auto tagblock">
-    <p>{props.tagName}</p>
+  <button class="my-1 px-2 py-1 col-sm-auto tagblock" style={{color: "dodgerblue", borderColor: "dodgerblue", backgroundColor: "aliceblue"}}>
+    {props.tagName}
   </button>
   )
 }

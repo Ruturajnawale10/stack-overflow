@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {Container, Row, Col} from 'react-bootstrap';
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
 import "../../App.css";
@@ -17,39 +18,49 @@ function AnswerCard(props) {
     console.log(props.item.tags);
     console.log("Cards");
     setTags(
-      <div class="row">
+      <Row>
         {tagnames.map((tagName) => (
           <Tag tagName={tagName} />
         ))}
-      </div>
+      </Row>
     );
     setProfile(<ProfileOverview item={props} />);
   }, []);
 
   return (
     <div>
-      <div class="container">
-        <div class="row" style={{ marginTop: "10px" }}>
-          <div class="col" style={{ marginTop: "10px", marginLeft: "20px" }}>
+      <Container>
+        <Row style={{ marginTop: "10px" }}>
+          <Col xs={2} className="text-end">
             <h6>
-              {props.item.upVotes.length} votes {props.item.answers.length}{" "}
-              answers {props.item.viewCount} views
+              <div >{props.item.upVotes.length} votes </div>
+              <div > {props.item.answers.length}{" "}answers </div>
+              <div >{props.item.viewCount} views</div>
             </h6>
-            <h4>
-              <a href={"/questions/" + props.item._id} id="link">
-                {props.item.title}
-              </a>
-            </h4>
-            <div class="row" style={{ marginTop: "10px", marginLeft: "20px" }}>
-              {tags}
-            </div>
-            <div class="row" style={{ marginTop: "30px", marginLeft: "65%" }}>
-              {profile}
-            </div>
-          </div>
-        </div>
+          </Col>
+          <Col>
+            <Row className="text-wrap">
+              <h4>
+                <a href={"/questions/" + props.item._id} id="link">
+                  {props.item.title}
+                </a>
+              </h4>
+            </Row>
+            <Row>
+              <Col xs={7}>
+                <div >
+                {tags}
+              </div>
+              </Col>
+              <Col>
+                <div > {profile}</div>
+              </Col>
+      
+            </Row>
+          </Col>
+        </Row>
         <hr class="solid" />
-      </div>
+      </Container>
     </div>
   );
 }

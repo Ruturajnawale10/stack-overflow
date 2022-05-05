@@ -7,6 +7,7 @@ import Views from "../models/ViewsModel.js";
 import Comments from "../models/CommentModel.js";
 import Answer from "../models/AnswerModel.js";
 import kafka from "../kafka/client.js";
+import config from "../configs/config.js";
 
 router.get("/", function (req, res) {
   console.log("Inside All Questions GET Request");
@@ -196,9 +197,47 @@ router.post("/addasviewed", function (req, res) {
   console.log("Inside Add as viewed question POST Request");
   let questionID = req.body.questionID;
   let userID = req.body.userID;
-  let data = { questionID: questionID, userID: userID };
+  let clientIPAddress = req.socket.remoteAddress;
 
-  kafka("question_views", data);
+  let clientIdentity = "";
+  //if userID is present, consider the client identity as userID + questionID
+  if (userID) {
+    clientIdentity = userID + questionID;
+  } else {
+    clientIdentity = clientIPAddress + questionID;
+  }
+
+  if (config.useKafka) {
+    let data = { questionID: questionID, clientIdentity: clientIdentity };
+    kafka("question_views", data);
+  } else {
+    Views.findOne(
+      {
+        questionID: questionID,
+      },
+      function (error, views) {
+        if (error) {
+          res.status(401).send(error);
+        } else {
+          if (views.clientIdentity.includes(clientIdentity)) {
+            res.end();
+          } else {
+            console.log(
+              "Adding this client IP address/userID in question's views"
+            );
+            Views.updateOne(
+              { _id: questionID },
+              { $push: { clientIdentity: clientIdentity } },
+              { upsert: true },
+              function (error, views) {
+                res.end();
+              }
+            );
+          }
+        }
+      }
+    );
+  }
 });
 
 router.get("/viewcount", function (req, res) {
@@ -335,11 +374,20 @@ router.post("/post_question", function (req, res) {
     activity: [],
   });
 
-  question.save(function (error) {
+  question.save(function (error, result) {
     if (error) {
       res.status(400).send();
     } else {
-      res.status(201).send(question);
+      const view = new Views({
+        _id: result._id.toString(),
+      });
+      view.save(function (error) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          res.status(201).send(question);
+        }
+      });
     }
   });
 });

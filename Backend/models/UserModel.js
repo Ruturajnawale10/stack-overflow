@@ -16,7 +16,7 @@ var usersSchema = new Schema(
     silverBadges: { type: [String] },
     bronzeBadges: { type: [String] },
     questionsAskedID: { type: [String] },
-    answeredID: { type: [String] },
+    answeredQuestionID: { type: [String] },
   },
   {
     versionKey: false,

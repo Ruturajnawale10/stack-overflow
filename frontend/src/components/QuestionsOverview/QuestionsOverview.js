@@ -29,7 +29,7 @@ function QuestionsOverview() {
   const [askedDate, setAskedDate] = useState(null);
   const [modifiedDate, setModifiedData] = useState(null);
   const [isBookMark, setisBookMark] = useState(false);
-  let userID = "626798764096f05e749e8de8";
+  let userID = localStorage.getItem("userID");
 
   let noVote = "#a9acb0";
   let vote = "darkorange";
@@ -139,14 +139,13 @@ function QuestionsOverview() {
         }
       });
 
-    //to enable this API, have a topic called "question_views" created in kafka
-    // and then uncomment the below addasviewed request
+    //to use kafka for this API, have a topic called "question_views" created in kafka
     // Note: The broker service runs on port 9092
 
-    // axios.post("/question/addasviewed", {
-    //   questionID: questionID,
-    //   userID: userID,
-    // });
+    axios.post("/question/addasviewed", {
+      questionID: questionID,
+      userID: userID,
+    });
   }, []);
 
   const changeVoteUpStatus = (e) => {

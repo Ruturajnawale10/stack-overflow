@@ -27,6 +27,7 @@ function QuestionsOverview() {
   const [description, setDescription] = useState(null);
   const [viewCount, setViewCount] = useState(0);
   const [askedDate, setAskedDate] = useState(null);
+  const [modifiedDate, setModifiedData] = useState(null);
   const [isBookMark, setisBookMark] = useState(false);
   let userID = "626798764096f05e749e8de8";
 
@@ -40,9 +41,6 @@ function QuestionsOverview() {
   const [bookMarkStatus, setBookMarkStatus] = useState(noBookMark);
 
   let { questionID } = useParams();
-  if (!questionID) {
-    questionID = "62679caa6a5ff0b364718083";
-  }
 
   const [voteCount, setVoteCount] = useState(0);
 
@@ -66,6 +64,7 @@ function QuestionsOverview() {
         let startDate = new Date(response.data.creationDate);
         let diffDate = getDateDiff(startDate);
         setAskedDate(diffDate);
+        setModifiedData(getDateDiff(new Date(response.data.modifiedDate)));
 
         setAnswers(
           <div class="row">
@@ -245,9 +244,10 @@ function QuestionsOverview() {
   
   };
 
+
   return (
     <div>
-      <div class="container">
+      <div class="container py-4">
         <div class="row">
           <h2> {title} </h2>
         </div>
@@ -259,7 +259,7 @@ function QuestionsOverview() {
 
           <div class="col-md-2" style={{ display: "flex" }}>
             <p id="date">Modified</p>{" "}
-            <p style={{ marginLeft: "10px" }}>8 days ago</p>
+            <p style={{ marginLeft: "10px" }}>{modifiedDate} ago</p>
           </div>
           <div class="col-md-2" style={{ display: "flex" }}>
             <p id="date">Viewed </p>
@@ -363,7 +363,11 @@ function QuestionsOverview() {
         <br />
         <div class="row" style={{ marginTop: "10px" }}>
           <h3>Your Answer</h3>
-          <MDEditor value={answer} onChange={setAnswer} />
+          <MDEditor 
+            value={answer} 
+            onChange={setAnswer} 
+            preview="edit"
+          />
 
           <Button
             type="button"

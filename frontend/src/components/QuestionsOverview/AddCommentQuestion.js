@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../App.css";
-import MDEditor from '@uiw/react-md-editor';
+import MDEditor, {commands} from '@uiw/react-md-editor';
 
 function AddCommentQuestion(props) {
   const [comment, setComment] = useState('');
@@ -17,9 +17,18 @@ function AddCommentQuestion(props) {
 
   return (
     <div class="container p-3" >
-      <MDEditor
+       <MDEditor
         value={comment}
         onChange={setComment}
+        preview="edit"
+        commands={[
+          commands.bold,
+          commands.italic,
+          commands.strikethrough,
+          commands.divider,
+          commands.link,
+          commands.code,
+      ]}
       />
       <div>
         <button

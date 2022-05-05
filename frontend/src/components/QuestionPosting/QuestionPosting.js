@@ -48,7 +48,7 @@ const QuestionPosting = () => {
     return(
         <div style={{backgroundColor: "whitesmoke"}}>
 
-            <Container  className="text-left" >
+            <Container  className="py-5" >
                 <Row>
                     <h2>Ask a public question</h2>
                 </Row>
@@ -87,6 +87,7 @@ const QuestionPosting = () => {
                             <MDEditor
                                 value={body}
                                 onChange={setBody}
+                                preview="edit"
                             />
                             </div>
                         </Form.Group>

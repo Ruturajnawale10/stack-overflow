@@ -255,7 +255,6 @@ router.post("/answer/comment/add", function (req, res) {
   let answerID = req.body.answerID;
   let userName = "Madara";
   let comment = req.body.comment;
-  //let data = { questionID: questionID, userID: userID };
 
   const commentData = new Comments({
     description: comment,
@@ -263,15 +262,14 @@ router.post("/answer/comment/add", function (req, res) {
     commentByUserID: userID,
     commentDate: Date.now(),
   });
-
   Questions.updateOne(
     { _id: questionID, "answers._id": answerID },
     { $push: { "answers.$.comments": commentData } },
     function (error) {
       if (error) {
-        res.end();
+        res.status(400).send();
       } else {
-        res.end();
+        res.status(201).send(commentData);
       }
     }
   );

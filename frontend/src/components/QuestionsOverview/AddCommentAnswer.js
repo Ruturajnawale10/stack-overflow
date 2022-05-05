@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import "../../App.css";
-import MDEditor from '@uiw/react-md-editor';
+import MDEditor, {commands} from "@uiw/react-md-editor";
 
 function AddCommentAnswer(props) {
   const [comment, setComment] = useState('');
 
   const submitData = (e) => {
-    axios.post("/question/answer/comment/add", {
+    let data = {
       questionID: props.answer.questionID,
       userID: props.answer.userID,
       answerID: props.answer.answerID,
       comment: comment,
-    });
+    };
+
+    axios.post("/question/answer/comment/add", data);
     window.location.reload(false);
   };
 
@@ -21,6 +23,15 @@ function AddCommentAnswer(props) {
        <MDEditor
         value={comment}
         onChange={setComment}
+        preview="edit"
+        commands={[
+          commands.bold,
+          commands.italic,
+          commands.strikethrough,
+          commands.divider,
+          commands.link,
+          commands.code,
+      ]}
       />
       <div>
         <button

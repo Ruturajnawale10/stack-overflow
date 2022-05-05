@@ -40,8 +40,8 @@ class Main extends Component {
               path="/questions/:questionID"
               element={<QuestionsOverview />}
             />
-            <Route path="/questions" element={<QuestionsOverview />} />
             <Route path="/allQuestions" element={<AllQuestions />} />
+            <Route path="/questions" element={<AllQuestions />} />
             <Route path="/questions/ask" element={<QuestionPosting />} />
             <Route path="/tags" element={<TagOverview />} />
             <Route path="/user" element={<UserSearch />} />

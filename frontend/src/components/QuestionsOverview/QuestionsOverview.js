@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MDEditor from "@uiw/react-md-editor";
+import moment from 'moment';
 import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -13,7 +14,6 @@ import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { BsBookmarkStarFill } from "react-icons/bs";
 import { MdOutlineHistory } from "react-icons/md";
-import { getDateDiff } from "../../Utils/DateDiff.js";
 
 function QuestionsOverview() {
   const [answer, setAnswer] = useState("");
@@ -61,10 +61,8 @@ function QuestionsOverview() {
           response.data.upVotes.length - response.data.downVotes.length
         );
 
-        let startDate = new Date(response.data.creationDate);
-        let diffDate = getDateDiff(startDate);
-        setAskedDate(diffDate);
-        setModifiedData(getDateDiff(new Date(response.data.modifiedDate)));
+        setAskedDate(moment(response.data.creationDate).fromNow());
+        setModifiedData(moment(response.data.modifiedDate).fromNow());
 
         setAnswers(
           <div class="row">
@@ -254,12 +252,12 @@ function QuestionsOverview() {
         <div class="row">
           <div class="col-md-3" style={{ display: "flex" }}>
             <p id="date">Asked</p>
-            <p style={{ marginLeft: "10px" }}>{askedDate} ago</p>
+            <p style={{ marginLeft: "10px" }}>{askedDate}</p>
           </div>
 
           <div class="col-md-2" style={{ display: "flex" }}>
             <p id="date">Modified</p>{" "}
-            <p style={{ marginLeft: "10px" }}>{modifiedDate} ago</p>
+            <p style={{ marginLeft: "10px" }}>{modifiedDate}</p>
           </div>
           <div class="col-md-2" style={{ display: "flex" }}>
             <p id="date">Viewed </p>

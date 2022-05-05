@@ -56,7 +56,7 @@ const InputTags = ({tags, setTags}) => {
                     return(
                         <Button 
                             value={tag}
-                            style={{color: "dodgerblue", borderColor: "dodgerblue", backgroundColor: "aliceblue"}} 
+                            style={{color: "dodgerblue", borderColor: "aliceblue", backgroundColor: "aliceblue"}} 
                             onClick={removeTagHandler} 
                         >
                             {tag}  <FiX value={tag} style={{strokeWidth: 3}}/>

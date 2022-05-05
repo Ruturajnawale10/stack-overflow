@@ -5,18 +5,18 @@ import Questions from "../models/QuestionModel.js";
 import Users from "../models/UserModel.js";
 import Views from "../models/ViewsModel.js";
 import Comments from "../models/CommentModel.js";
-import Answer from "../models/AnswerModel.js"
+import Answer from "../models/AnswerModel.js";
 import kafka from "../kafka/client.js";
 
 router.get("/", function (req, res) {
   console.log("Inside All Questions GET Request");
-// db.collectionName.find()
-Questions.find( {}, function (error, question) {
-  if (error) {
+  // db.collectionName.find()
+  Questions.find({}, function (error, question) {
+    if (error) {
       res.status(400).send();
-  } else {
-    let date = new Date().toLocaleDateString();
-   /*
+    } else {
+      let date = new Date().toLocaleDateString();
+      /*
     const newQ = new Questions({
       title:"how two add two int?",
     description: " lsfkjlas laksdfj lkljl",
@@ -28,97 +28,97 @@ Questions.find( {}, function (error, question) {
     downVotes: []
   
     });*/
-  
 
-
-    res.status(200).send(question);
-
-  }
+      res.status(200).send(question);
+    }
+  });
 });
-
-
-});
-
 
 router.get("/Interesting", function (req, res) {
   console.log("Inside All Questions GET Request");
-// db.collectionName.find()
-Questions.find( {},null,{sort:{'creationDate':-1}}, function (error, question) {
-  if (error) {
-      res.status(400).send();
-  } else {
-    console.log("interesting")
-    console.log(question)
-    console.log("interesting")
+  // db.collectionName.find()
+  Questions.find(
+    {},
+    null,
+    { sort: { creationDate: -1 } },
+    function (error, question) {
+      if (error) {
+        res.status(400).send();
+      } else {
+        console.log("interesting");
+        console.log(question);
+        console.log("interesting");
 
-
-    res.status(200).send(question);
-
-  }
-});
-
-
+        res.status(200).send(question);
+      }
+    }
+  );
 });
 
 router.get("/Hot", function (req, res) {
   console.log("Inside All Questions GET Request");
-// db.collectionName.find()
-Questions.find( {},null,{sort:{'viewCount':-1}}, function (error, question) {
-  if (error) {
-      res.status(400).send();
-  } else {
-    console.log("hot")
-    console.log(question)
-    console.log("hot")
+  // db.collectionName.find()
+  Questions.find(
+    {},
+    null,
+    { sort: { viewCount: -1 } },
+    function (error, question) {
+      if (error) {
+        res.status(400).send();
+      } else {
+        console.log("hot");
+        console.log(question);
+        console.log("hot");
 
-
-    res.status(200).send(question);
-
-  }
-});
-
-
+        res.status(200).send(question);
+      }
+    }
+  );
 });
 
 router.get("/Score", function (req, res) {
   console.log("Inside All Questions GET Request");
-// db.collectionName.find()
-Questions.find( {},null,{sort:{'upVotes':-1}}, function (error, question) {
-  if (error) {
-      res.status(400).send();
-  } else {
-    console.log("score")
-    console.log(question)
-    console.log("score")
+  // db.collectionName.find()
+  Questions.find(
+    {},
+    null,
+    { sort: { upVotes: -1 } },
+    function (error, question) {
+      if (error) {
+        res.status(400).send();
+      } else {
+        console.log("score");
+        console.log(question);
+        console.log("score");
 
-
-    res.status(200).send(question);
-
-  }
-});
-
+        res.status(200).send(question);
+      }
+    }
+  );
 });
 
 router.get("/Unanswered", function (req, res) {
   console.log("Inside All Questions GET Request");
-// db.collectionName.find()
-Questions.find( {},null,{sort:{'answers':1}}, function (error, question) {
-  if (error) {
-      console.log("error")
-      console.log(error)
-      console.log("error")
-      res.status(400).send();
-  } else {
-    console.log("Unanswered")
-    console.log(question)
-    console.log("Unanswered")
+  // db.collectionName.find()
+  Questions.find(
+    {},
+    null,
+    { sort: { answers: 1 } },
+    function (error, question) {
+      if (error) {
+        console.log("error");
+        console.log(error);
+        console.log("error");
+        res.status(400).send();
+      } else {
+        console.log("Unanswered");
+        console.log(question);
+        console.log("Unanswered");
 
-
-    res.status(200).send(question);
-
-  }
-});
-
+        res.status(200).send(question);
+      }
+    }
+  );
 });
 
 router.get("/overview", function (req, res) {
@@ -277,32 +277,27 @@ router.post("/answer/comment/add", function (req, res) {
 
 router.post("/answer/add", function (req, res) {
   console.log("Inside Add answer to question POST Request");
-  const {
-    description,
-    questionID,
-    userID,
-  } = req.body;
+  const { description, questionID, userID } = req.body;
 
   const answer = new Answer({
-      questionID: questionID,
-      description: description,
-      upVotes: [],
-      downVotes: [],
-      answerDate: new Date(),
-      comments: [],
-  })
+    questionID: questionID,
+    description: description,
+    upVotes: [],
+    downVotes: [],
+    answerDate: new Date(),
+    comments: [],
+  });
 
   console.log(answer);
   answer.save(function (error) {
     if (error) {
-        console.log('save issue')
-        res.status(400).send();
+      console.log("save issue");
+      res.status(400).send();
     } else {
-
-      try{
+      try {
         Questions.updateOne(
           { _id: questionID },
-          { $push: { "answers": answer} },
+          { $push: { answers: answer } },
           function (error) {
             if (error) {
               res.status(400).send();
@@ -311,52 +306,56 @@ router.post("/answer/add", function (req, res) {
             }
           }
         );
-        }catch(e){
-          console.log('error', error);
-          res.status(400).send();
-        }
+      } catch (e) {
+        console.log("error", error);
+        res.status(400).send();
+      }
     }
   });
-
 });
 
-
-
-router.post("/post_question", function(req, res){
+router.post("/post_question", function (req, res) {
   console.log("Inside Questions POST Request");
-  const {
-    userID,
-    title,
-    body,
-    tags,
-  } = req.body;
+  const { userID, title, body, tags } = req.body;
 
   const question = new Questions({
     title: title,
     description: body,
-    creationDate: new Date(), 
+    creationDate: new Date(),
     modifiedDate: new Date(),
     viewCount: 0,
     tags: tags,
     askedByUserID: userID,
-    upVotes: [], 
-    downVotes: [], 
+    upVotes: [],
+    downVotes: [],
     comments: [],
     answers: [],
     acceptedAnswerID: null,
     isWaitingForReview: true,
     activity: [],
-  })
+  });
 
   question.save(function (error) {
     if (error) {
-        res.status(400).send();
+      res.status(400).send();
     } else {
-        res.status(201).send(question);
+      res.status(201).send(question);
     }
+  });
 });
 
-});
+router.post("/getAll", function (req, res) {
+  console.log("Inside Questions Activity Tab GET Request");
+  console.log(req.body.userID);
+  let userID = req.body.userID;
 
+  Questions.find({ askedByUserID: userID }, function (error, questions) {
+    if (error) {
+      res.status(400).send();
+    } else {
+      res.status(200).send(questions);
+    }
+  });
+});
 
 export default router;

@@ -3,6 +3,7 @@ const Schema = mongoose.Schema;
 
 var ViewsSchema = new Schema(
   {
+    questionID: { type: String},
     clientIdentity: { type: [String], required: true, default: [] },
   },
   {

@@ -226,7 +226,7 @@ router.post("/addasviewed", function (req, res) {
               "Adding this client IP address/userID in question's views"
             );
             Views.updateOne(
-              { _id: questionID },
+              { questionID: questionID },
               { $push: { clientIdentity: clientIdentity } },
               { upsert: true },
               function (error, views) {
@@ -379,10 +379,10 @@ router.post("/post_question", function (req, res) {
       res.status(400).send();
     } else {
       const view = new Views({
-        _id: result._id.toString(),
+        questionID: result._id.toString(),
       });
-      view.save(function (error) {
-        if (error) {
+      view.save(function (error2) {
+        if (error2) {
           res.status(400).send();
         } else {
           res.status(201).send(question);

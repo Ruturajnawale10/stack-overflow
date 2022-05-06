@@ -104,17 +104,18 @@ function TagOverview() {
               value={searchValue}
               onChange={onChangeSearch}
             ></input>
-            {tags && <div className="dropdown">
+            
+            {/* <button className="btn btn-outline-success" onClick={handleSearch(searchValue)} type="submit">
+              Search
+            </button> */}
+          </div>
+          {/* {tags && <div className="dropdown">
               {tags.map((tag)=>{
                   <div className="dropdown-row">{tag.tagName}</div>
               })}
-          </div>}
-            <button className="btn btn-outline-success" onClick={handleSearch(searchValue)} type="submit">
-              Search
-            </button>
-          </div>
+          </div>} */}
           
-          
+
         </div>
 
         {tags && (

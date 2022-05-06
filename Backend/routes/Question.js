@@ -32,7 +32,7 @@ router.get("/", function (req, res) {
 
       res.status(200).send(question);
     }
-  });
+  }).limit(500);
 });
 
 router.get("/Interesting", function (req, res) {

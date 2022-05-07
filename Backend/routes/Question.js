@@ -16,53 +16,27 @@ import config from "../configs/config.js";
 router.get("/interesting", function (req, res) {
   console.log("Inside All Interesting Questions GET Request");
 
-  if (config.useRedis) {
-    client.get("interesting-questions").then(async function (data, err) {
-      if (err) {
-        console.error(err);
-        res.status(500).send("Error when connecting to Redis cache");
-      }
-      if (data != null) {
-        console.log("CACHE HIT for interesting questions data");
-        res.status(200).send(data);
+  Questions.find(
+    {},
+    null,
+    { sort: { creationDate: -1 } },
+    function (error, question) {
+      if (error) {
+        res.status(400).send();
       } else {
-        console.log("CACHE MISS for interesting questions data");
-        Questions.find(
-          {},
-          null,
-          { sort: { creationDate: -1 } },
-          function (error, question) {
-            if (error) {
-              res.status(400).send();
-            } else {
-              client.set("interesting-questions", JSON.stringify(question));
-              res.status(200).send(question);
-            }
-          }
-        );
+        console.log("Fetched 10k questions")
+        res.status(200).send(question);
       }
-    });
-  } else {
-    Questions.find(
-      {},
-      null,
-      { sort: { creationDate: -1 } },
-      function (error, question) {
-        if (error) {
-          res.status(400).send();
-        } else {
-          res.status(200).send(question);
-        }
-      }
-    );
-  }
+    }
+  ).limit(100);
 });
 
-router.get("hot", function (req, res) {
+router.get("/hot", function (req, res) {
   console.log("Inside All Hot Questions GET Request");
 
   if (config.useRedis) {
-    client.get("hot-questions").then(async function (data, err) {
+    let key = "hot-questions";
+    client.get(key).then(async function (data, err) {
       if (err) {
         console.error(err);
         res.status(500).send("Error when connecting to Redis cache");
@@ -80,7 +54,13 @@ router.get("hot", function (req, res) {
             if (error) {
               res.status(400).send();
             } else {
-              client.set("hot-questions", JSON.stringify(question));
+              var todayEnd = new Date().setHours(23, 59, 59, 999);
+              client.set(
+                key,
+                JSON.stringify(question),
+                "EX",
+                parseInt(todayEnd / 1000)
+              );
               res.status(200).send(question);
             }
           }
@@ -107,7 +87,8 @@ router.get("/score", function (req, res) {
   console.log("Inside All Score Questions GET Request");
 
   if (config.useRedis) {
-    client.get("score-questions").then(async function (data, err) {
+    let key = "score-questions";
+    client.get(key).then(async function (data, err) {
       if (err) {
         console.error(err);
         res.status(500).send("Error when connecting to Redis cache");
@@ -125,7 +106,13 @@ router.get("/score", function (req, res) {
             if (error) {
               res.status(400).send();
             } else {
-              client.set("score-questions", JSON.stringify(question));
+              var todayEnd = new Date().setHours(23, 59, 59, 999);
+              client.set(
+                key,
+                JSON.stringify(question),
+                "EX",
+                parseInt(todayEnd / 1000)
+              );
               res.status(200).send(question);
             }
           }
@@ -152,7 +139,8 @@ router.get("/unanswered", function (req, res) {
   console.log("Inside All Unanswered Questions GET Request");
 
   if (config.useRedis) {
-    client.get("unanswered-questions").then(async function (data, err) {
+    let key = "unanswered-questions";
+    client.get(key).then(async function (data, err) {
       if (err) {
         console.error(err);
         res.status(500).send("Error when connecting to Redis cache");
@@ -170,7 +158,13 @@ router.get("/unanswered", function (req, res) {
             if (error) {
               res.status(400).send();
             } else {
-              client.set("unanswered-questions", JSON.stringify(question));
+              var todayEnd = new Date().setHours(23, 59, 59, 999);
+              client.set(
+                key,
+                JSON.stringify(question),
+                "EX",
+                parseInt(todayEnd / 1000)
+              );
               res.status(200).send(question);
             }
           }

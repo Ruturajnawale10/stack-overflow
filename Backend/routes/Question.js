@@ -7,32 +7,65 @@ import Views from "../models/ViewsModel.js";
 import Comments from "../models/CommentModel.js";
 import Answer from "../models/AnswerModel.js";
 import kafka from "../kafka/client.js";
+import kafka2 from "../kafka/kafka-response-topic/client.js";
 import config from "../configs/config.js";
+import client from "../redis/redisConfig.js";
 
 router.get("/", function (req, res) {
   console.log("Inside All Questions GET Request");
-  // db.collectionName.find()
-  Questions.find({}, function (error, question) {
+
+   Questions.find({}, function (error, question) {
     if (error) {
       res.status(400).send();
     } else {
-      let date = new Date().toLocaleDateString();
-      /*
-    const newQ = new Questions({
-      title:"how two add two int?",
-    description: " lsfkjlas laksdfj lkljl",
-    creationDate: date,
-    viewCount: 6,
-    tags: ['python','c++','int'],
-    askedByUserID: '231wdfd',
-    upVotes: ['adf','vcdcd','asdfdf'],
-    downVotes: []
-  
-    });*/
-
       res.status(200).send(question);
     }
   });
+
+  // client.get("test-questions").then(async function (data, err) {
+  //   if (err) {
+  //     console.error(err);
+  //     res.status(500).send("Error when connecting to Redis cache");
+  //   }
+  //   if (data != null) {
+  //     console.log("cache hit");
+  //     res.status(200).send(data);
+  //   } else {
+  //     console.log("cache miss");
+  //     Questions.find({}, function (error, questions) {
+  //       if (error) {
+  //         res.send(400).send();
+  //       } else {
+  //         res.send(200).send(questions);
+  //       }
+  //     });
+
+  //     // const results = await Questions.find({},{ answers: 0, questionComments: 0, Activity: 0 });
+  //     // client.set("test-questions", JSON.stringify(results));
+  //     // res.status(200).send(results);
+  //   }
+  // });
+
+  //kafka2("question", null);
+
+  // kafka2("question", null, function (err, questions) {
+  //   console.log("in result");
+  //   console.log(questions);
+  //   if (err) {
+  //     console.log("Inside err");
+  //     res.status(400).send();
+  //   } else {
+  //     res.status(200).send(questions);
+  //   }
+  // });
+
+  // Questions.find({}, function (error, question) {
+  //   if (error) {
+  //     res.status(400).send();
+  //   } else {
+  //     res.status(200).send(question);
+  //   }
+  // });
 });
 
 router.get("/Interesting", function (req, res) {

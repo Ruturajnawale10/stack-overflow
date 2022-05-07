@@ -15,6 +15,7 @@
     "kafka-node": "^5.0.0",
     "mongoose": "^6.3.0",
     "passport": "^0.5.2",
-    "passport-jwt": "^4.0.0"
+    "passport-jwt": "^4.0.0",
+    "redis": "^4.1.0"
   }
 }

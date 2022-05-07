@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import MDEditor from "@uiw/react-md-editor";
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
 import AddCommentAnswer from "./AddCommentAnswer";
@@ -15,7 +16,6 @@ function AnswerCard(props) {
   const [comment, setComment] = useState(null);
   const [commentSection, setCommentSection] = useState(null);
   let userID = "626798764096f05e749e8de8";
-  let questionID = "62679caa6a5ff0b364718083";
 
   let noVote = "#a9acb0";
   let vote = "darkorange";
@@ -48,7 +48,7 @@ function AnswerCard(props) {
     axios
       .get("/vote/answer/status", {
         params: {
-          questionID: questionID,
+          questionID: props.answer.questionID,
           userID: userID,
           answerID: props.answer._id,
         },
@@ -163,7 +163,7 @@ function AnswerCard(props) {
             class="col-md-10"
             style={{ marginTop: "10px", marginLeft: "20px" }}
           >
-            <p>{props.answer.description}</p>
+            <MDEditor.Markdown source={props.answer.description}/>
 
             <div class="row" style={{ marginTop: "30px", marginLeft: "65%" }}>
               {profile}
@@ -181,7 +181,7 @@ function AnswerCard(props) {
                 onClick={() => {
                   setCommentSection(
                     <AddCommentAnswer
-                      answer={{ userID: userID, questionID: questionID, answerID: props.answer._id }}
+                      answer={{ userID: userID, questionID: props.answer.questionID, answerID: props.answer._id }}
                     />
                   );
                 }}

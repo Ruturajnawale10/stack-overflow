@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import {Container, Row, Col} from 'react-bootstrap';
 import "../../App.css";
 import profileImage from "../../images/smiling-minato.jpg";
 import gold from "../../images/gold.jpg";
@@ -20,25 +21,15 @@ function ProfileOverview(props) {
   console.log("inside profile overview")
   
   return (
-    <div class="userblockforallquestions">
-      <div class="container">
+    <>
+        <Row>
+          <p style={{textAlign:"right", color:"black"}}>
+            <img src={profileImage} style={{ height: "20px", width: "20px" }}></img> <a href="#" id="link">{name}</a> <strong>{reputation} </strong> asked {date.toLocaleDateString()}
+          
 
-        <div class="row">
-          <div class="col-md-3">
-            <img src={profileImage} style={{ blockSize: "50px" }}></img>
-          </div>
-          <div class="col-md-3" id="reputation">
-          <a href="#" id="link">{name}</a>
-            </div>
-            <div class="col-md-3" id="reputation">
-                {reputation}
-            </div>
-            <div class="col-md-3" style={{height:"28px"}}>
-            <p style={{textAlign:"right", color:"black"}}>asked {date.toLocaleDateString()}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+          </p>
+        </Row>
+    </>
   );
 }
 

@@ -184,9 +184,9 @@ router.get("/answer/status", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        if (question.answers[0].upVotes.includes(userID)) {
+        if (question?.answers[0]?.upVotes?.includes(userID)) {
           res.status(200).send("UPVOTE");
-        } else if (question.answers[0].downVotes.includes(userID)) {
+        } else if (question?.answers[0]?.downVotes?.includes(userID)) {
           res.status(200).send("DOWNVOTE");
         } else {
           res.status(200).send("NO VOTE");

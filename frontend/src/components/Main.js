@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Routes, Route } from "react-router-dom";
 import Login from "./Login/Login";
 import Navbar from "./Navbar/Navbar";
-//import Footer from "../Footer/Footer";
+import Footer from "./Footer/Footer";
 import QuestionsOverview from "../components/QuestionsOverview/QuestionsOverview.js";
 import AllQuestions from "../components/AllQuestions/AllQuestions";
 import TagOverview from "../components/Tags/TagOverview.js";
@@ -16,6 +16,8 @@ import AnalyticsDashboard from "./Admin/Analytics/AnalyticsDashboard";
 import ProfileOverview from "./Profile/ProfileOverview";
 import UserSearch from "./Users/UserSearch";
 import Register from "./Register/Register";
+import Logout from "./Logout";
+
 class Main extends Component {
   render() {
     return (
@@ -32,19 +34,21 @@ class Main extends Component {
           <Routes>
             {/* <Route exact path="/" element={<Navbar/>}/> */}
 
+            <Route path="/" element={<AllQuestions />} />
             <Route exact path="/login" element={<Login />} />
             <Route
               path="/questions/:questionID"
               element={<QuestionsOverview />}
             />
-            <Route path="/questions" element={<QuestionsOverview />} />
             <Route path="/allQuestions" element={<AllQuestions />} />
+            <Route path="/questions" element={<AllQuestions />} />
             <Route path="/questions/ask" element={<QuestionPosting />} />
             <Route path="/tags" element={<TagOverview />} />
             <Route path="/user" element={<UserSearch />} />
             <Route path="/profile" element={<ProfileOverview />} />
             <Route path="/admin/tags/add" element={<AddTag />} />
             <Route exact path="/register" element={<Register/>}/>
+            <Route exact path="/logout" element={<Logout/>}/>
             <Route
               path="/admin/questions/review"
               element={<ApprovalQuestions />}

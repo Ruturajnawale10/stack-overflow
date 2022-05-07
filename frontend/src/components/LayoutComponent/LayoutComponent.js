@@ -1,7 +1,7 @@
 import Navbar from "../Navbar/Navbar";
 import Sidebar from "../Sidebar/Sidebar";
 import styled from 'styled-components';
-
+import Footer from "../Footer/Footer";
 const Main = styled.div`
     margin-left: 10vw;
 `;
@@ -12,6 +12,7 @@ const Layout = (props) => {
             <Navbar/>
             <Sidebar/>
             <Main>{props.children}</Main>
+            <Footer/>
         </div>
     )
 }

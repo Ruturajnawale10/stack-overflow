@@ -10,7 +10,7 @@ import ActivityTab from "./ActivityTab";
 function ProfileOverview(props) {
   const [user, setUser] = useState(null);
   const [key, setKey] = useState("profile");
-  const emailID = "user1@gmail.com";
+  const [userID, setUserID] = useState();
   useEffect(() => {
     //fetch user profile
     //axios.get("/user/profile", {

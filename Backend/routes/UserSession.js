@@ -3,13 +3,12 @@ import express from "express";
 const router = express.Router();
 import Users from "../models/UserModel.js";
 import connPool from "../Utils/mysql.js";
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 // import jwt_secret from "../configs/config.js"
 let jwt_secret = "cmpe273_secret_key";
 
 router.post("/register", async function (req, res) {
-  
   console.log("Inside Register Post Request");
   console.log(req.body);
 
@@ -28,7 +27,18 @@ router.post("/register", async function (req, res) {
       res.writeHead(200, {
         "Content-Type": "application/json",
       });
-      res.end("Register Successful");
+      const user = new Users({
+        emailID: req.body.email,
+        displayName: req.body.displayName,
+      });
+
+      user.save(function (error) {
+        if (error) {
+          return;
+        } else {
+          res.end("Register Successful");
+        }
+      });
     }
   });
 });
@@ -53,16 +63,39 @@ router.post("/login", async function (req, res) {
         );
         console.log("made it here ", result);
         console.log(result[0].id_USERS);
-        if(validPassword){
-          const payload = {_id: result[0].id_USERS, email: result[0].email, displayName: result[0].displayName};
+        if (validPassword) {
+          const payload = {
+            _id: result[0].id_USERS,
+            email: result[0].email,
+            displayName: result[0].displayName,
+          };
           const token = jwt.sign(payload, jwt_secret, {
-          expiresIn: 1008000
+            expiresIn: 1008000,
           });
-          res.status(200).end("JWT " + token);
+
+          Users.findOne({ emailID: req.body.email }, (err, user) => {
+            if (err) {
+              res.send({ err: err });
+            } else {
+              res.status(200).send({ jwt: "JWT " + token, userID: user._id });
+            }
+          });
         }
       }
     }
-      });
+  });
+});
+
+router.post("/logout", function (req, res) {
+  console.log("Inside logout Post Request");
+  const authHeader = req.headers["authorization"];
+  jwt.sign(authHeader, "", { expiresIn: 1 }, (logout, err) => {
+    if (logout) {
+      res.status(200).send({ msg: "You have been Logged Out" });
+    } else {
+      res.send({ msg: "Error" });
+    }
+  });
 });
 
 router.post("/getProfiles", function (req, res) {

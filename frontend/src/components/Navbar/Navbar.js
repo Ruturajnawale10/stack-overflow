@@ -15,6 +15,26 @@ class Navbar extends Component {
 
     }
     render(){
+        let loggedInDiv = null;
+        let loggedOutDiv = null;
+        if (localStorage.getItem("token")) {
+            loggedOutDiv = 
+            <NavButton>
+            <NavButtonLink to="/logout">Logout</NavButtonLink>
+        </NavButton>
+            ;
+        } else {
+            loggedOutDiv = (
+                <div style={{display:"flex", justifyContent:"space-between"}}>
+                    <NavButton>
+                        <NavButtonLink to="/login">Login</NavButtonLink>
+                    </NavButton>
+                    <NavButton>
+                        <NavButtonLink to="/register">Register</NavButtonLink>
+                    </NavButton>
+                </div>
+            );
+        }
     return (
         <Nav>
             <NavbarLink to='/'>
@@ -48,9 +68,8 @@ class Navbar extends Component {
                     </Bottom>
                 </SearchHelp> : ""}
             </NavbarSearch>
-            <NavButton>
-                <NavButtonLink to='/logout'>Logout</NavButtonLink>
-            </NavButton>
+            {loggedInDiv}
+            {loggedOutDiv}
         </Nav>
         )
     }

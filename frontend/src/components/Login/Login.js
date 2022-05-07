@@ -35,12 +35,14 @@ class Login extends Component {
       this.setState({
           token: response.data
       });
-      localStorage.setItem("token", response.data);
+      localStorage.setItem("token", response.data.jwt);
+      localStorage.setItem("userID", response.data.userID);
+      window.location = "/";
   })
   .catch(error => {
-    console.log(error.response)
+    console.log(error)
       this.setState({
-          message: error.response.data
+          message: error
       })
   });
   }
@@ -57,10 +59,10 @@ class Login extends Component {
     <div>
         <Container>
         <div class="mx-auto mb24 p24 wmx3 bg-white bar-lg bs-xl mb24" style={{width:"40%"}}>
-            <img src="/so.png" alt="My logo" />
+            <img src="/so.png" alt="My logo" style={{display:"block", margin:"auto"}}/>
             <br />
         <div>
-            <h1 class="ta-center fs-title mx-auto">Login</h1>
+            <h1 class="ta-center fs-title mx-auto" style={{textAlign: "center"}}>Login</h1>
         </div>
         <br />
         <Form onSubmit={this.handleSubmit}>

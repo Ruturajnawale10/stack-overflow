@@ -7,119 +7,190 @@ import Views from "../models/ViewsModel.js";
 import Comments from "../models/CommentModel.js";
 import Answer from "../models/AnswerModel.js";
 import kafka from "../kafka/client.js";
+import client from "../redis/redisConfig.js";
 import config from "../configs/config.js";
 
-router.get("/", function (req, res) {
-  console.log("Inside All Questions GET Request");
-  // db.collectionName.find()
-  Questions.find({}, function (error, question) {
-    if (error) {
-      res.status(400).send();
-    } else {
-      let date = new Date().toLocaleDateString();
-      /*
-    const newQ = new Questions({
-      title:"how two add two int?",
-    description: " lsfkjlas laksdfj lkljl",
-    creationDate: date,
-    viewCount: 6,
-    tags: ['python','c++','int'],
-    askedByUserID: '231wdfd',
-    upVotes: ['adf','vcdcd','asdfdf'],
-    downVotes: []
-  
-    });*/
+//Note: To clear a particular cache key in Redis: eg. for unanswered-questions do:
+//client.del("unanswered-questions");
 
-      res.status(200).send(question);
-    }
-  }).limit(500);
+router.get("/interesting", function (req, res) {
+  console.log("Inside All Interesting Questions GET Request");
+
+  if (config.useRedis) {
+    client.get("interesting-questions").then(async function (data, err) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error when connecting to Redis cache");
+      }
+      if (data != null) {
+        console.log("CACHE HIT for interesting questions data");
+        res.status(200).send(data);
+      } else {
+        console.log("CACHE MISS for interesting questions data");
+        Questions.find(
+          {},
+          null,
+          { sort: { creationDate: -1 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              client.set("interesting-questions", JSON.stringify(question));
+              res.status(200).send(question);
+            }
+          }
+        );
+      }
+    });
+  } else {
+    Questions.find(
+      {},
+      null,
+      { sort: { creationDate: -1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          res.status(200).send(question);
+        }
+      }
+    );
+  }
 });
 
-router.get("/Interesting", function (req, res) {
-  console.log("Inside All Questions GET Request");
-  // db.collectionName.find()
-  Questions.find(
-    {},
-    null,
-    { sort: { creationDate: -1 } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        console.log("interesting");
-        console.log(question);
-        console.log("interesting");
+router.get("hot", function (req, res) {
+  console.log("Inside All Hot Questions GET Request");
 
-        res.status(200).send(question);
+  if (config.useRedis) {
+    client.get("hot-questions").then(async function (data, err) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error when connecting to Redis cache");
       }
-    }
-  );
+      if (data != null) {
+        console.log("CACHE HIT for Hot questions data");
+        res.status(200).send(data);
+      } else {
+        console.log("CACHE MISS for Hot questions data");
+        Questions.find(
+          {},
+          null,
+          { sort: { viewCount: -1 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              client.set("hot-questions", JSON.stringify(question));
+              res.status(200).send(question);
+            }
+          }
+        );
+      }
+    });
+  } else {
+    Questions.find(
+      {},
+      null,
+      { sort: { viewCount: -1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          res.status(200).send(question);
+        }
+      }
+    );
+  }
 });
 
-router.get("/Hot", function (req, res) {
-  console.log("Inside All Questions GET Request");
-  // db.collectionName.find()
-  Questions.find(
-    {},
-    null,
-    { sort: { viewCount: -1 } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        console.log("hot");
-        console.log(question);
-        console.log("hot");
+router.get("/score", function (req, res) {
+  console.log("Inside All Score Questions GET Request");
 
-        res.status(200).send(question);
+  if (config.useRedis) {
+    client.get("score-questions").then(async function (data, err) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error when connecting to Redis cache");
       }
-    }
-  );
+      if (data != null) {
+        console.log("CACHE HIT for score questions data");
+        res.status(200).send(data);
+      } else {
+        console.log("CACHE MISS for score questions data");
+        Questions.find(
+          {},
+          null,
+          { sort: { upVotes: -1 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              client.set("score-questions", JSON.stringify(question));
+              res.status(200).send(question);
+            }
+          }
+        );
+      }
+    });
+  } else {
+    Questions.find(
+      {},
+      null,
+      { sort: { upVotes: -1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          res.status(200).send(question);
+        }
+      }
+    );
+  }
 });
 
-router.get("/Score", function (req, res) {
-  console.log("Inside All Questions GET Request");
-  // db.collectionName.find()
-  Questions.find(
-    {},
-    null,
-    { sort: { upVotes: -1 } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        console.log("score");
-        console.log(question);
-        console.log("score");
+router.get("/unanswered", function (req, res) {
+  console.log("Inside All Unanswered Questions GET Request");
 
-        res.status(200).send(question);
+  if (config.useRedis) {
+    client.get("unanswered-questions").then(async function (data, err) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error when connecting to Redis cache");
       }
-    }
-  );
-});
-
-router.get("/Unanswered", function (req, res) {
-  console.log("Inside All Questions GET Request");
-  // db.collectionName.find()
-  Questions.find(
-    {},
-    null,
-    { sort: { answers: 1 } },
-    function (error, question) {
-      if (error) {
-        console.log("error");
-        console.log(error);
-        console.log("error");
-        res.status(400).send();
+      if (data != null) {
+        console.log("CACHE HIT for unanswered questions data");
+        res.status(200).send(data);
       } else {
-        console.log("Unanswered");
-        console.log(question);
-        console.log("Unanswered");
-
-        res.status(200).send(question);
+        console.log("CACHE MISS for unanswered questions data");
+        Questions.find(
+          {},
+          null,
+          { sort: { answers: 1 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              client.set("unanswered-questions", JSON.stringify(question));
+              res.status(200).send(question);
+            }
+          }
+        );
       }
-    }
-  );
+    });
+  } else {
+    Questions.find(
+      {},
+      null,
+      { sort: { answers: 1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          res.status(200).send(question);
+        }
+      }
+    );
+  }
 });
 
 router.get("/overview", function (req, res) {

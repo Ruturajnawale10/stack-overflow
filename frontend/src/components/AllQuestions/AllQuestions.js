@@ -41,12 +41,10 @@ function AllQuestions() {
   };
 
   const handleHot = (e) => {
-    axios.get("/questionhot").then((res) => {
+    axios.get("/question/hot").then((res) => {
       if (res) {
-        console.log("hot");
-        console.log(res.data);
-        console.log("hot");
         answersData = res.data;
+        setAlength(res.data.length);
         setAnswers(
           <div class="row">
             {answersData.map((answer) => (
@@ -62,13 +60,10 @@ function AllQuestions() {
   };
 
   const handleScore = (e) => {
-    console.log("score");
-    console.log(e);
-    console.log("score");
     axios.get("/question/score", { data: "hi" }).then((res) => {
       if (res) {
-        console.log(res.data);
         answersData = res.data;
+        setAlength(res.data.length);
         setAnswers(
           <div class="row">
             {answersData.map((answer) => (
@@ -87,6 +82,7 @@ function AllQuestions() {
     axios.get("/question/unanswered").then((res) => {
       if (res) {
         answersData = res.data;
+        setAlength(res.data.length);
         setAnswers(
           <div class="row">
             {answersData.map((answer) => (

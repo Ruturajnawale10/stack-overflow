@@ -6,6 +6,7 @@ var usersSchema = new Schema(
   {
     emailID: { type: String, required: true },
     displayName: { type: String },
+    isAdmin: { type: Boolean, required: true, default: false },
     joiningDate: { type: Date, default: Date.now() },
     lastSeen: { type: Date, default: Date.now() },
     location: { type: String },

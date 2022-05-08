@@ -61,8 +61,7 @@ router.post("/login", async function (req, res) {
           req.body.password,
           result[0].password
         );
-        console.log("made it here ", result);
-        console.log(result[0].id_USERS);
+        
         if (validPassword) {
           const payload = {
             _id: result[0].id_USERS,
@@ -77,7 +76,10 @@ router.post("/login", async function (req, res) {
             if (err) {
               res.send({ err: err });
             } else {
-              res.status(200).send({ jwt: "JWT " + token, userID: user._id });
+              if (!user.isAdmin) {
+                user.isAdmin = false;
+              }
+              res.status(200).send({ jwt: "JWT " + token, userID: user._id, isAdmin: user.isAdmin });
             }
           });
         }

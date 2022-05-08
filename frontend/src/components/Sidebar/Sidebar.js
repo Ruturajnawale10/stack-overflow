@@ -1,4 +1,5 @@
 import React, {Component, useEffect} from 'react';
+import { useState } from 'react';
 import {SideBarBlock,
         SideBarLink,
         SideBarSection,
@@ -6,9 +7,23 @@ import {SideBarBlock,
 
 } from './SideBarElements';
 
-class Sidebar extends Component {
-    render(){
-        return (
+function Sidebar() {
+
+    let adminSection = null;
+    if (localStorage.getItem("isAdmin") === "true") {
+        adminSection = (
+            <div>
+                <SidebarTitle>Admin</SidebarTitle>
+                <SideBarSection>
+                    <SideBarLink to="/admin/analytics">Analytics</SideBarLink>
+                    <SideBarLink to="/admin/tags/add">Add a tag</SideBarLink>
+                    <SideBarLink to="/admin/questions/review">Review Questions</SideBarLink>
+                </SideBarSection>
+            </div>)
+    }
+
+    return (
+       
             <SideBarBlock>
                 <SideBarSection>
                 <SideBarLink to="/allQuestions">Home</SideBarLink>
@@ -21,16 +36,11 @@ class Sidebar extends Component {
                 <SideBarLink to="/tags">Tags</SideBarLink>
                 </SideBarSection>
 
-                <SidebarTitle>Admin</SidebarTitle>
-                <SideBarSection>
-                <SideBarLink to="/admin/analytics">Analytics</SideBarLink>
-                <SideBarLink to="/admin/tags/add">Add a tag</SideBarLink>
-                <SideBarLink to="/admin/questions/review">Review Questions</SideBarLink>
-                </SideBarSection>
+                { adminSection }
 
             </SideBarBlock>
-        )
-    }
+        
+    )
 }
 
 export default Sidebar;

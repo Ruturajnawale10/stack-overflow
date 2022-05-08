@@ -193,17 +193,14 @@ router.get("/overview", function (req, res) {
   console.log("Inside Questions Overview GET Request");
   let questionID = req.query.questionID;
 
-  Questions.findOne(
-    { _id: questionID },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        console.log(question)
-        res.status(200).send(question);
-      }
+  Questions.findOne({ _id: questionID }, function (error, question) {
+    if (error) {
+      res.status(400).send();
+    } else {
+      console.log(question);
+      res.status(200).send(question);
     }
-  );
+  });
 });
 
 router.post("/bookmark/add", function (req, res) {
@@ -391,7 +388,10 @@ router.post("/answer/add", function (req, res) {
 
   const answer = new Answer({
     questionID: questionID,
+    userID: userID,
     description: description,
+    creationDate: Date.now(),
+    modifiedDate: Date.now(),
     upVotes: [],
     downVotes: [],
     answerDate: new Date(),
@@ -441,7 +441,6 @@ router.post("/post_question", function (req, res) {
     comments: [],
     answers: [],
     acceptedAnswerID: null,
-    isWaitingForReview: true,
     activity: [],
   });
 

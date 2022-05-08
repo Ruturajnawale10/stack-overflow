@@ -1,8 +1,8 @@
 "use strict";
 import express from "express";
 const router = express.Router();
-import Users from "../models/UserModel.js";
-import connPool from "../Utils/mysql.js";
+import Users from "../../models/UserModel.js";
+import connPool from "../../Utils/mysql.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 // import jwt_secret from "../configs/config.js"
@@ -100,14 +100,4 @@ router.post("/logout", function (req, res) {
   });
 });
 
-router.post("/getProfiles", function (req, res) {
-  let clientIPAddress = req.socket.remoteAddress;
-  Users.find({}, (err, result) => {
-    if (err) {
-      res.send({ err: err });
-    } else {
-      res.send(JSON.stringify(result));
-    }
-  });
-});
 export default router;

@@ -1,22 +1,17 @@
 import React, { useState, useEffect } from "react";
-import {Container, Row, Col} from 'react-bootstrap';
+import { Container, Row, Col } from "react-bootstrap";
 import ProfileOverview from "./ProfileOverview";
-import CommentCard from "./CommentCard";
+import axios from "axios";
 import "../../App.css";
 import Tag from "./Tag";
-function AnswerCard(props) {
-  let [tick, setTick] = useState(null);
+
+function QuestionCard(props) {
   const [profile, setProfile] = useState(null);
-  const [comment, setComment] = useState(null);
   const [tags, setTags] = useState(null);
-  let isAccepted = true;
-  let tagnames = props.item.tags;
+  const [viewCount, setViewCount] = useState(null);
+  let tagnames = props.question.tags;
 
   useEffect(() => {
-    console.log("Cards");
-    console.log(props);
-    console.log(props.item.tags);
-    console.log("Cards");
     setTags(
       <Row>
         {tagnames.map((tagName) => (
@@ -24,7 +19,15 @@ function AnswerCard(props) {
         ))}
       </Row>
     );
-    setProfile(<ProfileOverview item={props} />);
+    setProfile(<ProfileOverview question={props.question} />);
+
+    axios
+      .get("/question/viewcount", {
+        params: { questionID: props.question._id },
+      })
+      .then((response) => {
+        setViewCount(response.data);
+      });
   }, []);
 
   return (
@@ -33,29 +36,26 @@ function AnswerCard(props) {
         <Row style={{ marginTop: "10px" }}>
           <Col xs={2} className="text-end">
             <h6>
-              <div >{props.item.upVotes.length} votes </div>
-              <div > {props.item.answers.length}{" "}answers </div>
-              <div >{props.item.viewCount} views</div>
+              <div>{props.question.upVotes.length} votes </div>
+              <div style={{color:"#03030390"}}> {props.question.answers.length} answers </div>
+              <div style={{color:"#03030390"}}> {viewCount} views</div>
             </h6>
           </Col>
           <Col>
             <Row className="text-wrap">
               <h4>
-                <a href={"/questions/" + props.item._id} id="link">
-                  {props.item.title}
+                <a href={"/questions/" + props.question._id} id="link">
+                  {props.question.title}
                 </a>
               </h4>
             </Row>
             <Row>
               <Col xs={7}>
-                <div >
-                {tags}
-              </div>
+                <div>{tags}</div>
               </Col>
               <Col>
-                <div > {profile}</div>
+                <div> {profile}</div>
               </Col>
-      
             </Row>
           </Col>
         </Row>
@@ -65,4 +65,4 @@ function AnswerCard(props) {
   );
 }
 
-export default AnswerCard;
+export default QuestionCard;

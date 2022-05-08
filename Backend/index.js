@@ -61,15 +61,18 @@ mongoose.connect(
   }
 );
 
-//Route to handle Post Request Call
-import UserSession from "./routes/UserSession.js";
+// API Routes imports
+import UserSession from "./routes/User/UserSession.js";
+import UserProfile from "./routes/User/UserProfile.js";
 import Question from "./routes/Question.js";
 import Tags from "./routes/Tags.js";
 import Vote from "./routes/Vote.js";
 import Admin from "./routes/Admin/Admin.js";
 import Analytics from "./routes/Admin/Analytics.js";
 
+// API Routes
 app.use("/user", UserSession);
+app.use("/user/profile", UserProfile);
 app.use("/vote", Vote);
 app.use("/question", Question);
 app.use("/tags",  Tags);

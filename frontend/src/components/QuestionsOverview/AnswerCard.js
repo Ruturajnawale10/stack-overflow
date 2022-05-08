@@ -34,7 +34,7 @@ function AnswerCard(props) {
         </div>
       );
     }
-    setProfile(<ProfileOverview />);
+    setProfile(<ProfileOverview userID = { props.answer.userID } date = {props.answer.creationDate} />);
     setComment(
       <div class="row">
         {props.answer.comments.map((comment) => (

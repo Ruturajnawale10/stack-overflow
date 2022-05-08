@@ -1,5 +1,4 @@
-import React, {Component, useEffect} from 'react';
-import { useState } from 'react';
+import React from 'react';
 import {SideBarBlock,
         SideBarLink,
         SideBarSection,
@@ -28,7 +27,6 @@ function Sidebar() {
                 <SideBarSection>
                 <SideBarLink to="/allQuestions">Home</SideBarLink>
                 </SideBarSection>
-                {/* <SideBarLink to="/tags">Tags</SideBarLink> */}
                 <SidebarTitle>Public</SidebarTitle>
                 <SideBarSection>
                 

@@ -110,4 +110,15 @@ router.post("/getProfiles", function (req, res) {
     }
   });
 });
+router.post("/getProfile", function (req, res) {
+  //let clientIPAddress = req.socket.remoteAddress;
+  console.log(req.body);
+  Users.findById({ _id: req.body.userID }, (err, result) => {
+    if (err) {
+      res.send({ err: err });
+    } else {
+      res.send(JSON.stringify(result));
+    }
+  });
+});
 export default router;

@@ -10,9 +10,9 @@ function Logout() {
     localStorage.getItem("token");
   localStorage.removeItem("token");
   localStorage.removeItem("userID");
+  localStorage.removeItem("isAdmin");
   localStorage.removeItem("notOwnerID");
   axios.post("/user/logout").then((response) => {
-    console.log("Ohhho  ", response);
     setRedirectVar(navigate("/", { replace: true }, {}));
     window.location.reload(false);
   });

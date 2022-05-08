@@ -1,27 +1,27 @@
 import React, { useState, useEffect } from "react";
-import AnswerCard from "./AnswerCard";
+import QuestionCard from "./QuestionCard";
 import ProfileOverview from "./ProfileOverview";
 import axios from "axios";
 import "../../App.css";
 import DataTable from "react-data-table-component";
 
 function AllQuestions() {
-  const [answers, setAnswers] = useState(null);
+  const [questions, setquestions] = useState(null);
   const [tags, setTags] = useState(null);
   const [profile, setProfile] = useState(null);
   const [alenght, setAlength] = useState(null);
-  let answersData = "";
+  let questionData = "";
 
   const getInterestingQuestions = () => {
     axios.get("/question/interesting").then((res) => {
       if (res) {
-        answersData = res.data;
+        questionData = res.data;
         setAlength(res.data.length);
-        setAnswers(
+        setquestions(
           <div class="row">
-            {answersData.map((answer) => (
-              <div key={answer} id="answercard">
-                <AnswerCard item={answer} />
+            {questionData.map((question) => (
+              <div key={question} id="QuestionCard">
+                <QuestionCard question={question} />
               </div>
             ))}
           </div>
@@ -43,13 +43,13 @@ function AllQuestions() {
   const handleHot = (e) => {
     axios.get("/question/hot").then((res) => {
       if (res) {
-        answersData = res.data;
+        questionData = res.data;
         setAlength(res.data.length);
-        setAnswers(
+        setquestions(
           <div class="row">
-            {answersData.map((answer) => (
-              <div key={answer} id="answercard">
-                <AnswerCard item={answer} />
+            {questionData.map((question) => (
+              <div key={question} id="QuestionCard">
+                <QuestionCard question={question} />
               </div>
             ))}
           </div>
@@ -62,13 +62,13 @@ function AllQuestions() {
   const handleScore = (e) => {
     axios.get("/question/score", { data: "hi" }).then((res) => {
       if (res) {
-        answersData = res.data;
+        questionData = res.data;
         setAlength(res.data.length);
-        setAnswers(
+        setquestions(
           <div class="row">
-            {answersData.map((answer) => (
-              <div key={answer} id="answercard">
-                <AnswerCard item={answer} />
+            {questionData.map((question) => (
+              <div key={question} id="QuestionCard">
+                <QuestionCard question={question} />
               </div>
             ))}
           </div>
@@ -78,16 +78,16 @@ function AllQuestions() {
     });
   };
 
-  const handleUnanswered = (e) => {
-    axios.get("/question/unanswered").then((res) => {
+  const handleUnquestioned = (e) => {
+    axios.get("/question/unquestioned").then((res) => {
       if (res) {
-        answersData = res.data;
+        questionData = res.data;
         setAlength(res.data.length);
-        setAnswers(
+        setquestions(
           <div class="row">
-            {answersData.map((answer) => (
-              <div key={answer} id="answercard">
-                <AnswerCard item={answer} />
+            {questionData.map((question) => (
+              <div key={question} id="QuestionCard">
+                <QuestionCard question={question} />
               </div>
             ))}
           </div>
@@ -100,7 +100,7 @@ function AllQuestions() {
   const columns = [
     {
       name: "",
-      selector: (row) => answers,
+      selector: (row) => questions,
       width: "100%",
     },
   ];
@@ -157,7 +157,7 @@ function AllQuestions() {
                 Score
               </button>
               <button
-                onClick={handleUnanswered}
+                onClick={handleUnquestioned}
                 type="button"
                 class="btn btn-outline-secondary"
               >
@@ -177,8 +177,6 @@ function AllQuestions() {
             pagination
             paginationServer
           />
-
-          {/*<!--answers-->*/}
         </div>
       </div>
     </div>

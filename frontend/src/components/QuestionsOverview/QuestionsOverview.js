@@ -82,7 +82,7 @@ function QuestionsOverview() {
           </div>
         );
 
-        setProfile(<ProfileOverview />);
+        setProfile(<ProfileOverview userID = {response.data.askedByUserID} date = {response.data.creationDate}/>);
 
         setComment(
           <div class="row">

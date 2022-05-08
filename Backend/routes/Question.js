@@ -12,23 +12,25 @@ import config from "../configs/config.js";
 
 //Note: To clear a particular cache key in Redis: eg. for unanswered-questions do:
 //client.del("unanswered-questions");
+//to clear all cache data do:
+// client.flushAll('ASYNC');
 
 router.get("/interesting", function (req, res) {
   console.log("Inside All Interesting Questions GET Request");
 
   Questions.find(
-    {},
+    { isWaitingForReview: false },
     null,
     { sort: { creationDate: -1 } },
     function (error, question) {
       if (error) {
         res.status(400).send();
       } else {
-        console.log("Fetched 10k questions")
+        console.log("Fetched 10k questions");
         res.status(200).send(question);
       }
     }
-  ).limit(100);
+  );
 });
 
 router.get("/hot", function (req, res) {
@@ -47,7 +49,7 @@ router.get("/hot", function (req, res) {
       } else {
         console.log("CACHE MISS for Hot questions data");
         Questions.find(
-          {},
+          { isWaitingForReview: false },
           null,
           { sort: { viewCount: -1 } },
           function (error, question) {
@@ -69,7 +71,7 @@ router.get("/hot", function (req, res) {
     });
   } else {
     Questions.find(
-      {},
+      { isWaitingForReview: false },
       null,
       { sort: { viewCount: -1 } },
       function (error, question) {
@@ -99,7 +101,7 @@ router.get("/score", function (req, res) {
       } else {
         console.log("CACHE MISS for score questions data");
         Questions.find(
-          {},
+          { isWaitingForReview: false },
           null,
           { sort: { upVotes: -1 } },
           function (error, question) {
@@ -121,7 +123,7 @@ router.get("/score", function (req, res) {
     });
   } else {
     Questions.find(
-      {},
+      { isWaitingForReview: false },
       null,
       { sort: { upVotes: -1 } },
       function (error, question) {
@@ -151,7 +153,7 @@ router.get("/unanswered", function (req, res) {
       } else {
         console.log("CACHE MISS for unanswered questions data");
         Questions.find(
-          {},
+          { isWaitingForReview: false },
           null,
           { sort: { answers: 1 } },
           function (error, question) {
@@ -173,7 +175,7 @@ router.get("/unanswered", function (req, res) {
     });
   } else {
     Questions.find(
-      {},
+      { isWaitingForReview: false },
       null,
       { sort: { answers: 1 } },
       function (error, question) {
@@ -195,6 +197,7 @@ router.get("/overview", function (req, res) {
     if (error) {
       res.status(400).send();
     } else {
+      console.log(question);
       res.status(200).send(question);
     }
   });
@@ -206,7 +209,7 @@ router.post("/bookmark/add", function (req, res) {
   let userID = req.body.userID;
 
   Users.findOneAndUpdate(
-    { userID: userID },
+    { _id: userID },
     { $push: { bookmarkedQuestionID: questionID } },
     function (error, question) {
       if (error) {
@@ -385,7 +388,10 @@ router.post("/answer/add", function (req, res) {
 
   const answer = new Answer({
     questionID: questionID,
+    userID: userID,
     description: description,
+    creationDate: Date.now(),
+    modifiedDate: Date.now(),
     upVotes: [],
     downVotes: [],
     answerDate: new Date(),
@@ -435,7 +441,6 @@ router.post("/post_question", function (req, res) {
     comments: [],
     answers: [],
     acceptedAnswerID: null,
-    isWaitingForReview: true,
     activity: [],
   });
 

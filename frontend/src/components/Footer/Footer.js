@@ -9,11 +9,12 @@ class Footer extends Component {
 
     render(){
     return (
-        <footer class="w-100 py-4 flex-shrink-0"  style={{color: "red"}}>
+        <footer class="w-100 py-4 flex-shrink-0"  style={{color: "red", marginTop:"200px"}}>
         <div class="container py-4">
         <div class="row gy-4 gx-5">
             <div class="col-lg-4 col-md-6">
-                <h5 class="h1 text-white">STACKOVERFLOW</h5>
+            <img src="/so.png" alt="My logo" style={{display:"block", marginLeft:"10px"}}/>
+                <h5 class="h1 text-white" style={{marginTop:"20px"}}>STACK OVERFLOW</h5>
                 <p class="small text-muted">CMPE 273</p>
                 <p class="small text-muted mb-0">&copy; Copyrights. All rights reserved. </p>
             </div>

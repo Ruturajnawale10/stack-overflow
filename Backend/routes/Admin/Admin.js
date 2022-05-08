@@ -32,6 +32,7 @@ router.get("/questions/review", function (req, res) {
   Questions.find(
     { isWaitingForReview: true },
     { title: 1 },
+    { sort: { creationDate: -1 } },
     function (error, questions) {
       if (error) {
         res.status(400).send();
@@ -39,7 +40,7 @@ router.get("/questions/review", function (req, res) {
         res.status(200).send(questions);
       }
     }
-  );
+  ).limit(100);
 });
 
 router.post("/question/approve", function (req, res) {

@@ -37,6 +37,7 @@ class Login extends Component {
       });
       localStorage.setItem("token", response.data.jwt);
       localStorage.setItem("userID", response.data.userID);
+      localStorage.setItem("isAdmin", response.data.isAdmin);
       window.location = "/";
   })
   .catch(error => {

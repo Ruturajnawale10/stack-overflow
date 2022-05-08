@@ -59,6 +59,9 @@ const QuestionPosting = () => {
             setBodyWarning(false);
             setTagsWarning(false);
 
+            let isImageInserted = question.body.includes("![]");
+            question.isWaitingForReview = isImageInserted;
+
             axios.post("/question/post_question", 
                 question
             ).then((response) => {

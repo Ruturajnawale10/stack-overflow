@@ -19,7 +19,7 @@ var QuestionSchema = new Schema(
     comments: { type: [CommentModel.schema] },
     answers: { type: [AnswerModel.schema] },
     acceptedAnswerID: { type: String },
-    isWaitingForReview: { type: Boolean },
+    isWaitingForReview: { type: Boolean, required: true, default: false },
     activity: { type: [ActivityModel.schema] },
   },
   {

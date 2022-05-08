@@ -29,9 +29,8 @@ function ProfileOverview(props) {
         userID: localStorage.getItem("notOwnerID"),
       };
     }
-    axios.post("/user/getProfile", data).then((response) => {
+    axios.get("/user/profile", { params: data }).then((response) => {
       if (response) {
-        console.log(response.data);
         setProfile(response.data);
       } else {
         console.log("Error retrieving profile");

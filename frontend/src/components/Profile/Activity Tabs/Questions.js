@@ -74,9 +74,16 @@ function QuestionsTab() {
                   <div class="col">
                     {question.tags.map((tag) => {
                       return (
-                        <button class="col tagblock">
-                          <p>{tag}</p>
-                        </button>
+                        <button
+                        class="my-2 px-2 py-1 col-sm-auto tagblock"
+                        style={{
+                          color: "#39739D",
+                          fontWeight: "450",
+                          backgroundColor: "#E1ECF4"
+                        }}
+                      >
+                        {tag}
+                      </button>
                       );
                     })}
                     <p>

@@ -20,7 +20,7 @@ class UserSearch extends Component {
   handleUserPage(e) {
     e.preventDefault();
     localStorage.setItem("notOwnerID", e.target.value);
-    window.location.href = "/profile";
+    window.location = "/profile";
   }
   componentDidMount() {
     axios.get("/user/profile/all").then((response) => {

@@ -6,15 +6,15 @@ export const SideBarBlock = styled.div`
     flex-direction: column;
     justify-content: start;
     align-items: center;
-    position:absolute;
-    left:0;
-    top: 60px;
-    height: 100vh;
+    position:fixed;
+    // height: calc(100vh-100px);
     width: 10vw;
     background: white;
     padding: 20px;
     border-right: 1px solid grey;
-    z-index: 10;
+    height: 100%;
+    top: 60px;
+    // z-index: 10;
 `
 
 export const SideBarLink = styled(Link)`

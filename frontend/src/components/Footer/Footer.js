@@ -9,7 +9,7 @@ class Footer extends Component {
 
     render(){
     return (
-        <footer class="w-100 py-4 flex-shrink-0"  style={{color: "red", marginTop:"200px"}}>
+        <footer class="w-100 py-4 flex-shrink-0"  style={{color: "red", marginTop:"200px",zIndex:10,position:'absolute'}}>
         <div class="container py-4">
         <div class="row gy-4 gx-5">
             <div class="col-lg-4 col-md-6">

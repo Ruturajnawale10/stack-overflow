@@ -146,10 +146,10 @@ function QuestionsOverview() {
     // and then uncomment the below addasviewed request
     // Note: The broker service runs on port 9092
 
-    // axios.post("/question/addasviewed", {
-    //   questionID: questionID,
-    //   userID: userID,
-    // });
+     axios.post("/question/addasviewed", {
+       questionID: questionID,
+       userID: userID,
+     });
   }, []);
 
   const changeVoteUpStatus = (e) => {

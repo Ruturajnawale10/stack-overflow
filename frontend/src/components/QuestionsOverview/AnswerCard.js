@@ -4,6 +4,7 @@ import MDEditor from "@uiw/react-md-editor";
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
 import AddCommentAnswer from "./AddCommentAnswer";
+import WarningBanner from "../WarningBanners/WarningBanner.js";
 import "../../App.css";
 import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -15,6 +16,8 @@ function AnswerCard(props) {
   const [profile, setProfile] = useState(null);
   const [comment, setComment] = useState(null);
   const [commentSection, setCommentSection] = useState(null);
+  const [warningMsg, setWarningMsg] = useState(null);
+  const [warningBannerDiv, setWarningBannerDiv] = useState(null);
   let userID = localStorage.getItem("userID");
 
   let noVote = "#a9acb0";
@@ -42,10 +45,10 @@ function AnswerCard(props) {
     window.location.reload();
   };
 
-  if (!isAccepted) {
+  if (!isAccepted && userID === props.answer.questionAskedByUserID) {
     acceptedAnswerBtn = (
       <button type="button" class="btn btn-success" onClick={addAsAccepted}>
-        Add as accepted answer
+        Mark as accepted answer
       </button>
     );
   }
@@ -75,26 +78,39 @@ function AnswerCard(props) {
       </div>
     );
 
-    axios
-      .get("/vote/answer/status", {
-        params: {
-          questionID: props.answer.questionID,
-          userID: userID,
-          answerID: props.answer._id,
-        },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          if (response.data === "UPVOTE") {
-            setVoteUpStatus(vote);
-          } else if (response.data === "DOWNVOTE") {
-            setVoteDownStatus(vote);
+    if (userID !== null && props.answer.userID !== userID) {
+      axios
+        .get("/vote/answer/status", {
+          params: {
+            questionID: props.answer.questionID,
+            userID: userID,
+            answerID: props.answer._id,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            if (response.data === "UPVOTE") {
+              setVoteUpStatus(vote);
+            } else if (response.data === "DOWNVOTE") {
+              setVoteDownStatus(vote);
+            }
           }
-        }
-      });
+        });
+    } else if (userID !== null) {
+      setWarningMsg("You cannot upvote or downvote your answer!");
+    } else {
+      setWarningMsg(
+        "You need to login first in order to upvote, downvote or answers!"
+      );
+    }
   }, []);
 
   const changeVoteUpStatus = (e) => {
+    if (warningMsg !== null) {
+      setWarningBannerDiv(<WarningBanner msg={warningMsg} />);
+      return;
+    }
+
     if (voteUpStatus === noVote) {
       setVoteUpStatus(vote);
       setVoteCount(voteCount + 1);
@@ -127,6 +143,10 @@ function AnswerCard(props) {
   };
 
   const changeVoteDownStatus = (e) => {
+    if (warningMsg !== null) {
+      setWarningBannerDiv(<WarningBanner msg={warningMsg} />);
+      return;
+    }
     if (voteDownStatus === noVote) {
       setVoteDownStatus(vote);
       setVoteCount(voteCount - 1);
@@ -161,6 +181,7 @@ function AnswerCard(props) {
   return (
     <div>
       <div class="container">
+        <div class="row">{warningBannerDiv}</div>
         <div class="row" style={{ marginTop: "10px" }}>
           <div class="col-md-1" style={{ marginTop: "10px" }}>
             <div

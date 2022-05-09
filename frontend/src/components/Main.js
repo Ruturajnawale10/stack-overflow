@@ -17,6 +17,7 @@ import ProfileOverview from "./Profile/ProfileOverview";
 import UserSearch from "./Users/UserSearch";
 import Register from "./Register/Register";
 import Logout from "./Logout";
+import Messages from "../components/Messages/Messages.js";
 
 class Main extends Component {
   render() {
@@ -49,6 +50,7 @@ class Main extends Component {
             <Route path="/admin/tags/add" element={<AddTag />} />
             <Route exact path="/register" element={<Register/>}/>
             <Route exact path="/logout" element={<Logout/>}/>
+            <Route exact path="/Messages" element={<Messages/>}/>
             <Route
               path="/admin/questions/review"
               element={<ApprovalQuestions />}

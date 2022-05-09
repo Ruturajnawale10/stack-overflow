@@ -66,9 +66,9 @@ function QuestionsOverview() {
 
         setAnswers(
           <div class="row">
-            {response.data.answers.map((answer) => (
-              <div key={answer} id="answercard">
-                <AnswerCard answer={{ ...answer, questionID: questionID }} />
+            {response.data.answers.map((answer1) => (
+              <div key={answer1} id="answercard">
+                <AnswerCard answer={{ ...answer1, questionID: questionID, acceptedAnswerID: response.data.acceptedAnswerID }} />
               </div>
             ))}
           </div>
@@ -86,9 +86,9 @@ function QuestionsOverview() {
 
         setComment(
           <div class="row">
-            {response.data.comments.map((comment) => (
-              <div key={comment} id="commentcard">
-                <CommentCard comment={comment} />
+            {response.data.comments.map((comment2) => (
+              <div key={comment2} id="commentcard">
+                <CommentCard comment={comment2} />
               </div>
             ))}
           </div>

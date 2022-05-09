@@ -15,15 +15,40 @@ function AnswerCard(props) {
   const [profile, setProfile] = useState(null);
   const [comment, setComment] = useState(null);
   const [commentSection, setCommentSection] = useState(null);
-  let userID = "626798764096f05e749e8de8";
+  let userID = localStorage.getItem("userID");
 
   let noVote = "#a9acb0";
   let vote = "darkorange";
   const [voteUpStatus, setVoteUpStatus] = useState(noVote);
   const [voteDownStatus, setVoteDownStatus] = useState(noVote);
   const [voteCount, setVoteCount] = useState(0);
+  let acceptedAnswerBtn = null;
 
-  let isAccepted = true;
+  let isAccepted = false;
+  if (
+    props.answer.acceptedAnswerID !== null &&
+    props.answer.acceptedAnswerID === props.answer._id
+  ) {
+    isAccepted = true;
+  }
+
+  const addAsAccepted = (e) => {
+    axios.post("/question/answer/addaccepted", {
+      questionID: props.answer.questionID,
+      answerID: props.answer._id,
+      userID: props.answer.userID,
+      acceptedAnswerID: props.answer.acceptedAnswerID,
+    });
+    window.location.reload();
+  };
+
+  if (!isAccepted) {
+    acceptedAnswerBtn = (
+      <button type="button" class="btn btn-success" onClick={addAsAccepted}>
+        Add as accepted answer
+      </button>
+    );
+  }
 
   useEffect(() => {
     setVoteCount(props.answer.upVotes.length - props.answer.downVotes.length);
@@ -34,7 +59,12 @@ function AnswerCard(props) {
         </div>
       );
     }
-    setProfile(<ProfileOverview userID = { props.answer.userID } date = {props.answer.creationDate} />);
+    setProfile(
+      <ProfileOverview
+        userID={props.answer.userID}
+        date={props.answer.creationDate}
+      />
+    );
     setComment(
       <div class="row">
         {props.answer.comments.map((comment) => (
@@ -169,7 +199,7 @@ function AnswerCard(props) {
             class="col-md-10"
             style={{ marginTop: "10px", marginLeft: "20px" }}
           >
-            <MDEditor.Markdown source={props.answer.description}/>
+            <MDEditor.Markdown source={props.answer.description} />
 
             <div class="row" style={{ marginTop: "30px", marginLeft: "65%" }}>
               {profile}
@@ -187,13 +217,21 @@ function AnswerCard(props) {
                 onClick={() => {
                   setCommentSection(
                     <AddCommentAnswer
-                      answer={{ userID: userID, questionID: props.answer.questionID, answerID: props.answer._id }}
+                      answer={{
+                        userID: userID,
+                        questionID: props.answer.questionID,
+                        answerID: props.answer._id,
+                      }}
                     />
                   );
                 }}
               >
                 Add a comment
               </button>
+            </div>
+
+            <div class="row" style={{ marginTop: "30px", marginLeft: "65%" }}>
+              {acceptedAnswerBtn}
             </div>
           </div>
         </div>

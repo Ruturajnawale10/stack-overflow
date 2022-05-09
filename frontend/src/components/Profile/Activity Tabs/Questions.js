@@ -5,19 +5,20 @@ import moment from "moment";
 
 function QuestionsTab() {
   const [questions, setQuestions] = useState([]);
+  const [userID, setUserID] = useState(localStorage.getItem("userID"));
+  const [notOwnerID, setNotOwnerID] = useState(
+    localStorage.getItem("notOwnerID")
+  );
 
   useEffect(() => {
     var data;
-    var userID;
-    if (!localStorage.getItem("notOwnerID")) {
+    if (notOwnerID.length == 0) {
       data = {
-        userID: localStorage.getItem("userID"),
+        userID,
       };
-    } else if (
-      localStorage.getItem("userID") == localStorage.getItem("notOwnerID")
-    ) {
+    } else if (userID == notOwnerID) {
       data = {
-        userID: localStorage.getItem("userID"),
+        userID,
       };
     } else {
       data = {
@@ -25,7 +26,7 @@ function QuestionsTab() {
       };
     }
 
-    axios.post("/question/getAll", data).then((response) => {
+    axios.post("/user/profile/questions", data).then((response) => {
       if (response) {
         console.log(response.data);
         setQuestions(response.data);
@@ -41,7 +42,7 @@ function QuestionsTab() {
         <h4>{questions.length} Questions</h4>
         {questions.map((question) => {
           return (
-            <div class="container p-5 my-5 border">
+            <div class="container p-3 border">
               <div class="row">
                 <div
                   class="col-sm-2"
@@ -66,7 +67,10 @@ function QuestionsTab() {
                   <p style={{ fontSize: "13px" }}>{question.viewCount} views</p>
                 </div>
                 <div class="row">
-                  <a href="#" style={{ fontSize: "17px" }}>
+                  <a
+                    href={"/questions/" + question._id}
+                    style={{ fontSize: "17px" }}
+                  >
                     {question.title}
                   </a>
                 </div>
@@ -75,15 +79,15 @@ function QuestionsTab() {
                     {question.tags.map((tag) => {
                       return (
                         <button
-                        class="my-2 px-2 py-1 col-sm-auto tagblock"
-                        style={{
-                          color: "#39739D",
-                          fontWeight: "450",
-                          backgroundColor: "#E1ECF4"
-                        }}
-                      >
-                        {tag}
-                      </button>
+                          class="my-2 px-2 py-1 col-sm-auto tagblock"
+                          style={{
+                            color: "#39739D",
+                            fontWeight: "450",
+                            backgroundColor: "#E1ECF4",
+                          }}
+                        >
+                          {tag}
+                        </button>
                       );
                     })}
                     <p>
@@ -101,7 +105,9 @@ function QuestionsTab() {
       </div>
     );
   } else {
-    return <div class="square border-1">User has not asked any questions</div>;
+    return (
+      <div class="container p-4 border">User has not asked any questions</div>
+    );
   }
 }
 

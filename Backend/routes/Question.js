@@ -422,6 +422,52 @@ router.post("/answer/add", function (req, res) {
   });
 });
 
+router.post("/answer/addaccepted", function (req, res) {
+  console.log("Inside Add as accepted answer POST Request");
+  const { questionID, answerID, acceptedAnswerID, userID } = req.body;
+
+  Questions.findOneAndUpdate(
+    { _id: questionID },
+    { acceptedAnswerID: answerID },
+    function (error, question1) {
+      if (error) {
+        res.status(400).send();
+      } else {
+        Users.findOneAndUpdate(
+          { _id: userID },
+          { $inc: { reputation: 15 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              if (acceptedAnswerID) {
+                for (let ans of question1.answers) {
+                  if (ans._id.toString() === acceptedAnswerID) {
+                    let previousAcceptedAnswerUserID = ans.userID;
+                    Users.findOneAndUpdate(
+                      { _id: previousAcceptedAnswerUserID },
+                      { $inc: { reputation: -15 } },
+                      function (error, question) {
+                        if (error) {
+                          res.status(400).send();
+                        } else {
+                          res.status(200).send("SUCCESS");
+                        }
+                      }
+                    );
+                  }
+                }
+              } else {
+                res.status(200).send("SUCCESS");
+              }
+            }
+          }
+        );
+      }
+    }
+  );
+});
+
 router.post("/post_question", function (req, res) {
   console.log("Inside Questions POST Request");
   const { userID, title, body, tags } = req.body;

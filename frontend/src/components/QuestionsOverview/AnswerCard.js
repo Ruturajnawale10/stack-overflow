@@ -72,6 +72,7 @@ function AnswerCard(props) {
         questionID: props.answer.questionID,
         userID: userID,
         answerID: props.answer._id,
+        answeredByUserID: props.answer.userID,
       });
       if (voteDownStatus === vote) {
         setVoteDownStatus(noVote);
@@ -80,6 +81,7 @@ function AnswerCard(props) {
           questionID: props.answer.questionID,
           userID: userID,
           answerID: props.answer._id,
+          answeredByUserID: props.answer.userID,
         });
       }
     } else {
@@ -89,6 +91,7 @@ function AnswerCard(props) {
         questionID: props.answer.questionID,
         userID: userID,
         answerID: props.answer._id,
+        answeredByUserID: props.answer.userID,
       });
     }
   };
@@ -101,6 +104,7 @@ function AnswerCard(props) {
         questionID: props.answer.questionID,
         userID: userID,
         answerID: props.answer._id,
+        answeredByUserID: props.answer.userID,
       });
       if (voteUpStatus === vote) {
         setVoteUpStatus(noVote);
@@ -109,6 +113,7 @@ function AnswerCard(props) {
           questionID: props.answer.questionID,
           userID: userID,
           answerID: props.answer._id,
+          answeredByUserID: props.answer.userID,
         });
       }
     } else {
@@ -118,6 +123,7 @@ function AnswerCard(props) {
         questionID: props.answer.questionID,
         userID: userID,
         answerID: props.answer._id,
+        answeredByUserID: props.answer.userID,
       });
     }
   };

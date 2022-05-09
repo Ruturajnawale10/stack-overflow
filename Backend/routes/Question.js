@@ -26,7 +26,6 @@ router.get("/interesting", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        console.log("Fetched 10k questions");
         res.status(200).send(question);
       }
     }
@@ -197,7 +196,6 @@ router.get("/overview", function (req, res) {
     if (error) {
       res.status(400).send();
     } else {
-      console.log(question);
       res.status(200).send(question);
     }
   });

@@ -10,7 +10,6 @@ router.get("/", function (req, res) {
     if (err) {
       res.send({ err: err });
     } else {
-      console.log(user);
       res.send(JSON.stringify(user));
     }
   });

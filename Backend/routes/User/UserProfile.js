@@ -50,4 +50,36 @@ router.get("/answers", function (req, res) {
     }
   });
 });
+router.get("/bookmarks", function (req, res) {
+  console.log("Inside Bookmarks Tab GET Request");
+  let userID = req.query.userID;
+  let questions = [];
+  Users.find(
+    { _id: userID },
+    { bookmarkedQuestionID: 1, _id: 0 },
+    function (error, result) {
+      if (error) {
+        res.send({ error: error });
+      } else {
+        let bmID = [];
+        result.map((re) => bmID.push(re.bookmarkedQuestionID));
+        bmID.map((bookmark) => {
+          Questions.find({ _id: bookmark }, function (error, results) {
+            if (error) {
+              throw error;
+            } else {
+              questions.push(...results);
+            }
+          });
+        });
+        setTimeout(function () {
+          var allresult = [];
+          allresult.push(questions);
+          //console.log("Bookedmarked qs: " + JSON.stringify(allresult));
+          return res.status(200).send(JSON.stringify(allresult));
+        }, 1000);
+      }
+    }
+  );
+});
 export default router;

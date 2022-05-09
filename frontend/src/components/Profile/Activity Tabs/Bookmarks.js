@@ -26,10 +26,10 @@ function BookmarksTab() {
       };
     }
 
-    axios.get("/user/profile/answers", { params: data }).then((response) => {
+    axios.get("/user/profile/bookmarks", { params: data }).then((response) => {
       if (response) {
-        console.log(response.data);
-        setQuestions(response.data);
+        console.log(response.data[0]);
+        setQuestions(response.data[0]);
       } else {
         console.log("Error retrieving questions");
       }
@@ -39,7 +39,6 @@ function BookmarksTab() {
   if (questions.length > 0) {
     return (
       <div>
-        <p>Currently in progress</p>
         <h4>{questions.length} Bookmarks</h4>
         {questions.map((question) => {
           return (
@@ -50,32 +49,24 @@ function BookmarksTab() {
                   style={{ height: "17px", width: "100px" }}
                 >
                   <p style={{ fontSize: "13px" }}>
+                    {question.answers.length} answers
+                  </p>
+                </div>
+                <div
+                  class="col-sm-2"
+                  style={{ height: "17px", width: "100px" }}
+                >
+                  <p style={{ fontSize: "13px" }}>
                     {question.upVotes.length} votes
                   </p>
                 </div>
 
-                {question.answers.map((answer) => {
-                  if (answer.userID == question.acceptedAnswerID) {
-                    return (
-                      <div
-                        class="col-sm-2"
-                        style={{ height: "17px", width: "150px" }}
-                      >
-                        <p
-                          disabled
-                          style={{
-                            fontSize: "13px",
-                            color: "green",
-                            background: "box",
-                          }}
-                        >
-                          Accepted
-                        </p>
-                      </div>
-                    );
-                  }
-                })}
-
+                <div
+                  class="col-sm-2"
+                  style={{ height: "17px", width: "100px" }}
+                >
+                  <p style={{ fontSize: "13px" }}>{question.viewCount} views</p>
+                </div>
                 <div class="row">
                   <a
                     href={"/questions/" + question._id}
@@ -101,9 +92,8 @@ function BookmarksTab() {
                       );
                     })}
                     <p>
-                      asnwered{" "}
-                      {moment(question.answers.creationDate).format(
-                        "MMMM Do YYYY, h:mm"
+                      {moment(question.creationDate).format(
+                        "MMMM Do, YYYY @ h:mm"
                       )}
                     </p>
                   </div>

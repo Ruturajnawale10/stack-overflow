@@ -102,7 +102,7 @@ function AnswersTab() {
                     <p>
                       asnwered{" "}
                       {moment(question.answers.creationDate).format(
-                        "MMMM Do YYYY, h:mm"
+                        "MMMM Do, YYYY @ h:mm"
                       )}
                     </p>
                   </div>

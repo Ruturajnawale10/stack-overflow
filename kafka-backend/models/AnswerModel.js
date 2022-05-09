@@ -4,11 +4,15 @@ const Schema = mongoose.Schema;
 
 var AnswerSchema = new Schema(
   {
+    questionID: { type: String },
+    userID: { type: String },
     description: { type: String },
+    creationDate: { type: Date },
+    modifiedDate: { type: Date },
     upVotes: { type: [String] },
     downVotes: { type: [String] },
     answerDate: { type: Date },
-    comments: {type: [CommentModel.schema]}
+    comments: { type: [CommentModel.schema] },
   },
   {
     versionKey: false,

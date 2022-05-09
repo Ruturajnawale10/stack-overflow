@@ -10,13 +10,12 @@ function Logout() {
     localStorage.getItem("token");
   localStorage.removeItem("token");
   localStorage.removeItem("userID");
-  axios
-    .post("/user/logout")
-    .then((response) => {
-        console.log("Ohhho  ", response)
-      setRedirectVar(navigate("/", { replace: true }, {}));
-      window.location.reload(false);
-    });
+  localStorage.removeItem("isAdmin");
+  localStorage.removeItem("notOwnerID");
+  axios.post("/user/logout").then((response) => {
+    setRedirectVar(navigate("/", { replace: true }, {}));
+    window.location.reload(false);
+  });
 
   return <div>{redirectVar}1111</div>;
 }

@@ -1,44 +1,43 @@
 import React, { useState, useEffect } from "react";
+import { Row } from "react-bootstrap";
 import "../../App.css";
 import profileImage from "../../images/smiling-minato.jpg";
-import gold from "../../images/gold.jpg";
-import silver from "../../images/silver.png";
-import bronze from "../../images/bronze.png";
+import axios from "axios";
 
 function ProfileOverview(props) {
-  let date = new Date("06/30/2019");
+  const [displayName, setDisplayName] = useState(null);
+  const [reputation, setReputation] = useState(null);
+
+  let date = new Date(props.question.modifiedDate);
   let date2 = new Date();
   let today = date2 - date;
-  //pass question date here along with user data
-  let name = "Tyrone Slothrop";
-  let reputation = 36000;
-  let goldBadges = 3;
-  let silverBadges = 15;
-  let bronzeBadges = 8;
-  console.log("inside profile overview")
-  console.log(props)
-  console.log("inside profile overview")
-  
-  return (
-    <div class="userblockforallquestions">
-      <div class="container">
 
-        <div class="row">
-          <div class="col-md-3">
-            <img src={profileImage} style={{ blockSize: "50px" }}></img>
-          </div>
-          <div class="col-md-3" id="reputation">
-          <a href="#" id="link">{name}</a>
-            </div>
-            <div class="col-md-3" id="reputation">
-                {reputation}
-            </div>
-            <div class="col-md-3" style={{height:"28px"}}>
-            <p style={{textAlign:"right", color:"black"}}>asked {date.toLocaleDateString()}</p>
-          </div>
-        </div>
-      </div>
-    </div>
+  useEffect(() => {
+    axios
+      .get("/user/profile", {
+        params: { userID: props.question.askedByUserID },
+      })
+      .then((response) => {
+        setDisplayName(response.data.displayName);
+        setReputation(response.data.reputation);
+      });
+  }, []);
+
+  return (
+    <>
+      <Row>
+        <p style={{ textAlign: "right", color: "black" }}>
+          <img
+            src={profileImage}
+            style={{ height: "20px", width: "20px" }}
+          ></img>{" "}
+          <a href="#" id="link">
+            {displayName}
+          </a>{" "}
+          <p style={{ fontWeight: "bold", display: "inline" }}>{reputation}</p>
+        </p>
+      </Row>
+    </>
   );
 }
 

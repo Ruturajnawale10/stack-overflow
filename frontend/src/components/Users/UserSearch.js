@@ -17,9 +17,13 @@ class UserSearch extends Component {
       searchTerm: e.target.value,
     });
   };
-
+  handleUserPage(e) {
+    e.preventDefault();
+    localStorage.setItem("notOwnerID", e.target.value);
+    window.location = "/profile";
+  }
   componentDidMount() {
-    axios.post("/user/getProfiles").then((response) => {
+    axios.get("/user/profile/all").then((response) => {
       if (response) {
         console.log(response);
         this.setState({
@@ -91,13 +95,15 @@ class UserSearch extends Component {
                       marginLeft: "15px",
                     }}
                   >
-                    <a
-                      href="#"
-                      value={profile.displayName}
-                      style={{ fontSize: "14px" }}
+                    <button
+                      class="btn btn-link btn-sm"
+                      type="button"
+                      value={profile._id}
+                      onClick={this.handleUserPage}
+                      style={{ fontSize: "10px", padding: "0px" }}
                     >
                       {profile.displayName}
-                    </a>
+                    </button>
                     <p style={{ fontSize: "12px", margin: "0px" }}>
                       {profile.location}
                     </p>

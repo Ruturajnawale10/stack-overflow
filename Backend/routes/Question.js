@@ -5,159 +5,188 @@ import Questions from "../models/QuestionModel.js";
 import Users from "../models/UserModel.js";
 import Views from "../models/ViewsModel.js";
 import Comments from "../models/CommentModel.js";
-import Answer from "../models/AnswerModel.js"
+import Answer from "../models/AnswerModel.js";
 import kafka from "../kafka/client.js";
-//var  kafka = require('../kafka/client');
-//var kafka = require('./kafka/client');
-router.get("/", function (req, res) {
-  console.log("Inside All Questions GET Request");
-// db.collectionName.find()
+import client from "../redis/redisConfig.js";
+import config from "../configs/config.js";
 
+//Note: To clear a particular cache key in Redis: eg. for unanswered-questions do:
+//client.del("unanswered-questions");
+//to clear all cache data do:
+// client.flushAll('ASYNC');
 
-//implenting Kafka
-let questionID = "hello";
-let userID = "hi";
-let data = { questionID: questionID, userID: userID };
+router.get("/interesting", function (req, res) {
+  console.log("Inside All Interesting Questions GET Request");
 
-kafka("AllQuestions", data,function(err,results){
-  console.log('in result');
-  console.log(results);
-  console.log(err)
-  console.log('in result');
-  if (err){
-      console.log("Inside err");
-      res.json({
-          status:"error",
-          msg:"System Error, Try Again."
-      })
-  }else{
-      console.log("PAAAAAAAAAAAAAAAAAAS");
-        console.log(results)
-        console.log("PAAAAAAAAAAAAAAAAAAS");
-         // res.json({
-         //     updatedList:results
-        //  });
-          res.status(200).send(results);
-          //res.end();
+  Questions.find(
+    { isWaitingForReview: false },
+    null,
+    { sort: { creationDate: -1 } },
+    function (error, question) {
+      if (error) {
+        res.status(400).send();
+      } else {
+        console.log("Fetched 10k questions");
+        res.status(200).send(question);
       }
-  
+    }
+  );
 });
-/*
-kafka.make_request('AllQuestions',req.body, function(err,results){
-  console.log('in result');
-  console.log(results);
-  console.log('in result');
-  if (err){
-      console.log("Inside err");
-      res.json({
-          status:"error",
-          msg:"System Error, Try Again."
-      })
-  }else{
-      console.log("Inside else");
-          res.json({
-              updatedList:results
-          });
 
-          res.end();
+router.get("/hot", function (req, res) {
+  console.log("Inside All Hot Questions GET Request");
+
+  if (config.useRedis) {
+    let key = "hot-questions";
+    client.get(key).then(async function (data, err) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error when connecting to Redis cache");
       }
-  
-});*/
-/*
-Questions.find( {}, function (error, question) {
-  if (error) {
-      res.status(400).send();
+      if (data != null) {
+        console.log("CACHE HIT for Hot questions data");
+        res.status(200).send(data);
+      } else {
+        console.log("CACHE MISS for Hot questions data");
+        Questions.find(
+          { isWaitingForReview: false },
+          null,
+          { sort: { viewCount: -1 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              var todayEnd = new Date().setHours(23, 59, 59, 999);
+              client.set(
+                key,
+                JSON.stringify(question),
+                "EX",
+                parseInt(todayEnd / 1000)
+              );
+              res.status(200).send(question);
+            }
+          }
+        );
+      }
+    });
   } else {
-    let date = new Date().toLocaleDateString();
-
-    res.status(200).send(question);
-
-  }
-});*/
-
-
-});
-
-
-router.get("/Interesting", function (req, res) {
-  console.log("Inside All Questions GET Request");
-// db.collectionName.find()
-Questions.find( {},null,{sort:{'creationDate':-1}}, function (error, question) {
-  if (error) {
-      res.status(400).send();
-  } else {
-    console.log("interesting")
-    console.log(question)
-    console.log("interesting")
-
-
-    res.status(200).send(question);
-
-  }
-});
-
-
-});
-
-router.get("/Hot", function (req, res) {
-  console.log("Inside All Questions GET Request");
-// db.collectionName.find()
-Questions.find( {},null,{sort:{'viewCount':-1}}, function (error, question) {
-  if (error) {
-      res.status(400).send();
-  } else {
-    console.log("hot")
-    console.log(question)
-    console.log("hot")
-
-
-    res.status(200).send(question);
-
+    Questions.find(
+      { isWaitingForReview: false },
+      null,
+      { sort: { viewCount: -1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          res.status(200).send(question);
+        }
+      }
+    );
   }
 });
 
+router.get("/score", function (req, res) {
+  console.log("Inside All Score Questions GET Request");
 
-});
-
-router.get("/Score", function (req, res) {
-  console.log("Inside All Questions GET Request");
-// db.collectionName.find()
-Questions.find( {},null,{sort:{'upVotes':-1}}, function (error, question) {
-  if (error) {
-      res.status(400).send();
+  if (config.useRedis) {
+    let key = "score-questions";
+    client.get(key).then(async function (data, err) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error when connecting to Redis cache");
+      }
+      if (data != null) {
+        console.log("CACHE HIT for score questions data");
+        res.status(200).send(data);
+      } else {
+        console.log("CACHE MISS for score questions data");
+        Questions.find(
+          { isWaitingForReview: false },
+          null,
+          { sort: { upVotes: -1 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              var todayEnd = new Date().setHours(23, 59, 59, 999);
+              client.set(
+                key,
+                JSON.stringify(question),
+                "EX",
+                parseInt(todayEnd / 1000)
+              );
+              res.status(200).send(question);
+            }
+          }
+        );
+      }
+    });
   } else {
-    console.log("score")
-    console.log(question)
-    console.log("score")
-
-
-    res.status(200).send(question);
-
+    Questions.find(
+      { isWaitingForReview: false },
+      null,
+      { sort: { upVotes: -1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          res.status(200).send(question);
+        }
+      }
+    );
   }
 });
 
-});
+router.get("/unanswered", function (req, res) {
+  console.log("Inside All Unanswered Questions GET Request");
 
-router.get("/Unanswered", function (req, res) {
-  console.log("Inside All Questions GET Request");
-// db.collectionName.find()
-Questions.find( {},null,{sort:{'answers':1}}, function (error, question) {
-  if (error) {
-      console.log("error")
-      console.log(error)
-      console.log("error")
-      res.status(400).send();
+  if (config.useRedis) {
+    let key = "unanswered-questions";
+    client.get(key).then(async function (data, err) {
+      if (err) {
+        console.error(err);
+        res.status(500).send("Error when connecting to Redis cache");
+      }
+      if (data != null) {
+        console.log("CACHE HIT for unanswered questions data");
+        res.status(200).send(data);
+      } else {
+        console.log("CACHE MISS for unanswered questions data");
+        Questions.find(
+          { isWaitingForReview: false },
+          null,
+          { sort: { answers: 1 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              var todayEnd = new Date().setHours(23, 59, 59, 999);
+              client.set(
+                key,
+                JSON.stringify(question),
+                "EX",
+                parseInt(todayEnd / 1000)
+              );
+              res.status(200).send(question);
+            }
+          }
+        );
+      }
+    });
   } else {
-    console.log("Unanswered")
-    console.log(question)
-    console.log("Unanswered")
-
-
-    res.status(200).send(question);
-
+    Questions.find(
+      { isWaitingForReview: false },
+      null,
+      { sort: { answers: 1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          res.status(200).send(question);
+        }
+      }
+    );
   }
-});
-
 });
 
 router.get("/overview", function (req, res) {
@@ -168,6 +197,7 @@ router.get("/overview", function (req, res) {
     if (error) {
       res.status(400).send();
     } else {
+      console.log(question);
       res.status(200).send(question);
     }
   });
@@ -179,7 +209,7 @@ router.post("/bookmark/add", function (req, res) {
   let userID = req.body.userID;
 
   Users.findOneAndUpdate(
-    { userID: userID },
+    { _id: userID },
     { $push: { bookmarkedQuestionID: questionID } },
     function (error, question) {
       if (error) {
@@ -235,9 +265,47 @@ router.post("/addasviewed", function (req, res) {
   console.log("Inside Add as viewed question POST Request");
   let questionID = req.body.questionID;
   let userID = req.body.userID;
-  let data = { questionID: questionID, userID: userID };
+  let clientIPAddress = req.socket.remoteAddress;
 
-  kafka("question_views", data);
+  let clientIdentity = "";
+  //if userID is present, consider the client identity as userID + questionID
+  if (userID) {
+    clientIdentity = userID + questionID;
+  } else {
+    clientIdentity = clientIPAddress + questionID;
+  }
+
+  if (config.useKafka) {
+    let data = { questionID: questionID, clientIdentity: clientIdentity };
+    kafka("question_views", data);
+  } else {
+    Views.findOne(
+      {
+        questionID: questionID,
+      },
+      function (error, views) {
+        if (error) {
+          res.status(401).send(error);
+        } else {
+          if (views.clientIdentity.includes(clientIdentity)) {
+            res.end();
+          } else {
+            console.log(
+              "Adding this client IP address/userID in question's views"
+            );
+            Views.updateOne(
+              { questionID: questionID },
+              { $push: { clientIdentity: clientIdentity } },
+              { upsert: true },
+              function (error, views) {
+                res.end();
+              }
+            );
+          }
+        }
+      }
+    );
+  }
 });
 
 router.get("/viewcount", function (req, res) {
@@ -294,7 +362,6 @@ router.post("/answer/comment/add", function (req, res) {
   let answerID = req.body.answerID;
   let userName = "Madara";
   let comment = req.body.comment;
-  //let data = { questionID: questionID, userID: userID };
 
   const commentData = new Comments({
     description: comment,
@@ -302,15 +369,14 @@ router.post("/answer/comment/add", function (req, res) {
     commentByUserID: userID,
     commentDate: Date.now(),
   });
-
   Questions.updateOne(
     { _id: questionID, "answers._id": answerID },
     { $push: { "answers.$.comments": commentData } },
     function (error) {
       if (error) {
-        res.end();
+        res.status(400).send();
       } else {
-        res.end();
+        res.status(201).send(commentData);
       }
     }
   );
@@ -318,32 +384,30 @@ router.post("/answer/comment/add", function (req, res) {
 
 router.post("/answer/add", function (req, res) {
   console.log("Inside Add answer to question POST Request");
-  const {
-    description,
-    questionID,
-    userID,
-  } = req.body;
+  const { description, questionID, userID } = req.body;
 
   const answer = new Answer({
-      questionID: questionID,
-      description: description,
-      upVotes: [],
-      downVotes: [],
-      answerDate: new Date(),
-      comments: [],
-  })
+    questionID: questionID,
+    userID: userID,
+    description: description,
+    creationDate: Date.now(),
+    modifiedDate: Date.now(),
+    upVotes: [],
+    downVotes: [],
+    answerDate: new Date(),
+    comments: [],
+  });
 
   console.log(answer);
   answer.save(function (error) {
     if (error) {
-        console.log('save issue')
-        res.status(400).send();
+      console.log("save issue");
+      res.status(400).send();
     } else {
-
-      try{
+      try {
         Questions.updateOne(
           { _id: questionID },
-          { $push: { "answers": answer} },
+          { $push: { answers: answer } },
           function (error) {
             if (error) {
               res.status(400).send();
@@ -352,52 +416,64 @@ router.post("/answer/add", function (req, res) {
             }
           }
         );
-        }catch(e){
-          console.log('error', error);
-          res.status(400).send();
-        }
+      } catch (e) {
+        console.log("error", error);
+        res.status(400).send();
+      }
     }
   });
-
 });
 
-
-
-router.post("/post_question", function(req, res){
+router.post("/post_question", function (req, res) {
   console.log("Inside Questions POST Request");
-  const {
-    userID,
-    title,
-    body,
-    tags,
-  } = req.body;
+  const { userID, title, body, tags } = req.body;
 
   const question = new Questions({
     title: title,
     description: body,
-    creationDate: new Date(), 
+    creationDate: new Date(),
     modifiedDate: new Date(),
     viewCount: 0,
     tags: tags,
     askedByUserID: userID,
-    upVotes: [], 
-    downVotes: [], 
+    upVotes: [],
+    downVotes: [],
     comments: [],
     answers: [],
     acceptedAnswerID: null,
-    isWaitingForReview: true,
     activity: [],
-  })
+  });
 
-  question.save(function (error) {
+  question.save(function (error, result) {
     if (error) {
-        res.status(400).send();
+      res.status(400).send();
     } else {
-        res.status(201).send(question);
+      const view = new Views({
+        questionID: result._id.toString(),
+      });
+      view.save(function (error2) {
+        if (error2) {
+          res.status(400).send();
+        } else {
+          res.status(201).send(question);
+        }
+      });
     }
+  });
 });
 
-});
+router.post("/getAll", function (req, res) {
+  console.log("Inside Questions Activity Tab GET Request");
+  console.log(req.body.userID);
+  let userID = req.body.userID;
 
+  Questions.find({ askedByUserID: userID }, function (error, questions) {
+    if (error) {
+      res.status(400).send();
+    } else {
+      res.status(200).send(questions);
+    }
+  });
+});
 
 export default router;

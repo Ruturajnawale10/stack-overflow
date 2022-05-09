@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MDEditor from "@uiw/react-md-editor";
+import moment from 'moment';
 import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -13,7 +14,6 @@ import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { BsBookmarkStarFill } from "react-icons/bs";
 import { MdOutlineHistory } from "react-icons/md";
-import { getDateDiff } from "../../Utils/DateDiff.js";
 
 function QuestionsOverview() {
   const [answer, setAnswer] = useState("");
@@ -27,8 +27,9 @@ function QuestionsOverview() {
   const [description, setDescription] = useState(null);
   const [viewCount, setViewCount] = useState(0);
   const [askedDate, setAskedDate] = useState(null);
+  const [modifiedDate, setModifiedData] = useState(null);
   const [isBookMark, setisBookMark] = useState(false);
-  let userID = "626798764096f05e749e8de8";
+  let userID = localStorage.getItem("userID");
 
   let noVote = "#a9acb0";
   let vote = "darkorange";
@@ -40,9 +41,6 @@ function QuestionsOverview() {
   const [bookMarkStatus, setBookMarkStatus] = useState(noBookMark);
 
   let { questionID } = useParams();
-  if (!questionID) {
-    questionID = "62679caa6a5ff0b364718083";
-  }
 
   const [voteCount, setVoteCount] = useState(0);
 
@@ -63,9 +61,8 @@ function QuestionsOverview() {
           response.data.upVotes.length - response.data.downVotes.length
         );
 
-        let startDate = new Date(response.data.creationDate);
-        let diffDate = getDateDiff(startDate);
-        setAskedDate(diffDate);
+        setAskedDate(moment(response.data.creationDate).fromNow());
+        setModifiedData(moment(response.data.modifiedDate).fromNow());
 
         setAnswers(
           <div class="row">
@@ -85,7 +82,7 @@ function QuestionsOverview() {
           </div>
         );
 
-        setProfile(<ProfileOverview />);
+        setProfile(<ProfileOverview userID = {response.data.askedByUserID} date = {response.data.creationDate}/>);
 
         setComment(
           <div class="row">
@@ -142,14 +139,13 @@ function QuestionsOverview() {
         }
       });
 
-    //to enable this API, have a topic called "question_views" created in kafka
-    // and then uncomment the below addasviewed request
+    //to use kafka for this API, have a topic called "question_views" created in kafka
     // Note: The broker service runs on port 9092
 
-     axios.post("/question/addasviewed", {
-       questionID: questionID,
-       userID: userID,
-     });
+    axios.post("/question/addasviewed", {
+      questionID: questionID,
+      userID: userID,
+    });
   }, []);
 
   const changeVoteUpStatus = (e) => {
@@ -245,21 +241,22 @@ function QuestionsOverview() {
   
   };
 
+
   return (
     <div>
-      <div class="container">
+      <div class="container py-4">
         <div class="row">
           <h2> {title} </h2>
         </div>
         <div class="row">
           <div class="col-md-3" style={{ display: "flex" }}>
             <p id="date">Asked</p>
-            <p style={{ marginLeft: "10px" }}>{askedDate} ago</p>
+            <p style={{ marginLeft: "10px" }}>{askedDate}</p>
           </div>
 
           <div class="col-md-2" style={{ display: "flex" }}>
             <p id="date">Modified</p>{" "}
-            <p style={{ marginLeft: "10px" }}>8 days ago</p>
+            <p style={{ marginLeft: "10px" }}>{modifiedDate}</p>
           </div>
           <div class="col-md-2" style={{ display: "flex" }}>
             <p id="date">Viewed </p>
@@ -363,7 +360,11 @@ function QuestionsOverview() {
         <br />
         <div class="row" style={{ marginTop: "10px" }}>
           <h3>Your Answer</h3>
-          <MDEditor value={answer} onChange={setAnswer} />
+          <MDEditor 
+            value={answer} 
+            onChange={setAnswer} 
+            preview="edit"
+          />
 
           <Button
             type="button"

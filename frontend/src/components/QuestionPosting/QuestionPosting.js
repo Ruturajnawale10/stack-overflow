@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
-import {Alert, Button, Container, Row, Col, Form, Card} from "react-bootstrap";
-import {useNavigate } from "react-router-dom";
+import {Modal, Button, Container, Row, Col, Form, Card} from "react-bootstrap";
+import {useNavigate, Navigate, Link} from "react-router-dom";
 import MDEditor from "@uiw/react-md-editor";
+import {FiAlertCircle} from "react-icons/fi"
 
 import InputTags from "./InputTags";
 import axios from "axios";
@@ -12,12 +13,20 @@ const QuestionPosting = () => {
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [tags, setTags] = useState([]);
-    const [warning, setWarning] = useState(false);
+    const [titleWarning, setTitleWarning] = useState(false);
+    const [bodyWarning, setBodyWarning] = useState(false);
+    const [tagsWarning, setTagsWarning] = useState(false);
+    const [loginModalShow, setLoginModelShow] = useState(false);
     
     const [userID, setUserID] = useState(null);
 
     useEffect(() => {
-        //Get user details
+        //Get userID
+        if(localStorage.getItem("userID")){
+            setUserID(localStorage.getItem("userID"));
+        }else{
+            setLoginModelShow(true);
+        }
     }, []);
 
     const submitHandler = (e) => {
@@ -29,10 +38,30 @@ const QuestionPosting = () => {
             tags: tags
         };
         
-        if(title === '' || body === ''){
-            setWarning(true);
+        if(title.length < 15 || body.length < 30 || tags.length === 0){
+            if(title.length < 15){
+                setTitleWarning(true);
+            }else{
+                setTitleWarning(false);
+            }
+            if(body.length < 30){
+                setBodyWarning(true);
+            }else{
+                setBodyWarning(false);
+            }
+            if(tags.length === 0){
+                setTagsWarning(true);
+            }else{
+                setTagsWarning(false);
+            }
         }else{
-            setWarning(false);
+            setTitleWarning(false); 
+            setBodyWarning(false);
+            setTagsWarning(false);
+
+            let isImageInserted = question.body.includes("![]");
+            question.isWaitingForReview = isImageInserted;
+
             axios.post("/question/post_question", 
                 question
             ).then((response) => {
@@ -46,71 +75,87 @@ const QuestionPosting = () => {
     }
 
     return(
-        <div style={{backgroundColor: "whitesmoke"}}>
-
-            <Container  className="text-left" >
-                <Row>
-                    <h2>Ask a public question</h2>
-                </Row>
-                {warning &&
-                <Alert variant="warning">
-                    Please fill both Title and Body!
-                </Alert>
-                }
-                <Form onSubmit={submitHandler}>  
-                    <Container style={{backgroundColor: "white"}} className="mt-5 mb-5 pt-3 pb-4">
-                    
-                        <Form.Group className="mb-2" >
-                            <Form.Label>
-                                <h5>Title</h5>
-                            </Form.Label>
-                            <Form.Text>
-                                <p>Be specific and imagine you’re asking a question to another person</p>
-                            </Form.Text>
-                            <Form.Control 
-                                type="text" 
-                                value={title}
-                                placeholder="e.g. Is there an R function for finding the index of an element in a vector?" 
-                                onChange={(e)=>{setTitle(e.target.value)}}
-                            />
-                        </Form.Group>     
-
+        <>
+            <Modal
+                size="sm"
+                show={loginModalShow}
+                onHide={() => setLoginModelShow(false)}
+                backdrop="static"
+                keyboard={false}
+                centered
+            >
+                <Modal.Header closeButton>
+                <Modal.Title>
+                    Please login to ask a question
+                </Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    You can <Link  to="/login"> login here.</Link> <br/>
+                    No account? You can <Link  to="/register"> register here.</Link>
+                </Modal.Body>
+            </Modal>
+            <div style={{backgroundColor: "whitesmoke"}}>
+                <Container  className="py-5" >
+                    <Row>
+                        <h2>Ask a public question</h2>
+                    </Row>
+                    <Form onSubmit={submitHandler}>  
+                        <Container style={{backgroundColor: "white"}} className="mt-5 mb-5 pt-3 pb-4">
                         
-                        <Form.Group>
-                            <Form.Label className="mb-2" >
-                                <h5>Body</h5>
-                            </Form.Label>
-                            <Form.Text>
-                                <p>Include all the information someone would need to answer your question</p>
-                            </Form.Text>
-                            <div className="mb-3" >
-                            <MDEditor
-                                value={body}
-                                onChange={setBody}
-                            />
-                            </div>
-                        </Form.Group>
+                            <Form.Group className="mb-2" >
+                                <Form.Label>
+                                    <h5>Title</h5>
+                                </Form.Label>
+                                <Form.Text>
+                                    <p>Be specific and imagine you’re asking a question to another person</p>
+                                </Form.Text>
+                                <Form.Control 
+                                    type="text" 
+                                    value={title}
+                                    placeholder="e.g. Is there an R function for finding the index of an element in a vector?" 
+                                    onChange={(e)=>{setTitle(e.target.value)}}
+                                />
+                                {titleWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Title must be at least 15 characters.</div>}
+                            </Form.Group>     
 
-                        
-                        
-                        <Form.Group>
-                            <Form.Label className="mb-2">
-                                <h5>Tags</h5>
-                            </Form.Label>
-                            <Form.Text>
-                                <p>Add up to 5 tags to describe what your question is about</p>
-                            </Form.Text>
-                            <InputTags tags={tags} setTags={setTags}/>
-                        </Form.Group>
-                    </Container>
-                    <div className="pb-5">   
-                        <Button type="submit" className="">Post your question</Button>
-                    </div>
-                </Form>
-                
-                
-            </Container>
-        </div>
+                            
+                            <Form.Group>
+                                <Form.Label className="mb-2" >
+                                    <h5>Body</h5>
+                                </Form.Label>
+                                <Form.Text>
+                                    <p>Include all the information someone would need to answer your question</p>
+                                </Form.Text>
+                                <div className="mb-3" >
+                                    <MDEditor
+                                        value={body}
+                                        onChange={setBody}
+                                        preview="edit"
+                                    
+                                    />
+                                    {bodyWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Body must be at least 30 characters; you entered {body.length}.</div>}
+                                </div>
+                            </Form.Group>
+                            <Form.Group>
+                                <Form.Label className="mb-2">
+                                    <h5>Tags</h5>
+                                </Form.Label>
+                                <Form.Text>
+                                    <p>Add up to 5 tags to describe what your question is about</p>
+                                </Form.Text>
+                                <InputTags tags={tags} setTags={setTags}/>
+                                {tagsWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Please enter at least one tag. Tags are seperated by a space.</div>}
+                            </Form.Group>
+                            
+                        </Container>
+                        <div className="pb-5">   
+                            <Button type="submit" className="">Post your question</Button>
+                            { (titleWarning || bodyWarning || tagsWarning) && <div className="py-2" style={{color: 'red'}}><FiAlertCircle/>&emsp;Your question couldn't be submitted. Please see the errors above.</div>}
+                        </div>
+                    </Form>
+                </Container>
+            </div>
+        </>
         
     )
 }

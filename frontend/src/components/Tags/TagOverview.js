@@ -8,6 +8,7 @@ function TagOverview() {
   
   const [tags, setTags] = useState();
   const [searchValue, setSearchValue] = useState('');
+  
 
   useEffect(() => {
     axios.get("/tags/getTags").then((response, err) => {
@@ -120,7 +121,15 @@ function TagOverview() {
 
         {tags && (
           <Row>
-            {tags.map((tag) => {
+            {tags.filter((tag)=>{
+              if(searchValue==""){
+                return tag;
+              }else if(tag.tagName.
+                toLowerCase().includes(searchValue.toLowerCase())){
+                  return tag;
+                }
+            })
+            .map((tag) => {
               return (
                 <Col md={3}>
                   {" "}

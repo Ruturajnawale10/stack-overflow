@@ -36,6 +36,7 @@ const Login = () => {
       localStorage.setItem("token", response.data.jwt);
       localStorage.setItem("userID", response.data.userID);
       localStorage.setItem("isAdmin", response.data.isAdmin);
+      localStorage.setItem("userName", response.data.userName);
       window.location = "/";
   })
   .catch(error => {

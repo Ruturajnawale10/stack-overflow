@@ -327,11 +327,7 @@ router.get("/viewcount", function (req, res) {
 
 router.post("/comment/add", function (req, res) {
   console.log("Inside Add comment to question POST Request");
-  let questionID = req.body.questionID;
-  let userID = req.body.userID;
-  let userName = "Kushina";
-  let comment = req.body.comment;
-  //let data = { questionID: questionID, userID: userID };
+  const { questionID, userID, userName, comment } = req.body;
 
   const commentData = new Comments({
     description: comment,
@@ -355,11 +351,7 @@ router.post("/comment/add", function (req, res) {
 
 router.post("/answer/comment/add", function (req, res) {
   console.log("Inside Add comment to answer POST Request");
-  let questionID = req.body.questionID;
-  let userID = req.body.userID;
-  let answerID = req.body.answerID;
-  let userName = "Madara";
-  let comment = req.body.comment;
+  const { questionID, userID, userName, answerID, comment } = req.body;
 
   const commentData = new Comments({
     description: comment,

@@ -15,7 +15,7 @@ function QuestionCard(props) {
     setTags(
       <Row>
         {tagnames.map((tagName) => (
-          <Tag tagName={tagName} />
+          <Tag key={tagName} tagName={tagName} />
         ))}
       </Row>
     );
@@ -37,8 +37,14 @@ function QuestionCard(props) {
           <Col xs={2} className="text-end">
             <h6>
               <div>{props.question.netVotesCount} votes </div>
-              <div style={{color:"#03030390"}}> {props.question.answers.length} answers </div>
-              <div style={{color:"#03030390"}}> {props.question.viewCount} views</div>
+              <div style={{ color: "#03030390" }}>
+                {" "}
+                {props.question.answers.length} answers{" "}
+              </div>
+              <div style={{ color: "#03030390" }}>
+                {" "}
+                {props.question.viewCount} views
+              </div>
             </h6>
           </Col>
           <Col>

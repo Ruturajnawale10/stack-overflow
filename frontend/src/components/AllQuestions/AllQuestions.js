@@ -29,7 +29,7 @@ function AllQuestions() {
       } else {
       }
     });
-    setProfile(<ProfileOverview />);
+    //setProfile(<ProfileOverview />);
   };
 
   useEffect(() => {
@@ -49,7 +49,7 @@ function AllQuestions() {
           <div class="row">
             {questionData.map((question) => (
               <div key={question} id="QuestionCard">
-                <QuestionCard question={question} />
+                <QuestionCard key={question} question={question} />
               </div>
             ))}
           </div>

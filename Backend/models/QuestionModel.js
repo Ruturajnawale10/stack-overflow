@@ -16,6 +16,7 @@ var QuestionSchema = new Schema(
     askedByUserID: { type: String },
     upVotes: { type: [String] },
     downVotes: { type: [String] },
+    netVotesCount: { type: Number, required: true, default: 0 },
     comments: { type: [CommentModel.schema] },
     answers: { type: [AnswerModel.schema] },
     acceptedAnswerID: { type: String },

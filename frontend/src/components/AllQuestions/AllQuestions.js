@@ -78,8 +78,8 @@ function AllQuestions() {
     });
   };
 
-  const handleUnquestioned = (e) => {
-    axios.get("/question/unquestioned").then((res) => {
+  const handleUnanswered = (e) => {
+    axios.get("/question/unanswered").then((res) => {
       if (res) {
         questionData = res.data;
         setAlength(res.data.length);
@@ -157,7 +157,7 @@ function AllQuestions() {
                 Score
               </button>
               <button
-                onClick={handleUnquestioned}
+                onClick={handleUnanswered}
                 type="button"
                 class="btn btn-outline-secondary"
               >

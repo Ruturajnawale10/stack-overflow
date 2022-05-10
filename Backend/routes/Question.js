@@ -102,7 +102,7 @@ router.get("/score", function (req, res) {
         Questions.find(
           { isWaitingForReview: false },
           null,
-          { sort: { upVotes: -1 } },
+          { sort: { netVotesCount: -1 } },
           function (error, question) {
             if (error) {
               res.status(400).send();
@@ -124,7 +124,7 @@ router.get("/score", function (req, res) {
     Questions.find(
       { isWaitingForReview: false },
       null,
-      { sort: { upVotes: -1 } },
+      { sort: { netVotesCount: -1 } },
       function (error, question) {
         if (error) {
           res.status(400).send();
@@ -152,9 +152,8 @@ router.get("/unanswered", function (req, res) {
       } else {
         console.log("CACHE MISS for unanswered questions data");
         Questions.find(
-          { isWaitingForReview: false },
+          { isWaitingForReview: false, "answers.0": { $exists: false } },
           null,
-          { sort: { answers: 1 } },
           function (error, question) {
             if (error) {
               res.status(400).send();
@@ -174,9 +173,8 @@ router.get("/unanswered", function (req, res) {
     });
   } else {
     Questions.find(
-      { isWaitingForReview: false },
+      { isWaitingForReview: false, "answers.0": { $exists: false } },
       null,
-      { sort: { answers: 1 } },
       function (error, question) {
         if (error) {
           res.status(400).send();
@@ -291,12 +289,31 @@ router.post("/addasviewed", function (req, res) {
             console.log(
               "Adding this client IP address/userID in question's views"
             );
-            Views.updateOne(
+            Views.findOneAndUpdate(
               { questionID: questionID },
               { $push: { clientIdentity: clientIdentity } },
-              { upsert: true },
+              { upsert: true, new: true },
               function (error, views) {
-                res.end();
+                if (error) {
+                  res.end();
+                } else {
+                  let totalViews = Number(views.clientIdentity.length);
+                  Questions.updateOne(
+                    {
+                      _id: questionID,
+                    },
+                    {
+                      viewCount: totalViews,
+                    },
+                    function (error, question) {
+                      if (error) {
+                        res.end();
+                      } else {
+                        res.end();
+                      }
+                    }
+                  );
+                }
               }
             );
           }

@@ -36,9 +36,9 @@ function QuestionCard(props) {
         <Row style={{ marginTop: "10px" }}>
           <Col xs={2} className="text-end">
             <h6>
-              <div>{props.question.upVotes.length} votes </div>
+              <div>{props.question.netVotesCount} votes </div>
               <div style={{color:"#03030390"}}> {props.question.answers.length} answers </div>
-              <div style={{color:"#03030390"}}> {viewCount} views</div>
+              <div style={{color:"#03030390"}}> {props.question.viewCount} views</div>
             </h6>
           </Col>
           <Col>

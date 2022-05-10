@@ -6,11 +6,11 @@ import Users from "../models/UserModel.js";
 
 router.post("/question/upvote", function (req, res) {
   console.log("Inside Upvote POST Request");
-  const {questionID, userID } = req.body;
+  const { questionID, userID } = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID },
-    { $push: { upVotes: userID } },
+    { $push: { upVotes: userID }, $inc: { netVotesCount: 1 } },
     function (error, question) {
       if (error) {
         res.status(400).send();
@@ -38,7 +38,7 @@ router.post("/question/removeupvote", function (req, res) {
 
   Questions.findOneAndUpdate(
     { _id: questionID },
-    { $pull: { upVotes: userID } },
+    { $pull: { upVotes: userID }, $inc: { netVotesCount: -1 } },
     function (error, question) {
       if (error) {
         res.status(400).send();
@@ -66,7 +66,7 @@ router.post("/question/downvote", function (req, res) {
 
   Questions.findOneAndUpdate(
     { _id: questionID },
-    { $push: { downVotes: userID } },
+    { $push: { downVotes: userID }, $inc: { netVotesCount: -1 } },
     function (error, question) {
       if (error) {
         res.status(400).send();
@@ -94,7 +94,7 @@ router.post("/question/removedownvote", function (req, res) {
 
   Questions.findOneAndUpdate(
     { _id: questionID },
-    { $pull: { downVotes: userID } },
+    { $pull: { downVotes: userID }, $inc: { netVotesCount: 1 } },
     function (error, question) {
       if (error) {
         res.status(400).send();
@@ -137,7 +137,7 @@ router.get("/question/status", function (req, res) {
 
 router.post("/answer/upvote", function (req, res) {
   console.log("Inside Upvote POST Request");
-  const {questionID, userID, answerID, answeredByUserID} = req.body;
+  const { questionID, userID, answerID, answeredByUserID } = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID, "answers._id": answerID },
@@ -164,7 +164,7 @@ router.post("/answer/upvote", function (req, res) {
 
 router.post("/answer/removeupvote", function (req, res) {
   console.log("Inside remove Upvote Request");
-  const {questionID, userID, answerID, answeredByUserID} = req.body;
+  const { questionID, userID, answerID, answeredByUserID } = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID, "answers._id": answerID },
@@ -191,7 +191,7 @@ router.post("/answer/removeupvote", function (req, res) {
 
 router.post("/answer/downvote", function (req, res) {
   console.log("Inside downvote POST Request");
-  const {questionID, userID, answerID, answeredByUserID} = req.body;
+  const { questionID, userID, answerID, answeredByUserID } = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID, "answers._id": answerID },
@@ -218,7 +218,7 @@ router.post("/answer/downvote", function (req, res) {
 
 router.post("/answer/removedownvote", function (req, res) {
   console.log("Inside remove downvote POST Request");
-  const {questionID, userID, answerID, answeredByUserID} = req.body;
+  const { questionID, userID, answerID, answeredByUserID } = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID, "answers._id": answerID },

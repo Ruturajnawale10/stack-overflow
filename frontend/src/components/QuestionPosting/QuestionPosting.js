@@ -96,12 +96,12 @@ const QuestionPosting = () => {
                 </Modal.Body>
             </Modal>
             <div style={{backgroundColor: "whitesmoke"}}>
-                <Container  className="py-5" >
+                <Container className="py-5 px-3" >
                     <Row>
                         <h2>Ask a public question</h2>
                     </Row>
                     <Form onSubmit={submitHandler}>  
-                        <Container style={{backgroundColor: "white"}} className="mt-5 mb-5 pt-3 pb-4">
+                        <Container style={{backgroundColor: "white"}} className="mt-5 mb-5 pt-3 pb-4 px-3">
                         
                             <Form.Group className="mb-2" >
                                 <Form.Label>
@@ -145,7 +145,7 @@ const QuestionPosting = () => {
                                     <p>Add up to 5 tags to describe what your question is about</p>
                                 </Form.Text>
                                 <InputTags tags={tags} setTags={setTags}/>
-                                {tagsWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Please enter at least one tag. Tags are seperated by a space.</div>}
+                                {tagsWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Please enter at least one tag. Tags are seperated by a space and must already exist.</div>}
                             </Form.Group>
                             
                         </Container>

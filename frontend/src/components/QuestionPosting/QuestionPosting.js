@@ -26,6 +26,7 @@ const QuestionPosting = () => {
             setUserID(localStorage.getItem("userID"));
         }else{
             setLoginModelShow(true);
+            navigate('/login?redirectfrom=/questions/ask');
         }
     }, []);
 
@@ -84,7 +85,7 @@ const QuestionPosting = () => {
                 keyboard={false}
                 centered
             >
-                <Modal.Header closeButton>
+                <Modal.Header>
                 <Modal.Title>
                     Please login to ask a question
                 </Modal.Title>

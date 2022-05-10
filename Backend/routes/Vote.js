@@ -2,11 +2,11 @@
 import express from "express";
 const router = express.Router();
 import Questions from "../models/QuestionModel.js";
+import Users from "../models/UserModel.js";
 
 router.post("/question/upvote", function (req, res) {
   console.log("Inside Upvote POST Request");
-  let questionID = req.body.questionID;
-  let userID = req.body.userID;
+  const {questionID, userID } = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID },
@@ -15,7 +15,17 @@ router.post("/question/upvote", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        res.status(200).send("SUCCESS");
+        Users.findOneAndUpdate(
+          { _id: question.askedByUserID },
+          { $inc: { reputation: 10 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              res.status(200).send("SUCCESS");
+            }
+          }
+        );
       }
     }
   );
@@ -33,7 +43,17 @@ router.post("/question/removeupvote", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        res.status(200).send(question);
+        Users.findOneAndUpdate(
+          { _id: question.askedByUserID },
+          { $inc: { reputation: -10 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              res.status(200).send("SUCCESS");
+            }
+          }
+        );
       }
     }
   );
@@ -51,7 +71,17 @@ router.post("/question/downvote", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        res.status(200).send(question);
+        Users.findOneAndUpdate(
+          { _id: question.askedByUserID },
+          { $inc: { reputation: -10 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              res.status(200).send("SUCCESS");
+            }
+          }
+        );
       }
     }
   );
@@ -69,7 +99,17 @@ router.post("/question/removedownvote", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        res.status(200).send(question);
+        Users.findOneAndUpdate(
+          { _id: question.askedByUserID },
+          { $inc: { reputation: 10 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              res.status(200).send("SUCCESS");
+            }
+          }
+        );
       }
     }
   );
@@ -97,9 +137,7 @@ router.get("/question/status", function (req, res) {
 
 router.post("/answer/upvote", function (req, res) {
   console.log("Inside Upvote POST Request");
-  let questionID = req.body.questionID;
-  let userID = req.body.userID;
-  let answerID = req.body.answerID;
+  const {questionID, userID, answerID, answeredByUserID} = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID, "answers._id": answerID },
@@ -108,7 +146,17 @@ router.post("/answer/upvote", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        res.status(200).send("SUCCESS");
+        Users.findOneAndUpdate(
+          { _id: answeredByUserID },
+          { $inc: { reputation: 5 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              res.status(200).send("SUCCESS");
+            }
+          }
+        );
       }
     }
   );
@@ -116,9 +164,7 @@ router.post("/answer/upvote", function (req, res) {
 
 router.post("/answer/removeupvote", function (req, res) {
   console.log("Inside remove Upvote Request");
-  let questionID = req.body.questionID;
-  let userID = req.body.userID;
-  let answerID = req.body.answerID;
+  const {questionID, userID, answerID, answeredByUserID} = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID, "answers._id": answerID },
@@ -127,7 +173,17 @@ router.post("/answer/removeupvote", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        res.status(200).send("SUCCESS");
+        Users.findOneAndUpdate(
+          { _id: answeredByUserID },
+          { $inc: { reputation: -5 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              res.status(200).send("SUCCESS");
+            }
+          }
+        );
       }
     }
   );
@@ -135,9 +191,7 @@ router.post("/answer/removeupvote", function (req, res) {
 
 router.post("/answer/downvote", function (req, res) {
   console.log("Inside downvote POST Request");
-  let questionID = req.body.questionID;
-  let userID = req.body.userID;
-  let answerID = req.body.answerID;
+  const {questionID, userID, answerID, answeredByUserID} = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID, "answers._id": answerID },
@@ -146,7 +200,17 @@ router.post("/answer/downvote", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        res.status(200).send("SUCCESS");
+        Users.findOneAndUpdate(
+          { _id: answeredByUserID },
+          { $inc: { reputation: -5 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              res.status(200).send("SUCCESS");
+            }
+          }
+        );
       }
     }
   );
@@ -154,9 +218,7 @@ router.post("/answer/downvote", function (req, res) {
 
 router.post("/answer/removedownvote", function (req, res) {
   console.log("Inside remove downvote POST Request");
-  let questionID = req.body.questionID;
-  let userID = req.body.userID;
-  let answerID = req.body.answerID;
+  const {questionID, userID, answerID, answeredByUserID} = req.body;
 
   Questions.findOneAndUpdate(
     { _id: questionID, "answers._id": answerID },
@@ -165,7 +227,17 @@ router.post("/answer/removedownvote", function (req, res) {
       if (error) {
         res.status(400).send();
       } else {
-        res.status(200).send("SUCCESS");
+        Users.findOneAndUpdate(
+          { _id: answeredByUserID },
+          { $inc: { reputation: 5 } },
+          function (error, question) {
+            if (error) {
+              res.status(400).send();
+            } else {
+              res.status(200).send("SUCCESS");
+            }
+          }
+        );
       }
     }
   );

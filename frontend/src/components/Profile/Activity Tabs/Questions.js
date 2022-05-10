@@ -93,7 +93,7 @@ function QuestionsTab() {
                     <p>
                       asked{" "}
                       {moment(question.creationDate).format(
-                        "MMMM Do YYYY, h:mm"
+                        "MMMM Do, YYYY @ h:mm"
                       )}
                     </p>
                   </div>

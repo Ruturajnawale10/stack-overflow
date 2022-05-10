@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MDEditor from "@uiw/react-md-editor";
-import moment from 'moment';
+import moment from "moment";
 import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import axios from "axios";
@@ -9,6 +9,7 @@ import Tag from "./Tag";
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
 import AddCommentQuestion from "./AddCommentQuestion";
+import WarningBanner from "../WarningBanners/WarningBanner.js";
 import "../../App.css";
 import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -30,6 +31,8 @@ function QuestionsOverview() {
   const [modifiedDate, setModifiedData] = useState(null);
   const [isBookMark, setisBookMark] = useState(false);
   let userID = localStorage.getItem("userID");
+  const [warningMsg, setWarningMsg] = useState(null);
+  const [warningBannerDiv, setWarningBannerDiv] = useState(null);
 
   let noVote = "#a9acb0";
   let vote = "darkorange";
@@ -66,9 +69,16 @@ function QuestionsOverview() {
 
         setAnswers(
           <div class="row">
-            {response.data.answers.map((answer) => (
-              <div key={answer} id="answercard">
-                <AnswerCard answer={{ ...answer, questionID: questionID }} />
+            {response.data.answers.map((answer1) => (
+              <div key={answer1} id="answercard">
+                <AnswerCard
+                  answer={{
+                    ...answer1,
+                    questionID: questionID,
+                    acceptedAnswerID: response.data.acceptedAnswerID,
+                    questionAskedByUserID: response.data.askedByUserID,
+                  }}
+                />
               </div>
             ))}
           </div>
@@ -82,17 +92,47 @@ function QuestionsOverview() {
           </div>
         );
 
-        setProfile(<ProfileOverview userID = {response.data.askedByUserID} date = {response.data.creationDate}/>);
+        setProfile(
+          <ProfileOverview
+            userID={response.data.askedByUserID}
+            date={response.data.creationDate}
+          />
+        );
 
         setComment(
           <div class="row">
-            {response.data.comments.map((comment) => (
-              <div key={comment} id="commentcard">
-                <CommentCard comment={comment} />
+            {response.data.comments.map((comment2) => (
+              <div key={comment2} id="commentcard">
+                <CommentCard comment={comment2} />
               </div>
             ))}
           </div>
         );
+
+        if (userID !== null && response.data.askedByUserID !== userID) {
+          axios
+            .get("/vote/question/status", {
+              params: {
+                questionID: questionID,
+                userID: userID,
+              },
+            })
+            .then((res) => {
+              if (res.status === 200) {
+                if (res.data === "UPVOTE") {
+                  setVoteUpStatus(vote);
+                } else if (response.data === "DOWNVOTE") {
+                  setVoteDownStatus(vote);
+                }
+              }
+            });
+        } else if (userID !== null) {
+          setWarningMsg("You cannot upvote or downvote your question!");
+        } else {
+          setWarningMsg(
+            "You need to login first in order to upvote, downvote or bookmark questions!"
+          );
+        }
       });
 
     axios
@@ -106,23 +146,6 @@ function QuestionsOverview() {
         if (response.status === 200) {
           if (response.data === "IS BOOKMARK") {
             setBookMarkStatus(bookMark);
-          }
-        }
-      });
-
-    axios
-      .get("/vote/question/status", {
-        params: {
-          questionID: questionID,
-          userID: userID,
-        },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          if (response.data === "UPVOTE") {
-            setVoteUpStatus(vote);
-          } else if (response.data === "DOWNVOTE") {
-            setVoteDownStatus(vote);
           }
         }
       });
@@ -149,6 +172,10 @@ function QuestionsOverview() {
   }, []);
 
   const changeVoteUpStatus = (e) => {
+    if (warningMsg !== null) {
+      setWarningBannerDiv(<WarningBanner msg={warningMsg} />);
+      return;
+    }
     if (voteUpStatus === noVote) {
       axios.post("/vote/question/upvote", {
         questionID: questionID,
@@ -175,6 +202,10 @@ function QuestionsOverview() {
   };
 
   const changeVoteDownStatus = (e) => {
+    if (warningMsg !== null) {
+      setWarningBannerDiv(<WarningBanner msg={warningMsg} />);
+      return;
+    }
     if (voteDownStatus === noVote) {
       axios.post("/vote/question/downvote", {
         questionID: questionID,
@@ -201,6 +232,10 @@ function QuestionsOverview() {
   };
 
   const changeBookMarkStatus = (e) => {
+    if (warningMsg !== null) {
+      setWarningBannerDiv(<WarningBanner msg={warningMsg} />);
+      return;
+    }
     // axios.defaults.headers.common["authorization"] =
     //   localStorage.getItem("token");
     if (isBookMark) {
@@ -238,9 +273,7 @@ function QuestionsOverview() {
         }
       });
     }
-  
   };
-
 
   return (
     <div>
@@ -248,6 +281,7 @@ function QuestionsOverview() {
         <div class="row">
           <h2> {title} </h2>
         </div>
+        <div class="row">{warningBannerDiv}</div>
         <div class="row">
           <div class="col-md-3" style={{ display: "flex" }}>
             <p id="date">Asked</p>
@@ -360,11 +394,7 @@ function QuestionsOverview() {
         <br />
         <div class="row" style={{ marginTop: "10px" }}>
           <h3>Your Answer</h3>
-          <MDEditor 
-            value={answer} 
-            onChange={setAnswer} 
-            preview="edit"
-          />
+          <MDEditor value={answer} onChange={setAnswer} preview="edit" />
 
           <Button
             type="button"

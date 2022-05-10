@@ -54,7 +54,7 @@ function AnswersTab() {
                 </div>
 
                 {question.answers.map((answer) => {
-                  if (answer.userID == question.acceptedAnswerID) {
+                  if (answer._id == question.acceptedAnswerID) {
                     return (
                       <div
                         class="col-sm-2"
@@ -102,7 +102,7 @@ function AnswersTab() {
                     <p>
                       asnwered{" "}
                       {moment(question.answers.creationDate).format(
-                        "MMMM Do YYYY, h:mm"
+                        "MMMM Do, YYYY @ h:mm"
                       )}
                     </p>
                   </div>

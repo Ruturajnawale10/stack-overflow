@@ -11,6 +11,7 @@ const Layout = (props) => {
         <div>
             <Navbar/>
             <Sidebar/>
+            <div style={{padding: "50px"}}></div>
             <Main>{props.children}</Main>
             <Footer/>
         </div>

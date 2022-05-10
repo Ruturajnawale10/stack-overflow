@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Row } from "react-bootstrap";
 import "../../App.css";
 import profileImage from "../../images/smiling-minato.jpg";
+import moment from "moment";
 import axios from "axios";
 
 function ProfileOverview(props) {
@@ -9,8 +10,8 @@ function ProfileOverview(props) {
   const [reputation, setReputation] = useState(null);
 
   let date = new Date(props.question.modifiedDate);
-  let date2 = new Date();
-  let today = date2 - date;
+ 
+  let today = moment(date, "MMMM Do, YYYY @ h:mm:ss").fromNow();
 
   useEffect(() => {
     axios
@@ -34,7 +35,9 @@ function ProfileOverview(props) {
           <a href="#" id="link">
             {displayName}
           </a>{" "}
-          <p style={{ fontWeight: "bold", display: "inline" }}>{reputation}</p>
+          <p style={{ fontWeight: "bold", display: "inline" }}>
+            {reputation} &emsp; asked {today}
+          </p>
         </p>
       </Row>
     </>

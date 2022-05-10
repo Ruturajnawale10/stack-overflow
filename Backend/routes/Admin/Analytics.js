@@ -3,6 +3,7 @@ import express from "express";
 import connPool from "../../Utils/mysql.js";
 const router = express.Router();
 import Questions from "../../models/QuestionModel.js";
+import Views from "../../models/ViewsModel.js";
 import Users from "../../models/UserModel.js";
 
 router.get("/questions/mostviewed", function (req, res) {

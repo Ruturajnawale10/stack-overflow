@@ -4,6 +4,7 @@ import MDEditor from "@uiw/react-md-editor";
 import ProfileOverview from "./ProfileOverview";
 import CommentCard from "./CommentCard";
 import AddCommentAnswer from "./AddCommentAnswer";
+import WarningBanner from "../WarningBanners/WarningBanner.js";
 import "../../App.css";
 import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowSortedDown } from "react-icons/ti";
@@ -15,15 +16,42 @@ function AnswerCard(props) {
   const [profile, setProfile] = useState(null);
   const [comment, setComment] = useState(null);
   const [commentSection, setCommentSection] = useState(null);
-  let userID = "626798764096f05e749e8de8";
+  const [warningMsg, setWarningMsg] = useState(null);
+  const [warningBannerDiv, setWarningBannerDiv] = useState(null);
+  let userID = localStorage.getItem("userID");
 
   let noVote = "#a9acb0";
   let vote = "darkorange";
   const [voteUpStatus, setVoteUpStatus] = useState(noVote);
   const [voteDownStatus, setVoteDownStatus] = useState(noVote);
   const [voteCount, setVoteCount] = useState(0);
+  let acceptedAnswerBtn = null;
 
-  let isAccepted = true;
+  let isAccepted = false;
+  if (
+    props.answer.acceptedAnswerID !== null &&
+    props.answer.acceptedAnswerID === props.answer._id
+  ) {
+    isAccepted = true;
+  }
+
+  const addAsAccepted = (e) => {
+    axios.post("/question/answer/addaccepted", {
+      questionID: props.answer.questionID,
+      answerID: props.answer._id,
+      userID: props.answer.userID,
+      acceptedAnswerID: props.answer.acceptedAnswerID,
+    });
+    window.location.reload();
+  };
+
+  if (!isAccepted && userID === props.answer.questionAskedByUserID) {
+    acceptedAnswerBtn = (
+      <button type="button" class="btn btn-success" onClick={addAsAccepted}>
+        Mark as accepted answer
+      </button>
+    );
+  }
 
   useEffect(() => {
     setVoteCount(props.answer.upVotes.length - props.answer.downVotes.length);
@@ -34,7 +62,12 @@ function AnswerCard(props) {
         </div>
       );
     }
-    setProfile(<ProfileOverview userID = { props.answer.userID } date = {props.answer.creationDate} />);
+    setProfile(
+      <ProfileOverview
+        userID={props.answer.userID}
+        date={props.answer.creationDate}
+      />
+    );
     setComment(
       <div class="row">
         {props.answer.comments.map((comment) => (
@@ -45,26 +78,39 @@ function AnswerCard(props) {
       </div>
     );
 
-    axios
-      .get("/vote/answer/status", {
-        params: {
-          questionID: props.answer.questionID,
-          userID: userID,
-          answerID: props.answer._id,
-        },
-      })
-      .then((response) => {
-        if (response.status === 200) {
-          if (response.data === "UPVOTE") {
-            setVoteUpStatus(vote);
-          } else if (response.data === "DOWNVOTE") {
-            setVoteDownStatus(vote);
+    if (userID !== null && props.answer.userID !== userID) {
+      axios
+        .get("/vote/answer/status", {
+          params: {
+            questionID: props.answer.questionID,
+            userID: userID,
+            answerID: props.answer._id,
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            if (response.data === "UPVOTE") {
+              setVoteUpStatus(vote);
+            } else if (response.data === "DOWNVOTE") {
+              setVoteDownStatus(vote);
+            }
           }
-        }
-      });
+        });
+    } else if (userID !== null) {
+      setWarningMsg("You cannot upvote or downvote your answer!");
+    } else {
+      setWarningMsg(
+        "You need to login first in order to upvote, downvote or answers!"
+      );
+    }
   }, []);
 
   const changeVoteUpStatus = (e) => {
+    if (warningMsg !== null) {
+      setWarningBannerDiv(<WarningBanner msg={warningMsg} />);
+      return;
+    }
+
     if (voteUpStatus === noVote) {
       setVoteUpStatus(vote);
       setVoteCount(voteCount + 1);
@@ -72,6 +118,7 @@ function AnswerCard(props) {
         questionID: props.answer.questionID,
         userID: userID,
         answerID: props.answer._id,
+        answeredByUserID: props.answer.userID,
       });
       if (voteDownStatus === vote) {
         setVoteDownStatus(noVote);
@@ -80,6 +127,7 @@ function AnswerCard(props) {
           questionID: props.answer.questionID,
           userID: userID,
           answerID: props.answer._id,
+          answeredByUserID: props.answer.userID,
         });
       }
     } else {
@@ -89,11 +137,16 @@ function AnswerCard(props) {
         questionID: props.answer.questionID,
         userID: userID,
         answerID: props.answer._id,
+        answeredByUserID: props.answer.userID,
       });
     }
   };
 
   const changeVoteDownStatus = (e) => {
+    if (warningMsg !== null) {
+      setWarningBannerDiv(<WarningBanner msg={warningMsg} />);
+      return;
+    }
     if (voteDownStatus === noVote) {
       setVoteDownStatus(vote);
       setVoteCount(voteCount - 1);
@@ -101,6 +154,7 @@ function AnswerCard(props) {
         questionID: props.answer.questionID,
         userID: userID,
         answerID: props.answer._id,
+        answeredByUserID: props.answer.userID,
       });
       if (voteUpStatus === vote) {
         setVoteUpStatus(noVote);
@@ -109,6 +163,7 @@ function AnswerCard(props) {
           questionID: props.answer.questionID,
           userID: userID,
           answerID: props.answer._id,
+          answeredByUserID: props.answer.userID,
         });
       }
     } else {
@@ -118,6 +173,7 @@ function AnswerCard(props) {
         questionID: props.answer.questionID,
         userID: userID,
         answerID: props.answer._id,
+        answeredByUserID: props.answer.userID,
       });
     }
   };
@@ -125,6 +181,7 @@ function AnswerCard(props) {
   return (
     <div>
       <div class="container">
+        <div class="row">{warningBannerDiv}</div>
         <div class="row" style={{ marginTop: "10px" }}>
           <div class="col-md-1" style={{ marginTop: "10px" }}>
             <div
@@ -163,7 +220,7 @@ function AnswerCard(props) {
             class="col-md-10"
             style={{ marginTop: "10px", marginLeft: "20px" }}
           >
-            <MDEditor.Markdown source={props.answer.description}/>
+            <MDEditor.Markdown source={props.answer.description} />
 
             <div class="row" style={{ marginTop: "30px", marginLeft: "65%" }}>
               {profile}
@@ -181,13 +238,21 @@ function AnswerCard(props) {
                 onClick={() => {
                   setCommentSection(
                     <AddCommentAnswer
-                      answer={{ userID: userID, questionID: props.answer.questionID, answerID: props.answer._id }}
+                      answer={{
+                        userID: userID,
+                        questionID: props.answer.questionID,
+                        answerID: props.answer._id,
+                      }}
                     />
                   );
                 }}
               >
                 Add a comment
               </button>
+            </div>
+
+            <div class="row" style={{ marginTop: "30px", marginLeft: "65%" }}>
+              {acceptedAnswerBtn}
             </div>
           </div>
         </div>

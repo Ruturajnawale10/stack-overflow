@@ -19,7 +19,7 @@ function TagCard(props) {
         <div class="d-flex jc-space-between col-md-auto">
           <div class="flex--item tagblock">
             <a
-              href="/questions/tagged/javascript"
+              href={"/tags/" + tag.tagName}
               class="post-tag"
               title="show questions tagged 'javascript'"
               rel="tag"

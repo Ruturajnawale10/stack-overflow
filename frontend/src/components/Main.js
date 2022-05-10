@@ -6,6 +6,7 @@ import Footer from "./Footer/Footer";
 import QuestionsOverview from "../components/QuestionsOverview/QuestionsOverview.js";
 import AllQuestions from "../components/AllQuestions/AllQuestions";
 import TagOverview from "../components/Tags/TagOverview.js";
+import TagPage from "../components/Tags/TagPage.js";
 import QuestionPosting from "../components/QuestionPosting/QuestionPosting.js";
 import AddTag from "./Admin/AddTags";
 import Sidebar from "./Sidebar/Sidebar";
@@ -40,6 +41,10 @@ class Main extends Component {
             <Route
               path="/questions/:questionID"
               element={<QuestionsOverview />}
+            />
+            <Route
+              path="/tags/:inputTag"
+              element={<TagPage />}
             />
             <Route path="/allQuestions" element={<AllQuestions />} />
             <Route path="/questions" element={<AllQuestions />} />

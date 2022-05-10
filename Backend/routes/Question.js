@@ -520,4 +520,20 @@ router.post("/getAll", function (req, res) {
   });
 });
 
+//api to get questions by tag name
+router.get("/getQuestionByTag", function (req, res) {
+  console.log("Inside Questions Overview GET Request");
+  let tag = req.query.tag;
+  console.log("Input tag : " + tag);
+  Questions.find({ tags: {$all: [tag]} }, function (error, questions) {
+    if (error) {
+      res.status(400).send();
+    } else {
+  console.log("questions : " + questions);
+
+      res.status(200).send(questions);
+    }
+  });
+});
+
 export default router;

@@ -102,9 +102,25 @@ router.post("/addQuestion", function (req, res) {
       }
     });
   });
-    
-    
-
 });
 
+router.get("/getTagByName", function (req, res) {
+  console.log("Inside getTagByName GET Request");
+  let tag = req.query.tag;
+  let sqlQuerry =
+    "SELECT * FROM TAGS WHERE tagName = " +
+    mysql.escape(tag);
+  connPool.query(sqlQuerry, function (err, result) {
+    console.log("querry executed and result is : ");
+    if (err || result.length === 0) {
+      console.log("Error occured is : " + err);
+      return;
+    } else {
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+      });
+      res.end(JSON.stringify(result));
+    }
+  });
+});
 export default router;

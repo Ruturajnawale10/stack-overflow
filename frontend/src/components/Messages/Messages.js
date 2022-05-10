@@ -12,6 +12,7 @@ function Messages() {
   const [profile, setProfile] = useState(null);
   const [alenght, setAlength] = useState(null);
   let answersData='';
+  let input ="";
  //var alenght=0;
   useEffect(() => {
 
@@ -34,7 +35,7 @@ function Messages() {
               </div>
             );
 			answersData =[1,2,3,4]
-            setOnlineUsers(
+        /*    setOnlineUsers(
               <div class="row">
                 {answersData.map((a) => (
                   <div key={a} id="answercard">
@@ -42,13 +43,33 @@ function Messages() {
                   </div>
                 ))}
               </div>
-            );
+            );*/
            
         }else{
 
         }
   //  });  
 
+    axios.get("/user/profile/all").then((response) => {
+      if (response) {
+        console.log(response);
+
+
+		       setOnlineUsers(
+              <div class="row">
+                {response.data.map((online) => (
+                  <div key={online} id="answercard">
+                    <OnlineUsers item={online} />
+                  </div>
+                ))}
+              </div>
+            );
+
+      } else {
+        console.log("Error retrieving profiles");
+      }
+    });
+  
 
     console.log("answerdata")
     console.log(answersData)
@@ -58,29 +79,44 @@ function Messages() {
 
   }, []);
 
-  const handleInteresting =(e)=>{
-    axios.get('/question/Interesting',{data:"hi"})
-    .then(res => {
-        if(res){
-          console.log("Interesting")
-            console.log(res.data)
-            console.log("Interesting")
-             answersData = res.data;
-            setAnswers(
-              <div class="row">
-                {answersData.map((answer) => (
-                  <div key={answer} id="answercard">
-                    <AnswerCard item={answer} />
-                  </div>
-                ))}
-              </div>
-            );
-           
-        }else{
 
-        }
-    });
+  const handleChange = (e) => {
+     input= e.target.value;
   }
+
+  const handleSearch = () => {
+
+    axios.get("/user/profile/all").then((response) => {
+		if (response) {
+		  console.log("inside handle")
+		  console.log(response);
+		  console.log(input)
+		  console.log("inside handle")
+			var user ={}
+			 //user['data']['items'] = response.data.items[input];
+			 const arrayWithFilterObjects= response.data.filter((o) => o.displayName === input);
+			 user['data'] = {'item': arrayWithFilterObjects}
+			 //user['data']['item'] = arrayWithFilterObjects;
+			 console.log("find")
+			 console.log(arrayWithFilterObjects)
+			 console.log("find")
+	
+				 setOnlineUsers(
+				<div class="row">
+				  {//user.data.map((online) => (
+					<div key={arrayWithFilterObjects[0]} id="answercard">
+					  <OnlineUsers item={arrayWithFilterObjects[0]} />
+					</div>
+		}
+				  
+				</div>
+			  );
+  
+		} else {
+		  console.log("Error retrieving profiles");
+		}
+	  });
+  };
 
   return (
     
@@ -97,101 +133,22 @@ function Messages() {
 					<div class="px-4 d-none d-md-block">
 						<div class="d-flex align-items-center">
 							<div class="flex-grow-1">
-								<input type="text" class="form-control my-3" placeholder="Search..."></input>
+								<input type="text" class="form-control my-3" placeholder="Search..." onChange={ handleChange }></input>
+								<button
+								 onClick={handleSearch}
+                  class="btn btn-primary m-2">
+                  {" "}
+                  Search{" "}
+                </button>
 							</div>
 						</div>
 					</div>
 					{online}
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="badge bg-success float-right">5</div>
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40"></img>
-							<div class="flex-grow-1 ml-3">
-								Vanessa Tucker
-								<div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="badge bg-success float-right">2</div>
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle mr-1" alt="William Harris" width="40" height="40"></img>
-							<div class="flex-grow-1 ml-3">
-								William Harris
-								<div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40"></img>
-							<div class="flex-grow-1 ml-3">
-								Sharon Lessman
-								<div class="small"><span class="fas fa-circle chat-online"></span> Online</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar4.png" class="rounded-circle mr-1" alt="Christina Mason" width="40" height="40"></img>
-							<div class="flex-grow-1 ml-3">
-								Christina Mason
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="rounded-circle mr-1" alt="Fiona Green" width="40" height="40"></img>
-							<div class="flex-grow-1 ml-3">
-								Fiona Green
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar2.png" class="rounded-circle mr-1" alt="Doris Wilder" width="40" height="40"></img>
-							<div class="flex-grow-1 ml-3">
-								Doris Wilder
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar4.png" class="rounded-circle mr-1" alt="Haley Kennedy" width="40" height="40"></img>
-							<div class="flex-grow-1 ml-3">
-								Haley Kennedy
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
-					<a href="#" class="list-group-item list-group-item-action border-0">
-						<div class="d-flex align-items-start">
-							<img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Jennifer Chang" width="40" height="40"></img>
-							<div class="flex-grow-1 ml-3">
-								Jennifer Chang
-								<div class="small"><span class="fas fa-circle chat-offline"></span> Offline</div>
-							</div>
-						</div>
-					</a>
-
+		
 					<hr class="d-block d-lg-none mt-1 mb-0"></hr>
 				</div>
 				<div class="col-12 col-lg-7 col-xl-9">
-					<div class="py-2 px-4 border-bottom d-none d-lg-block">
-						<div class="d-flex align-items-center py-1">
-							<div class="position-relative">
-								<img src="https://bootdey.com/img/Content/avatar/avatar3.png" class="rounded-circle mr-1" alt="Sharon Lessman" width="40" height="40"></img>
-							</div>
-							<div class="flex-grow-1 pl-3">
-								<strong>Sharon Lessman</strong>
-								<div class="text-muted small"><em>Typing...</em></div>
-							</div>
-							
-						</div>
-					</div>
+	
 
 					<div class="position-relative">
 						<div class="chat-messages p-4">

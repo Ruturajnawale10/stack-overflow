@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import {ButtonGroup, Button, Form, Row, Container} from "react-bootstrap";
+import {Card, ButtonGroup, Button, Form, Row, Container} from "react-bootstrap";
 import {FiX} from "react-icons/fi";
+import axios from "axios";
 
 const InputTags = ({tags, setTags}) => {
     const [input, setInput] = useState("");
@@ -11,9 +12,12 @@ const InputTags = ({tags, setTags}) => {
     const tempTags = ['mongoDb', 'javascript', 'compilers', 'python', 'perl', 'React', 'C++', 'C', 'C#']
 
     useEffect(() => {
-        //fetch all currrent tags
+
         if(availableTags.length === 0){
-            setAvailableTags([...tempTags]);
+            axios.get("/tags/getTags").then((response, err) => {
+                //console.log("data from getTags is : " + JSON.stringify(response.data));
+                setAvailableTags([...response.data]);
+            });
         }
 
         if(input.length > 0){
@@ -23,7 +27,7 @@ const InputTags = ({tags, setTags}) => {
             console.log('input.length == 0')
             setSuggestions([]);
         }
-        console.log('new suggestions:', suggestions);
+        //console.log('new suggestions:', suggestions);
     }, [tags, input]); 
 
     const onChangeInputHandler = (e) => {
@@ -32,7 +36,7 @@ const InputTags = ({tags, setTags}) => {
 
     const getSuggestions = () => {
         setSuggestions([]);
-        const filtered = availableTags.filter(tag => tag.toLowerCase().includes(input.toLowerCase()));  
+        const filtered = availableTags.filter(tag => tag.tagName.toLowerCase().includes(input.toLowerCase()));  
         setSuggestions(filtered);
     }
 
@@ -43,8 +47,10 @@ const InputTags = ({tags, setTags}) => {
             //condition if user type space & input is non zero & number of tags is less than 5
             //add to tags array & clear input after checking if tag is already in tags array
             e.preventDefault();
-            if(!tags.find(tag => tag == input)){
-                setTags(tags => [...tags, input])
+            if(!tags.find(tag => tag.toLowerCase() == input.toLowerCase())){
+                if(suggestions.find(tag => tag.tagName.toLowerCase() === input.toLowerCase())){
+                    setTags(tags => [...tags, input])
+                }
             }
             setInput("");
         }else if(key === " " && input.length > 1 && tags.length == 5){
@@ -70,6 +76,17 @@ const InputTags = ({tags, setTags}) => {
         setTags(filtered);
     }
 
+    const addSuggestionHandler = (e) => {
+        e.preventDefault();
+        if(tags.length < 5){
+            if(!tags.find(tag => tag.toLowerCase() == e.target.value.toLowerCase())){
+                setTags(tags => [...tags, e.target.value.toLowerCase()]);
+            }
+        }
+        setInput("");
+
+    }
+
     return(
         <>
             <div className="pb-2">
@@ -92,22 +109,28 @@ const InputTags = ({tags, setTags}) => {
                 onChange={onChangeInputHandler}
                 onKeyDown={onKeyDownHandler}
             />
+            
             <ButtonGroup className="my-2">
                 {
                     suggestions.map(suggestion =>{
                         return(
                             <Button 
-                                className="mx-1"
-                                value={suggestion}
+                                className="mx-1 text-start"
+                                value={suggestion.tagName}
                                 style={{color: "#39739D", backgroundColor: "#E1ECF4", borderColor:"#E1ECF4"}}           
+                                onClick={addSuggestionHandler}
                             >
-                                {suggestion}
+                                    {suggestion.tagName} &nbsp; ({suggestion.noOfQuestions})
                             </Button>
                         )
                     })
                 }
                
             </ButtonGroup>
+            {
+                (suggestions.length === 0 && input.length > 0 ) &&
+                <div>No results for '{input}'</div>
+            }
         </>
     )
 }

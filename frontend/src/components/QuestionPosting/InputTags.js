@@ -3,16 +3,37 @@ import {ButtonGroup, Button, Form, Row, Container} from "react-bootstrap";
 import {FiX} from "react-icons/fi";
 
 const InputTags = ({tags, setTags}) => {
-    
     const [input, setInput] = useState("");
+    const [availableTags, setAvailableTags] = useState([]);
+    const [suggestions, setSuggestions] = useState([]);
+    
+    //Mock tag for displaying tags
+    const tempTags = ['mongoDb', 'javascript', 'compilers', 'python', 'perl', 'React', 'C++', 'C', 'C#']
 
     useEffect(() => {
+        //fetch all currrent tags
+        if(availableTags.length === 0){
+            setAvailableTags([...tempTags]);
+        }
 
-    }, [tags]); 
+        if(input.length > 0){
+            console.log('input.length > 0')
+            getSuggestions();
+        }else{
+            console.log('input.length == 0')
+            setSuggestions([]);
+        }
+        console.log('new suggestions:', suggestions);
+    }, [tags, input]); 
 
-    const onChangeHandler = (e) => {
-        console.log("onChangeHandler")
+    const onChangeInputHandler = (e) => {
         setInput(e.target.value);
+    }
+
+    const getSuggestions = () => {
+        setSuggestions([]);
+        const filtered = availableTags.filter(tag => tag.toLowerCase().includes(input.toLowerCase()));  
+        setSuggestions(filtered);
     }
 
     const onKeyDownHandler = (e) => {
@@ -68,10 +89,25 @@ const InputTags = ({tags, setTags}) => {
                 type="text"
                 value={input}
                 placeholder="e.g. (iphone mongodb angularjs)" 
-                onChange={onChangeHandler}
+                onChange={onChangeInputHandler}
                 onKeyDown={onKeyDownHandler}
             />
-       
+            <ButtonGroup className="my-2">
+                {
+                    suggestions.map(suggestion =>{
+                        return(
+                            <Button 
+                                className="mx-1"
+                                value={suggestion}
+                                style={{color: "#39739D", backgroundColor: "#E1ECF4", borderColor:"#E1ECF4"}}           
+                            >
+                                {suggestion}
+                            </Button>
+                        )
+                    })
+                }
+               
+            </ButtonGroup>
         </>
     )
 }

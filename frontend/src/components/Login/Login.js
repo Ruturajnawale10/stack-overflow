@@ -52,7 +52,7 @@ const Login = () => {
 
 
     return ( 
-    <div style={{backgroundColor: "whitesmoke", height: "120vh"}}>
+    <div>
       <Container className="py-4" >
         { questionAskWarning &&
 
@@ -69,47 +69,42 @@ const Login = () => {
             <Col ></Col>
           </Row>
         }
-        <img src="/so.png" alt="My logo" style={{display:"block", margin:"auto"}}/>
-        <br />
+        <div class="mx-auto mb24 p24 wmx3 bg-white bar-lg bs-xl mb24" style={{width:"40%"}}>
+            <img src="/so.png" alt="My logo" style={{display:"block", margin:"auto"}}/>
+            <br />
         <div>
             <h1 class="ta-center fs-title mx-auto" style={{textAlign: "center"}}>Login</h1>
         </div>
-
         <br />
-
-        <Container className="py-5 px-5">
-          <div class="mx-auto mb24 p24 wmx3 bg-white bar-lg bs-xl mb24" style={{width:"40%"}}>
-            
-          <Form onSubmit={handleSubmit} className="px-3 py-4">
-          <Form.Group className="mb-3" controlId="formBasicEmail">
-            <Form.Label className="d-flex justify-content-start" >Email address</Form.Label>
-            <Form.Control type="email" placeholder="Enter email" name="email" value={email} onChange={(e) => setEmail(e.target.value)} />
-          </Form.Group>
-          <br />
-          <Form.Group className="mb-3" controlId="formBasicPassword">
-            <Form.Label className="d-flex justify-content-start">Password  
-            <Container className="d-flex justify-content-end"  >
-            <a class="d-flex justify-content-start" href="/">Forgot Password?</a> 
-                </Container>
-              </Form.Label> 
-            <Form.Control type="password" placeholder="Password" name="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
-          </Form.Group>
-          <Button variant="primary" type="submit">
-            Log In
-          </Button>
-        </Form>
-          <br/>
+        <Form onSubmit={handleSubmit}>
+        <Form.Group className="mb-3" controlId="formBasicEmail">
+          <Form.Label className="d-flex justify-content-start" >Email address</Form.Label>
+          <Form.Control type="email" placeholder="Enter email" name="email" value={email} onChange={(e)=>{setEmail(e.target.value)}} />
+        </Form.Group>
+         <br />
+        <Form.Group className="mb-3" controlId="formBasicPassword">
+          <Form.Label className="d-flex justify-content-start">Password  
+          <Container className="d-flex justify-content-end"  >
+          <a class="d-flex justify-content-start" href="/">Forgot Password?</a> 
+              </Container>
+            </Form.Label> 
+          <Form.Control type="password" placeholder="Password" name="password" value={password} onChange={(e)=>{setPassword(e.target.value)}}/>
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Log In
+        </Button>
+      </Form>
+        <br/>
+        <br></br>
+        <Form.Text className="text-muted">
+            Dont have an account? <a href='/register'>Sign Up</a>
+          </Form.Text>
+          <br></br>
           <br></br>
           <Form.Text className="text-muted">
-              Dont have an account? <a href='/register'>Sign Up</a>
-            </Form.Text>
-            <br></br>
-            <br></br>
-            <Form.Text className="text-muted">
-              Are you an employer? <a href='/'>Sign up on Talent</a>
-            </Form.Text>
-          </div>
-          </Container>
+            Are you an employer? <a href='/'>Sign up on Talent</a>
+          </Form.Text>
+        </div>
         </Container>
     </div>
   );

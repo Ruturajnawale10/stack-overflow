@@ -33,6 +33,8 @@ function QuestionsOverview() {
   let userID = localStorage.getItem("userID");
   const [warningMsg, setWarningMsg] = useState(null);
   const [warningBannerDiv, setWarningBannerDiv] = useState(null);
+  const [warningBannerCommentDiv, setWarningBannerCommentDiv] = useState(null);
+  const [warningBannerAnswerDiv, setWarningBannerAnswerDiv] = useState(null);
 
   let noVote = "#a9acb0";
   let vote = "darkorange";
@@ -275,6 +277,30 @@ function QuestionsOverview() {
     }
   };
 
+  const submitCommentHandler = (e) => {
+    if (userID === null) {
+      setWarningBannerCommentDiv(
+        <WarningBanner msg={"You need to be logged in first to comment!"} />
+      );
+      return;
+    }
+
+    setCommentSection(
+      <AddCommentQuestion
+        question={{ userID: userID, questionID: questionID }}
+      />
+    );
+  };
+
+  const checkIfLoggedIn = (e) => {
+    if (userID === null) {
+      setWarningBannerAnswerDiv(
+        <WarningBanner msg={"You need to be logged in first to answer!"} />
+      );
+      return;
+    }
+  };
+
   return (
     <div>
       <div class="container py-4">
@@ -363,6 +389,7 @@ function QuestionsOverview() {
             </div>
             <hr class="solid" />
             <div class="row" style={{ marginTop: "10px" }}>
+              {warningBannerCommentDiv}
               <p>{comment}</p>
 
               {commentSection}
@@ -371,13 +398,7 @@ function QuestionsOverview() {
                 id="comment-button"
                 class="btn btn-link d-flex justify-content-left"
                 style={{ color: "grey" }}
-                onClick={() => {
-                  setCommentSection(
-                    <AddCommentQuestion
-                      question={{ userID: userID, questionID: questionID }}
-                    />
-                  );
-                }}
+                onClick={submitCommentHandler}
               >
                 Add a comment
               </button>
@@ -394,7 +415,13 @@ function QuestionsOverview() {
         <br />
         <div class="row" style={{ marginTop: "10px" }}>
           <h3>Your Answer</h3>
-          <MDEditor value={answer} onChange={setAnswer} preview="edit" />
+          {warningBannerAnswerDiv}
+          <MDEditor
+            value={answer}
+            onChange={setAnswer}
+            preview="edit"
+            onFocus={checkIfLoggedIn}
+          />
 
           <Button
             type="button"

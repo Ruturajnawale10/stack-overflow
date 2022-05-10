@@ -1,15 +1,17 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import WarningBanner from "../WarningBanners/WarningBanner.js";
 import "../../App.css";
-import MDEditor, {commands} from "@uiw/react-md-editor";
+import MDEditor, { commands } from "@uiw/react-md-editor";
 
 function AddCommentAnswer(props) {
-  const [comment, setComment] = useState('');
+  const [comment, setComment] = useState("");
 
   const submitData = (e) => {
     let data = {
       questionID: props.answer.questionID,
       userID: props.answer.userID,
+      userName: localStorage.getItem("userName"),
       answerID: props.answer.answerID,
       comment: comment,
     };
@@ -20,7 +22,7 @@ function AddCommentAnswer(props) {
 
   return (
     <div class="container p-3" style={{ border: "3px solid #666666" }}>
-       <MDEditor
+      <MDEditor
         value={comment}
         onChange={setComment}
         preview="edit"
@@ -31,7 +33,7 @@ function AddCommentAnswer(props) {
           commands.divider,
           commands.link,
           commands.code,
-      ]}
+        ]}
       />
       <div>
         <button

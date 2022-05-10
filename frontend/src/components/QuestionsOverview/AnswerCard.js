@@ -18,6 +18,8 @@ function AnswerCard(props) {
   const [commentSection, setCommentSection] = useState(null);
   const [warningMsg, setWarningMsg] = useState(null);
   const [warningBannerDiv, setWarningBannerDiv] = useState(null);
+  const [warningBannerCommentDiv, setWarningBannerCommentDiv] = useState(null);
+
   let userID = localStorage.getItem("userID");
 
   let noVote = "#a9acb0";
@@ -178,6 +180,25 @@ function AnswerCard(props) {
     }
   };
 
+  const submitCommentHandler = (e) => {
+    if (userID === null) {
+      setWarningBannerCommentDiv(
+        <WarningBanner msg={"You need to be logged in first to comment!"} />
+      );
+      return;
+    }
+
+    setCommentSection(
+      <AddCommentAnswer
+        answer={{
+          userID: userID,
+          questionID: props.answer.questionID,
+          answerID: props.answer._id,
+        }}
+      />
+    );
+  };
+
   return (
     <div>
       <div class="container">
@@ -227,6 +248,7 @@ function AnswerCard(props) {
             </div>
 
             <div class="row" style={{ marginTop: "10px" }}>
+              {warningBannerCommentDiv}
               <p>{comment}</p>
 
               {commentSection}
@@ -235,17 +257,7 @@ function AnswerCard(props) {
                 id="comment-button"
                 class="btn btn-link d-flex justify-content-left"
                 style={{ color: "grey" }}
-                onClick={() => {
-                  setCommentSection(
-                    <AddCommentAnswer
-                      answer={{
-                        userID: userID,
-                        questionID: props.answer.questionID,
-                        answerID: props.answer._id,
-                      }}
-                    />
-                  );
-                }}
+                onClick={submitCommentHandler}
               >
                 Add a comment
               </button>

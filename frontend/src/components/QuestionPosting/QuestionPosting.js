@@ -62,7 +62,8 @@ const QuestionPosting = () => {
 
             let isImageInserted = question.body.includes("![]");
             question.isWaitingForReview = isImageInserted;
-
+            axios.defaults.headers.common["authorization"] =
+                localStorage.getItem("token");
             axios.post("/question/post_question", 
                 question
             ).then((response) => {

@@ -9,6 +9,8 @@ import Answer from "../models/AnswerModel.js";
 import kafka from "../kafka/client.js";
 import client from "../redis/redisConfig.js";
 import config from "../configs/config.js";
+import { checkAuth } from "../Utils/passport.js";
+
 
 //Note: To clear a particular cache key in Redis: eg. for unanswered-questions do:
 //client.del("unanswered-questions");
@@ -477,7 +479,7 @@ router.post("/answer/addaccepted", function (req, res) {
   );
 });
 
-router.post("/post_question", function (req, res) {
+router.post("/post_question", checkAuth, function (req, res) {
   console.log("Inside Questions POST Request");
   const { userID, title, body, tags } = req.body;
 

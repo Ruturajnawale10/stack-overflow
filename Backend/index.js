@@ -14,6 +14,7 @@ app.use(express.urlencoded({ limit: "50mb" }));
 //use cors to allow cross origin resource sharing
 app.use(cors({ origin: config.localhost, credentials: true }));
 
+let jwt_secret = "cmpe273_secret_key";
 //use express session to maintain session data
 app.use(
   session({
@@ -46,6 +47,13 @@ var options = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 };
+
+import passport from "passport";
+app.use(passport.initialize());
+app.use(passport.session());
+import { auth } from './Utils/passport.js'
+auth(passport);
+
 
 mongoose.connect(
   config.mongo.mongoDBURL,

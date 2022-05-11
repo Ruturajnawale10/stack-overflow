@@ -5,7 +5,7 @@ import Users from "../../models/UserModel.js";
 import connPool from "../../Utils/mysql.js";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-// import jwt_secret from "../configs/config.js"
+import {checkAuth} from "../../Utils/passport.js";
 let jwt_secret = "cmpe273_secret_key";
 
 router.post("/register", async function (req, res) {
@@ -24,9 +24,6 @@ router.post("/register", async function (req, res) {
       console.log("Error occured is : " + err);
       return;
     } else {
-      res.writeHead(200, {
-        "Content-Type": "application/json",
-      });
       const user = new Users({
         emailID: req.body.email,
         displayName: req.body.displayName,
@@ -36,6 +33,10 @@ router.post("/register", async function (req, res) {
         if (error) {
           return;
         } else {
+          res.writeHead(200, {
+            "Content-Type": "application/json",
+            "mongo_id": user._id
+          });
           res.end("Register Successful");
         }
       });

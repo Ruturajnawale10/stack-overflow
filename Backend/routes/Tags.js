@@ -98,7 +98,7 @@ router.post("/addQuestion", function (req, res) {
       if (err) {
         console.log(err);
       } else {
-        res.send(result);
+        res.status(200).send(result);
       }
     });
   });

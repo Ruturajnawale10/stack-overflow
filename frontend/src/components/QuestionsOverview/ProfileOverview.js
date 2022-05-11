@@ -2,24 +2,25 @@ import React, { useState, useEffect } from "react";
 import "../../App.css";
 import axios from "axios";
 import profileImage from "../../images/smiling-minato.jpg";
+import moment from 'moment';
+
+import {FaCircle} from 'react-icons/fa';
 import gold from "../../images/gold.jpg";
 import silver from "../../images/silver.png";
 import bronze from "../../images/bronze.png";
 
-function ProfileOverview(props) {
+
+function ProfileOverview({userID, date}) {
   const [displayName, setDisplayName] = useState(null);
   const [reputation, setReputation] = useState(null);
   const [goldBadges, setGoldBadges] = useState(null);
   const [silverBadges, setSilverBadges] = useState(null);
   const [bronzeBadges, setBronzeBadges] = useState(null);
 
-  // todo: fetch and set proper asked qyestion/answer date
-  let date = new Date(props.date).toLocaleDateString();
-
   useEffect(() => {
     axios
       .get("/user/profile", {
-        params: { userID: props.userID },
+        params: { userID: userID },
       })
       .then((response) => {
         setDisplayName(response.data.displayName);
@@ -32,18 +33,19 @@ function ProfileOverview(props) {
 
   return (
     <div class="userblock">
-      <div class="container">
+      <div class="my-1 container">
         <div class="row">
           <div class="col-md-12" style={{ height: "28px" }}>
-            <p style={{ textAlign: "left", color: "#8f9294" }}>{date}</p>
+            <p style={{ textAlign: "left", color: "#8f9294" }}>asked {moment(date).format('MMMM Do YYYY, h:mm:ss a')}</p>
           </div>
         </div>
         <div class="row">
           <div class="col-md-3">
             <img src={profileImage} style={{ blockSize: "50px" }}></img>
+          
           </div>
           <div class="col-md-9">
-            <div class="row">
+            <div class="row text-start">
               <a href="#" id="link">
                 {displayName}
               </a>
@@ -53,15 +55,15 @@ function ProfileOverview(props) {
                 {reputation}
               </div>
               <div class="col-md-3">
-                <img src={gold} style={{ blockSize: "10px" }}></img>
+                <FaCircle className="mx-1" size={10} style={{color: "gold"}}/>
                 {goldBadges}
               </div>
               <div class="col-md-3">
-                <img src={silver} style={{ blockSize: "10px" }}></img>
+                <FaCircle className="mx-1" size={10} style={{color: "silver"}}/>
                 {silverBadges}
               </div>
               <div class="col-md-3">
-                <img src={bronze} style={{ blockSize: "10px" }}></img>
+                <FaCircle className="mx-1" size={10} style={{color: "peru"}}/>
                 {bronzeBadges}
               </div>
             </div>

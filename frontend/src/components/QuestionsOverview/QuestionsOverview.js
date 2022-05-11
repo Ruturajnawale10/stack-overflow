@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MDEditor from "@uiw/react-md-editor";
+import MDEditor, {commands} from "@uiw/react-md-editor";
 import moment from "moment";
 import { Button } from "react-bootstrap";
 import { useParams } from "react-router-dom";
@@ -421,6 +421,24 @@ function QuestionsOverview() {
             onChange={setAnswer}
             preview="edit"
             onFocus={checkIfLoggedIn}
+            commands={[
+              commands.bold,
+              commands.italic,
+              commands.strikethrough,
+              commands.divider,
+              commands.divider,
+              commands.link,
+              commands.image,
+              commands.divider,
+              commands.divider,
+              commands.code,
+              commands.codeBlock,
+              commands.divider,
+              commands.divider,
+              commands.unorderedListCommand,
+              commands.orderedListCommand,
+              commands.checkedListCommand,
+            ]}
           />
 
           <Button

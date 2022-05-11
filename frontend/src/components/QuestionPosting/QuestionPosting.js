@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import {Modal, Button, Container, Row, Col, Form, Card} from "react-bootstrap";
 import {useNavigate, Navigate, Link} from "react-router-dom";
-import MDEditor from "@uiw/react-md-editor";
+import MDEditor, {commands} from "@uiw/react-md-editor";
 import {FiAlertCircle} from "react-icons/fi"
 
 import InputTags from "./InputTags";
@@ -68,6 +68,17 @@ const QuestionPosting = () => {
             ).then((response) => {
                 if(response.status === 201){
                     //on successful creation of question redirect to that question page
+                    tags.forEach(tag => {
+                        const data = {
+                            tag: tag
+                        };
+                        axios.post("/tags/addQuestion", 
+                        data
+                        ).then((response) => {
+                            if(response.status === 200){
+                                console.log(response);
+                        }})
+                    })
                     navigate(`/questions/${response.data._id}`);
                 }
             })
@@ -132,6 +143,24 @@ const QuestionPosting = () => {
                                         value={body}
                                         onChange={setBody}
                                         preview="edit"
+                                        commands={[
+                                            commands.bold,
+                                            commands.italic,
+                                            commands.strikethrough,
+                                            commands.divider,
+                                            commands.divider,
+                                            commands.link,
+                                            commands.image,
+                                            commands.divider,
+                                            commands.divider,
+                                            commands.code,
+                                            commands.codeBlock,
+                                            commands.divider,
+                                            commands.divider,
+                                            commands.unorderedListCommand,
+                                            commands.orderedListCommand,
+                                            commands.checkedListCommand,
+                                          ]}
                                     
                                     />
                                     {bodyWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Body must be at least 30 characters; you entered {body.length}.</div>}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MDEditor, {commands} from "@uiw/react-md-editor";
 import moment from "moment";
 import { Button } from "react-bootstrap";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 import AnswerCard from "./AnswerCard";
 import Tag from "./Tag";
@@ -44,7 +44,7 @@ function QuestionsOverview() {
   let noBookMark = "#a9acb0";
   let bookMark = "#ebac46";
   const [bookMarkStatus, setBookMarkStatus] = useState(noBookMark);
-
+  let navigate = useNavigate();
   let { questionID } = useParams();
 
   const [voteCount, setVoteCount] = useState(0);
@@ -96,6 +96,7 @@ function QuestionsOverview() {
 
         setProfile(
           <ProfileOverview
+            type="question"
             userID={response.data.askedByUserID}
             date={response.data.creationDate}
           />
@@ -323,7 +324,7 @@ function QuestionsOverview() {
             <p style={{ marginLeft: "10px" }}>{viewCount} times </p>
           </div>
         </div>
-
+        <hr></hr>
         <div class="row" style={{ marginTop: "10px" }}>
           <div class="col-md-1" style={{ marginTop: "10px" }}>
             <div
@@ -366,6 +367,7 @@ function QuestionsOverview() {
                 size={39}
                 fill={"#a9acb0"}
                 style={{ marginTop: "23px" }}
+                onClick={(e)=> {navigate(`/posts/${questionID}`)}}
               />
             </div>
           </div>
@@ -446,6 +448,7 @@ function QuestionsOverview() {
             id="answer-button"
             class="btn d-flex justify-content-left"
             onClick={submitAnswerHandler}
+            disabled={!userID ? true : false}
           >
             Post your Answer
           </Button>

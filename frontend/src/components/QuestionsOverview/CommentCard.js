@@ -1,9 +1,10 @@
 import MDEditor from "@uiw/react-md-editor";
 import React, { useState, useEffect } from "react";
+import moment from 'moment';
 import "../../App.css";
 
 function CommentCard(props) {
-  let date = new Date(props.comment.commentDate).toLocaleDateString();
+
 
   return (
     <div>
@@ -16,7 +17,7 @@ function CommentCard(props) {
                   " -", 
                   ` <a href="#" id="link">${props.comment.commentByUserName}</a>`,
                   "    ",
-                  `${date}`
+                  `${moment(props.comment.commentDate).format('MMMM D, YYYY HH:mm')}`
                   )
             } /> 
            

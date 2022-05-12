@@ -3,32 +3,44 @@ import express from "express";
 const router = express.Router();
 import Questions from "../models/QuestionModel.js";
 import Users from "../models/UserModel.js";
+import kafka from "../kafka/client.js";
+import config from "../configs/config.js";
 
 router.post("/question/upvote", function (req, res) {
   console.log("Inside Upvote POST Request");
   const { questionID, userID } = req.body;
 
-  Questions.findOneAndUpdate(
-    { _id: questionID },
-    { $push: { upVotes: userID }, $inc: { netVotesCount: 1 } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        Users.findOneAndUpdate(
-          { _id: question.askedByUserID },
-          { $inc: { reputation: 10 } },
-          function (error, question) {
-            if (error) {
-              res.status(400).send();
-            } else {
-              res.status(200).send("SUCCESS");
+  if (config.useKafka) {
+    let type = { artifact: "question_vote", action: "upvote" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+    };
+    kafka("vote", data);
+  } else {
+    Questions.findOneAndUpdate(
+      { _id: questionID },
+      { $push: { upVotes: userID }, $inc: { netVotesCount: 1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          Users.findOneAndUpdate(
+            { _id: question.askedByUserID },
+            { $inc: { reputation: 10 } },
+            function (error, question) {
+              if (error) {
+                res.status(400).send();
+              } else {
+                res.status(200).send("SUCCESS");
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.post("/question/removeupvote", function (req, res) {
@@ -36,27 +48,37 @@ router.post("/question/removeupvote", function (req, res) {
   let questionID = req.body.questionID;
   let userID = req.body.userID;
 
-  Questions.findOneAndUpdate(
-    { _id: questionID },
-    { $pull: { upVotes: userID }, $inc: { netVotesCount: -1 } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        Users.findOneAndUpdate(
-          { _id: question.askedByUserID },
-          { $inc: { reputation: -10 } },
-          function (error, question) {
-            if (error) {
-              res.status(400).send();
-            } else {
-              res.status(200).send("SUCCESS");
+  if (config.useKafka) {
+    let type = { artifact: "question_vote", action: "removeUpvote" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+    };
+    kafka("vote", data);
+  } else {
+    Questions.findOneAndUpdate(
+      { _id: questionID },
+      { $pull: { upVotes: userID }, $inc: { netVotesCount: -1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          Users.findOneAndUpdate(
+            { _id: question.askedByUserID },
+            { $inc: { reputation: -10 } },
+            function (error, question) {
+              if (error) {
+                res.status(400).send();
+              } else {
+                res.status(200).send("SUCCESS");
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.post("/question/downvote", function (req, res) {
@@ -64,27 +86,37 @@ router.post("/question/downvote", function (req, res) {
   let questionID = req.body.questionID;
   let userID = req.body.userID;
 
-  Questions.findOneAndUpdate(
-    { _id: questionID },
-    { $push: { downVotes: userID }, $inc: { netVotesCount: -1 } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        Users.findOneAndUpdate(
-          { _id: question.askedByUserID },
-          { $inc: { reputation: -10 } },
-          function (error, question) {
-            if (error) {
-              res.status(400).send();
-            } else {
-              res.status(200).send("SUCCESS");
+  if (config.useKafka) {
+    let type = { artifact: "question_vote", action: "downvote" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+    };
+    kafka("vote", data);
+  } else {
+    Questions.findOneAndUpdate(
+      { _id: questionID },
+      { $push: { downVotes: userID }, $inc: { netVotesCount: -1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          Users.findOneAndUpdate(
+            { _id: question.askedByUserID },
+            { $inc: { reputation: -10 } },
+            function (error, question) {
+              if (error) {
+                res.status(400).send();
+              } else {
+                res.status(200).send("SUCCESS");
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.post("/question/removedownvote", function (req, res) {
@@ -92,27 +124,37 @@ router.post("/question/removedownvote", function (req, res) {
   let questionID = req.body.questionID;
   let userID = req.body.userID;
 
-  Questions.findOneAndUpdate(
-    { _id: questionID },
-    { $pull: { downVotes: userID }, $inc: { netVotesCount: 1 } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        Users.findOneAndUpdate(
-          { _id: question.askedByUserID },
-          { $inc: { reputation: 10 } },
-          function (error, question) {
-            if (error) {
-              res.status(400).send();
-            } else {
-              res.status(200).send("SUCCESS");
+  if (config.useKafka) {
+    let type = { artifact: "question_vote", action: "removeDownvote" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+    };
+    kafka("vote", data);
+  } else {
+    Questions.findOneAndUpdate(
+      { _id: questionID },
+      { $pull: { downVotes: userID }, $inc: { netVotesCount: 1 } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          Users.findOneAndUpdate(
+            { _id: question.askedByUserID },
+            { $inc: { reputation: 10 } },
+            function (error, question) {
+              if (error) {
+                res.status(400).send();
+              } else {
+                res.status(200).send("SUCCESS");
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.get("/question/status", function (req, res) {
@@ -139,108 +181,156 @@ router.post("/answer/upvote", function (req, res) {
   console.log("Inside Upvote POST Request");
   const { questionID, userID, answerID, answeredByUserID } = req.body;
 
-  Questions.findOneAndUpdate(
-    { _id: questionID, "answers._id": answerID },
-    { $push: { "answers.$.upVotes": userID } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        Users.findOneAndUpdate(
-          { _id: answeredByUserID },
-          { $inc: { reputation: 5 } },
-          function (error, question) {
-            if (error) {
-              res.status(400).send();
-            } else {
-              res.status(200).send("SUCCESS");
+  if (config.useKafka) {
+    let type = { artifact: "answer_vote", action: "upvote" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+      answeredByUserID: answeredByUserID,
+      answerID: answerID,
+    };
+    kafka("vote", data);
+  } else {
+    Questions.findOneAndUpdate(
+      { _id: questionID, "answers._id": answerID },
+      { $push: { "answers.$.upVotes": userID } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          Users.findOneAndUpdate(
+            { _id: answeredByUserID },
+            { $inc: { reputation: 5 } },
+            function (error, question) {
+              if (error) {
+                res.status(400).send();
+              } else {
+                res.status(200).send("SUCCESS");
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.post("/answer/removeupvote", function (req, res) {
   console.log("Inside remove Upvote Request");
   const { questionID, userID, answerID, answeredByUserID } = req.body;
 
-  Questions.findOneAndUpdate(
-    { _id: questionID, "answers._id": answerID },
-    { $pull: { "answers.$.upVotes": userID } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        Users.findOneAndUpdate(
-          { _id: answeredByUserID },
-          { $inc: { reputation: -5 } },
-          function (error, question) {
-            if (error) {
-              res.status(400).send();
-            } else {
-              res.status(200).send("SUCCESS");
+  if (config.useKafka) {
+    let type = { artifact: "answer_vote", action: "removeUpvote" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+      answeredByUserID: answeredByUserID,
+      answerID: answerID,
+    };
+    kafka("vote", data);
+  } else {
+    Questions.findOneAndUpdate(
+      { _id: questionID, "answers._id": answerID },
+      { $pull: { "answers.$.upVotes": userID } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          Users.findOneAndUpdate(
+            { _id: answeredByUserID },
+            { $inc: { reputation: -5 } },
+            function (error, question) {
+              if (error) {
+                res.status(400).send();
+              } else {
+                res.status(200).send("SUCCESS");
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.post("/answer/downvote", function (req, res) {
   console.log("Inside downvote POST Request");
   const { questionID, userID, answerID, answeredByUserID } = req.body;
 
-  Questions.findOneAndUpdate(
-    { _id: questionID, "answers._id": answerID },
-    { $push: { "answers.$.downVotes": userID } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        Users.findOneAndUpdate(
-          { _id: answeredByUserID },
-          { $inc: { reputation: -5 } },
-          function (error, question) {
-            if (error) {
-              res.status(400).send();
-            } else {
-              res.status(200).send("SUCCESS");
+  if (config.useKafka) {
+    let type = { artifact: "answer_vote", action: "downvote" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+      answeredByUserID: answeredByUserID,
+      answerID: answerID,
+    };
+    kafka("vote", data);
+  } else {
+    Questions.findOneAndUpdate(
+      { _id: questionID, "answers._id": answerID },
+      { $push: { "answers.$.downVotes": userID } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          Users.findOneAndUpdate(
+            { _id: answeredByUserID },
+            { $inc: { reputation: -5 } },
+            function (error, question) {
+              if (error) {
+                res.status(400).send();
+              } else {
+                res.status(200).send("SUCCESS");
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.post("/answer/removedownvote", function (req, res) {
   console.log("Inside remove downvote POST Request");
   const { questionID, userID, answerID, answeredByUserID } = req.body;
 
-  Questions.findOneAndUpdate(
-    { _id: questionID, "answers._id": answerID },
-    { $pull: { "answers.$.downVotes": userID } },
-    function (error, question) {
-      if (error) {
-        res.status(400).send();
-      } else {
-        Users.findOneAndUpdate(
-          { _id: answeredByUserID },
-          { $inc: { reputation: 5 } },
-          function (error, question) {
-            if (error) {
-              res.status(400).send();
-            } else {
-              res.status(200).send("SUCCESS");
+  if (config.useKafka) {
+    let type = { artifact: "answer_vote", action: "removeDownvote" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+      answeredByUserID: answeredByUserID,
+      answerID: answerID,
+    };
+    kafka("vote", data);
+  } else {
+    Questions.findOneAndUpdate(
+      { _id: questionID, "answers._id": answerID },
+      { $pull: { "answers.$.downVotes": userID } },
+      function (error, question) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          Users.findOneAndUpdate(
+            { _id: answeredByUserID },
+            { $inc: { reputation: 5 } },
+            function (error, question) {
+              if (error) {
+                res.status(400).send();
+              } else {
+                res.status(200).send("SUCCESS");
+              }
             }
-          }
-        );
+          );
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.get("/answer/status", function (req, res) {

@@ -123,7 +123,7 @@ function QuestionsOverview() {
               if (res.status === 200) {
                 if (res.data === "UPVOTE") {
                   setVoteUpStatus(vote);
-                } else if (response.data === "DOWNVOTE") {
+                } else if (res.data === "DOWNVOTE") {
                   setVoteDownStatus(vote);
                 }
               }

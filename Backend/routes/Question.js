@@ -11,15 +11,15 @@ import client from "../redis/redisConfig.js";
 import config from "../configs/config.js";
 import { checkAuth } from "../Utils/passport.js";
 
-
 //Note: To clear a particular cache key in Redis: eg. for unanswered-questions do:
 //client.del("unanswered-questions");
 //to clear all cache data do:
 // client.flushAll('ASYNC');
+//current expiration of cache is 30 minutes
 
 router.get("/interesting", function (req, res) {
   console.log("Inside All Interesting Questions GET Request");
-
+  //client.flushAll('ASYNC');
   Questions.find(
     { isWaitingForReview: false },
     null,
@@ -57,13 +57,8 @@ router.get("/hot", function (req, res) {
             if (error) {
               res.status(400).send();
             } else {
-              var todayEnd = new Date().setHours(23, 59, 59, 999);
-              client.set(
-                key,
-                JSON.stringify(question),
-                "EX",
-                parseInt(todayEnd / 1000)
-              );
+              //expiration of cache is 30 minutes
+              client.setEx(key, 60 * 1 * 30, JSON.stringify(question));
               res.status(200).send(question);
             }
           }
@@ -109,13 +104,7 @@ router.get("/score", function (req, res) {
             if (error) {
               res.status(400).send();
             } else {
-              var todayEnd = new Date().setHours(23, 59, 59, 999);
-              client.set(
-                key,
-                JSON.stringify(question),
-                "EX",
-                parseInt(todayEnd / 1000)
-              );
+              client.setEx(key, 60 * 1 * 30, JSON.stringify(question));
               res.status(200).send(question);
             }
           }
@@ -160,13 +149,7 @@ router.get("/unanswered", function (req, res) {
             if (error) {
               res.status(400).send();
             } else {
-              var todayEnd = new Date().setHours(23, 59, 59, 999);
-              client.set(
-                key,
-                JSON.stringify(question),
-                "EX",
-                parseInt(todayEnd / 1000)
-              );
+              client.setEx(key, 60 * 1 * 30, JSON.stringify(question));
               res.status(200).send(question);
             }
           }
@@ -274,7 +257,8 @@ router.post("/addasviewed", function (req, res) {
   }
 
   if (config.useKafka) {
-    let data = { questionID: questionID, clientIdentity: clientIdentity };
+    let type = { artifact: "question_views" };
+    let data = { questionID: questionID, clientIdentity: clientIdentity, type: type };
     kafka("question_views", data);
   } else {
     Views.findOne(
@@ -536,11 +520,11 @@ router.get("/getQuestionByTag", function (req, res) {
   console.log("Inside Questions Overview GET Request");
   let tag = req.query.tag;
   console.log("Input tag : " + tag);
-  Questions.find({ tags: {$all: [tag]} }, function (error, questions) {
+  Questions.find({ tags: { $all: [tag] } }, function (error, questions) {
     if (error) {
       res.status(400).send();
     } else {
-  console.log("questions : " + questions);
+      console.log("questions : " + questions);
 
       res.status(200).send(questions);
     }

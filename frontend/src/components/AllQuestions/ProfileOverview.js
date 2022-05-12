@@ -13,6 +13,14 @@ function ProfileOverview(props) {
  
   let today = moment(date, "MMMM Do, YYYY @ h:mm:ss").fromNow();
 
+  var handleUserPage = (e) => {
+    e.preventDefault();
+    const eTarget = e.currentTarget.value;
+    console.log(eTarget)
+    localStorage.setItem("notOwnerID", props.question.askedByUserID);
+    window.location = "/profile";
+  }
+
   useEffect(() => {
     axios
       .get("/user/profile", {
@@ -32,7 +40,7 @@ function ProfileOverview(props) {
             src={profileImage}
             style={{ height: "20px", width: "20px" }}
           ></img>{" "}
-          <a href="#" id="link">
+          <a href="/profile" onClick={handleUserPage} value={props.question.askedByUserID} id="link">
             {displayName}
           </a>{" "}
           <p style={{ fontWeight: "bold", display: "inline" }}>

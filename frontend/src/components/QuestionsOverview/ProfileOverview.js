@@ -19,8 +19,6 @@ function ProfileOverview({userID, date}) {
 
   var handleUserPage = (e) => {
     e.preventDefault();
-    console.log("made it here");
-    console.log("made it here");
     const eTarget = e.currentTarget.value;
     console.log(eTarget)
     localStorage.setItem("notOwnerID", userID);

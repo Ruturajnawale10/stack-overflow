@@ -77,7 +77,7 @@ import Tags from "./routes/Tags.js";
 import Vote from "./routes/Vote.js";
 import Admin from "./routes/Admin/Admin.js";
 import Analytics from "./routes/Admin/Analytics.js";
-
+import Messages from "./routes/Messages.js";
 // API Routes
 app.use("/user", UserSession);
 app.use("/user/profile", UserProfile);
@@ -86,6 +86,7 @@ app.use("/question", Question);
 app.use("/tags",  Tags);
 app.use("/admin",  Admin);
 app.use("/admin/analytics",  Analytics);
+app.use("/messages",  Messages);
 
 //start the server on port 3001
 app.listen(3001);

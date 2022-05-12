@@ -27,15 +27,61 @@ router.get("/all", function (req, res) {
 router.post("/questions", function (req, res) {
   console.log("Inside Questions Activity Tab GET Request");
   console.log(req.body.userID);
+  console.log(req.body.user);
+  console.log(req.body.tag);
   let userID = req.body.userID;
+  let displayName1 = req.body.user;
+  let tag = req.body.tag;
 
-  Questions.find({ askedByUserID: userID }, function (error, questions) {
-    if (error) {
-      res.status(400).send();
-    } else {
-      res.status(200).send(questions);
+  if(req.body.userID){
+    console.log("made it here1234")
+    Questions.find({ askedByUserID: userID }, function (error, questions) {
+      if (error) {
+        res.status(400).send();
+      } else {
+        res.status(200).send(questions);
+      }
+    });
+  }
+  else if(req.body.user){
+    console.log("made it here12345")
+    Users.find({ displayName: displayName1 }, function (error, questions) {
+      if (error) {
+        res.status(400).send();
+      } else {
+        // res.status(200).send(questions);
+        console.log(questions[0]);
+        var id = questions[0]._id;
+        console.log(id);
+        console.log(questions[0]._id.toString())
+        Questions.find({ askedByUserID: questions[0]._id.toString() }, function (error, questions) {
+          if (error) {
+            res.status(400).send();
+          } else {
+            res.status(200).send(questions);
+          }
+        });
+      }
+    });
+
+    // Questions.find({ displayName: displayName1 }, function (error, questions) {
+    //   if (error) {
+    //     res.status(400).send();
+    //   } else {
+    //     res.status(200).send(questions);
+    //   }
+    // });
     }
-  });
+    else if(req.body.tag){
+      console.log("made it here123456")
+      Questions.find({tags: req.body.tag}, function (error, questions) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          res.status(200).send(questions);
+        }
+      });
+    }
 });
 router.get("/answers", function (req, res) {
   console.log("Inside Answers Activity Tab GET Request");

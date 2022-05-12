@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { Component, useEffect } from "react";
+import { Form } from "react-bootstrap";
 import {
   Nav,
   NavBarLogoImage,
@@ -19,7 +21,7 @@ import SearchBar from "./Searchbar";
 class Navbar extends Component {
   constructor(props) {
     super(props);
-    this.state = { check: false };
+    this.state = { check: false , query: ""};
     // window.addEventListener('click',(e)=>this.hideComponent(e));
   }
 
@@ -30,6 +32,50 @@ class Navbar extends Component {
   }
   handleProfileClick() {
     localStorage.setItem("notOwnerID", localStorage.getItem("userID"));
+  }
+  
+  handleParseInput = (e) => {
+    console.log("made it here 123")
+    this.setState({
+      [e.target.name]: e.target.value
+    })
+    console.log(this.state.query)
+  }
+  handleSubmit = (e) => {
+    console.log(this.state.query)
+    let final_query = this.state.query;
+
+    // search via Tag
+    if(final_query.slice(1,4) === "tag" || final_query.slice(1,4) === "TAG" ){
+      var n1 = final_query.lastIndexOf(']');
+      var result1 = final_query.substring(n1 + 1);
+      console.log(result1 + " this is tag result");
+      const data1 = {"tag": result1.trim()};
+      axios.post("/user/profile/questions", data1).then((response) => {
+        if (response) {
+          console.log(response.data);
+        } else {
+          console.log("Error retrieving questions");
+        }
+      });
+    }
+
+     // search via User
+    if(final_query.slice(0,4) === "user" || final_query.slice(0,4) === "USER" ){
+      // console.log(final_query.slice(-4) + " This is when -4");
+      var n = final_query.lastIndexOf(':');
+      var result = final_query.substring(n + 1);
+      console.log("this is result " + result.trim());
+      const data = {"user" : result.trim()};
+      axios.post("/user/profile/questions", data).then((response) => {
+        if (response) {
+          console.log(response.data);
+        } else {
+          console.log("Error retrieving questions");
+        }
+      });
+    }
+
   }
   render() {
     let loggedInDiv = null;
@@ -67,9 +113,7 @@ class Navbar extends Component {
           onClick={(e) =>
             this.setState((prevState) => ({ check: !prevState.check }))
           }
-        >
-          <SearchBar/>
-          {/**<SearchInput></SearchInput>*/}
+        ><SearchInput name="query" onChange={this.handleParseInput}></SearchInput>
           {this.state.check ? (
             <SearchHelp>
               <Top>
@@ -85,7 +129,7 @@ class Navbar extends Component {
               </Top>
               <Bottom>
                 <NavButton>
-                  <NavButtonLink to="/ask">Ask a Question</NavButtonLink>
+                  <NavButtonLink to="/" onClick={this.handleSubmit}>Ask a Question</NavButtonLink>
                 </NavButton>
               </Bottom>
             </SearchHelp>

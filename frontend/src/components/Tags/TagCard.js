@@ -29,7 +29,7 @@ function TagCard(props) {
           </div>
         </div>
         <div className="flex--item fc-medium mb12 v-truncate4">
-          {tag.description.length>125 && (tag.description).slice(0, 124)}{"..."}
+          {tag.description.length>125 && (tag.description).slice(0, 124) + "..."}
           {tag.description.length<=125 && (tag.description)}
         </div>
       </div>

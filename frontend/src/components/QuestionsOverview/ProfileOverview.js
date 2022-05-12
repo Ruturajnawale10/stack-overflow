@@ -17,6 +17,16 @@ function ProfileOverview({userID, date}) {
   const [silverBadges, setSilverBadges] = useState(null);
   const [bronzeBadges, setBronzeBadges] = useState(null);
 
+  var handleUserPage = (e) => {
+    e.preventDefault();
+    console.log("made it here");
+    console.log("made it here");
+    const eTarget = e.currentTarget.value;
+    console.log(eTarget)
+    localStorage.setItem("notOwnerID", userID);
+    window.location = "/profile";
+  }
+
   useEffect(() => {
     axios
       .get("/user/profile", {
@@ -46,7 +56,7 @@ function ProfileOverview({userID, date}) {
           </div>
           <div class="col-md-9">
             <div class="row text-start">
-              <a href="#" id="link">
+              <a href="/profile" onClick={handleUserPage} value={userID} id="link">
                 {displayName}
               </a>
             </div>

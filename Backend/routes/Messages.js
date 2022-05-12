@@ -21,11 +21,27 @@ router.post("/getMessage", function (req, res) {
         console.log("Error occured is : " + err);
         res.end();
       } else {
+
+        var sql = "Select * FROM MESSAGES WHERE fromUser =? and toUser =?";
+        connPool.query(sql, [req.body.to, req.body.from], function (err, result2) {
+          if (err || result.length === 0) {
+            console.log("Error occured is : " + err);
+            res.end();
+          } else {
+            console.log('resultado')
+            console.log(result2)
+            console.log('resultado')
+            console.log("query executed successfully");
+            res.status(200).send([result,result2]);
+          }
+        });
+/*
         console.log('resultado')
         console.log(result)
         console.log('resultado')
         console.log("query executed successfully");
         res.status(200).send(result);
+        */
       }
     });
 });

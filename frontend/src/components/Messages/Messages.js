@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import MyMessage from "./ResponseCard";
 import AnswerCard from "./AnswerCard";
 import ProfileOverview from "./ProfileOverview";
 import { NavLink as Link } from 'react-router-dom';
@@ -7,6 +8,7 @@ import "../../App.css";
 import OnlineUsers from "./OnlineUsers";
 function Messages() {
   const [answers, setAnswers] = useState(null);
+  const [mymessage, setMyMessage] = useState(null);
   const [online, setOnlineUsers] = useState(null);
   //const [tags, setTags] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -122,16 +124,29 @@ function Messages() {
 		  console.log(response);
 		  console.log("inside messages response")
 
-
+		   var allresponses = response.data[0]
 		  setAnswers(
 			<div class="row">
-			  {response.data.map((answer) => (
+			  {response.data[0].map((answer) => (
 				<div key={answer} id="answercard">
 				  <AnswerCard item={answer} />
 				</div>
 			  ))}
 			</div>
+			
 		  );
+		  setMyMessage(
+			<div class="row">
+			  {response.data[1].map((message) => (
+				<div key={message} id="answercard">
+				  <MyMessage item={message} />
+				</div>
+			  ))}
+			</div>
+			
+		  );
+
+
 
 
 
@@ -180,11 +195,50 @@ function Messages() {
 		  console.log(response);
 		  console.log("inside send handle")
 
-  
+   	  //get messages between two users
+		 var data ={'from':localStorage.getItem('userName'),'to':input}
+		 axios.post("/messages/getMessage",data).then((response) => {
+		   console.log("inside messages")
+		   console.log(data)
+		   console.log("inside messages")
+		   if (response) {
+			   console.log("inside messages response")
+			 console.log(response);
+			 console.log("inside messages response")
+   
+   
+			 setAnswers(
+			   <div class="row">
+				 {response.data[0].map((answer) => (
+				   <div key={answer} id="answercard">
+					 <AnswerCard item={answer} />
+				   </div>
+				 ))}
+			   </div>
+			 );
+			 setAnswers(
+				<div class="row">
+				  {response.data[1].map((answer) => (
+					<div key={answer} id="answercard">
+					  <MyMessage item={answer} />
+					</div>
+				  ))}
+				</div>
+			  );
+   
+   
+   
+		   } else {
+			 console.log("Error retrieving profiles");
+		   }
+		 });
 		} else {
 		  console.log("Error retrieving profiles");
 		}
 	  });
+
+
+	 
   };
 
   return (
@@ -221,6 +275,7 @@ function Messages() {
 					<div class="position-relative">
 						<div class="chat-messages p-4">
 						{answers}
+						{mymessage}
 						</div>
 					</div>
 

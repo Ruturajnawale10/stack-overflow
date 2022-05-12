@@ -9,8 +9,8 @@ var usersSchema = new Schema(
     isAdmin: { type: Boolean, required: true, default: false },
     joiningDate: { type: Date, default: Date.now() },
     lastSeen: { type: Date, default: Date.now() },
-    location: { type: String },
-    profileImageName: { type: String },
+    location: { type: String , required: false},
+    profileImageName: { type: String, required: false, default : "https://bootdey.com/img/Content/avatar/avatar7.png" },
     reputation: { type: Number, required: true, default: 0 },
     bookmarkedQuestionID: { type: [String] },
     goldBadges: { type: [String] },
@@ -18,9 +18,9 @@ var usersSchema = new Schema(
     bronzeBadges: { type: [String] },
     questionsAskedID: { type: [String] },
     answeredQuestionID: { type: [String] },
-    title: { type: String },
-    aboutMe: { type: String },
-    fullName: { type: String },
+    title: { type: String, required: false },
+    aboutMe: { type: String, required: false},
+    fullName: { type: String, required: false },
 
   },
   {

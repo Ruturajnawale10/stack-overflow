@@ -1,11 +1,12 @@
 //This tab handles editing the user's profile information
-import React, { Component, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import axios from "axios";
 import { Container } from "react-bootstrap";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { storage_bucket } from "../../firebase/firebaseConfig";
 
 function SettingsTab(props) {
+  const [user, setUser] = useState();
   const [displayName, setDispalyName] = useState();
   const [location, setLocation] = useState();
   const [title, setTitle] = useState();
@@ -14,9 +15,26 @@ function SettingsTab(props) {
   const [image, setImage] = useState(
     "https://bootdey.com/img/Content/avatar/avatar7.png"
   );
-  const [downloadUrl, setDownloadUrl] = useState();
-  const [tempImage, setTempImage] = useState();
 
+  useEffect(() => {
+    
+    axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios
+      .get("/user/profile", { params: {userID: localStorage.getItem("userID") } })
+      .then((response) => {
+        let userDetails = response.data;
+        console.log("userDetails are : " + JSON.stringify(userDetails));
+        setUser(userDetails);
+        setDispalyName(userDetails.displayName);
+        setLocation(userDetails.location);
+        setTitle(userDetails.title);
+        setAboutMe(userDetails.aboutMe);
+        setFullName(userDetails.fullName);
+        if (userDetails.profileImageName != null) setImage(userDetails.profileImageName);
+        console.log("iiiiiiiiiiii " + image)
+      });
+  }, []);
+  
 
   const handleDisplayNameChange = (e) => {
     setDispalyName(e.target.value);
@@ -35,25 +53,42 @@ function SettingsTab(props) {
   };
   const handleImageChange = (e) => {
     if (e.target.files[0]) {
-      setTempImage(e.target.files[0]);
+      if (e.target.files[0] != null) {
+        console.log(e.target.files[0]);
+        const storageRef = ref(storage_bucket, e.target.files[0].name);
+        // 'file' comes from the Blob or File API
+        uploadBytes(storageRef, e.target.files[0])
+          .then((snapshot) => {
+            return getDownloadURL(snapshot.ref);
+          })
+          .then((downloadURL) => {
+            console.log("Download URL", downloadURL);
+            setImage(downloadURL);
+          });
+      }
     }
   };
   const handleSaveChanges = (e) => {
-    if (tempImage != null) {
-      console.log(tempImage);
-      const storageRef = ref(storage_bucket, tempImage.name);
-      // 'file' comes from the Blob or File API
-      uploadBytes(storageRef, tempImage)
-        .then((snapshot) => {
-          return getDownloadURL(snapshot.ref);
-        })
-        .then((downloadURL) => {
-          console.log("Download URL", downloadURL);
-          setImage(downloadURL);
-          setDownloadUrl(downloadURL);
-        });
-    }
+    const userInfo = {
+      id: localStorage.getItem("userID"),
+      displayName: displayName,
+      location: location,
+      title: title,
+      profileImageName: image,
+      aboutMe: aboutMe,
+      fullName: fullName,
+    };
+    console.log(" user info is : " + JSON.stringify(userInfo));
+    // axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
+    axios
+      .post("/user/profile/updateUser", userInfo)
+      .then((response) => {
+        console.log("Status Code : ", response.status);
+        console.log("updated user is : ", response.data);
+        alert("User information updated successfully");
+      });
   }
+
   return (
       <Container>
       <div className="container bootstrap snippets bootdey">

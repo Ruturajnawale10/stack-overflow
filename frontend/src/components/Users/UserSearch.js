@@ -83,7 +83,7 @@ class UserSearch extends Component {
                 <div class="row" style={{ height: "82px", width: "230px" }}>
                   <div class="col-md-3">
                     <img
-                      src={profileImage}
+                      src={profile.profileImageName}
                       style={{ height: "48px", width: "48px" }}
                     ></img>
                   </div>

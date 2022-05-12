@@ -83,7 +83,7 @@ function ProfileOverview(props) {
         <div class="row" style={{ height: "144px", width: "800px" }}>
           <div class="col-md-1">
             <img
-              src={profileImage}
+              src={profile.profileImageName}
               style={{ height: "128px", width: "128px" }}
             ></img>
           </div>
@@ -136,7 +136,7 @@ function ProfileOverview(props) {
         <div class="row" style={{ height: "144px", width: "800px" }}>
           <div class="col-md-1">
             <img
-              src={profileImage}
+              src={profile.profileImageName}
               style={{ height: "128px", width: "128px" }}
             ></img>
           </div>

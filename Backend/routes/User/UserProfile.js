@@ -244,4 +244,36 @@ router.get("/questions/answered", function (req, res) {
     }
   );
 });
+
+router.post("/updateUser", (req,res) =>{
+  console.log("Inside updateUser for user : " + req.body.id);
+  console.log("Request object for update User " + JSON.stringify(req.body));
+  let user = {
+    displayName: req.body.displayName,
+    location: req.body.location,
+    title: req.body.title,
+    profileImageName: req.body.profileImageName,
+    aboutMe: req.body.aboutMe,
+    fullName: req.body.fullName
+  };
+
+  Users.findOneAndUpdate( { _id : req.body.id } , user, {new: true} , (err, updatedUser)=>{
+    console.log("inside find and update")
+    console.log("updatedUser " +  updatedUser)
+    if (err) {
+      console.log("Error occoured while updating user is " + err);
+      return;
+    }
+    if(updatedUser){
+      console.log("updated use is " + updatedUser);
+      res.writeHead(200, {
+        "Content-Type": "application/json",
+      });
+      res.end(JSON.stringify(updatedUser));
+    }
+  });
+
+});
+
+
 export default router;

@@ -208,22 +208,24 @@ function Messages() {
    
    
 			 setAnswers(
-			   <div class="row">
-				 {response.data[0].map((answer) => (
-				   <div key={answer} id="answercard">
-					 <AnswerCard item={answer} />
-				   </div>
-				 ))}
-			   </div>
-			 );
-			 setAnswers(
 				<div class="row">
-				  {response.data[1].map((answer) => (
+				  {response.data[0].map((answer) => (
 					<div key={answer} id="answercard">
-					  <MyMessage item={answer} />
+					  <AnswerCard item={answer} />
 					</div>
 				  ))}
 				</div>
+				
+			  );
+			  setMyMessage(
+				<div class="row">
+				  {response.data[1].map((message) => (
+					<div key={message} id="answercard">
+					  <MyMessage item={message} />
+					</div>
+				  ))}
+				</div>
+				
 			  );
    
    

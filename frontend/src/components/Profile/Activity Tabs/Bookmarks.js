@@ -81,8 +81,11 @@ function BookmarksTab() {
                   <div class="col">
                     {question.tags.map((tag) => {
                       return (
-                        <button
-                          class="my-2 px-2 py-1 col-sm-auto tagblock"
+                        <a
+                          href={"/tags/" + tag}
+                          class="btn my-2 px-2 py-1 col-sm-auto"
+                          rel="tag"
+                          role="button"
                           style={{
                             color: "#39739D",
                             fontWeight: "450",
@@ -90,7 +93,7 @@ function BookmarksTab() {
                           }}
                         >
                           {tag}
-                        </button>
+                        </a>
                       );
                     })}
                     <p>

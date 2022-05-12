@@ -71,8 +71,11 @@ function BadgesTab(props) {
                 <div>
                   <div class="row">
                     <div class="col-sm-3">
-                      <button
-                        class="my-2 px-2 py-1 col-sm-auto tagblock"
+                      <a
+                        href={"/tags/" + key}
+                        class="btn my-2 px-2 py-1 col-sm-auto"
+                        rel="tag"
+                        role="button"
                         style={{
                           color: "#39739D",
                           fontWeight: "450",
@@ -81,7 +84,7 @@ function BadgesTab(props) {
                       >
                         <img src={gold} style={{ blockSize: "10px" }}></img>{" "}
                         {key}
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -91,8 +94,11 @@ function BadgesTab(props) {
                 <div>
                   <div class="row">
                     <div class="col-sm-3">
-                      <button
-                        class="my-2 px-2 py-1 col-sm-auto tagblock"
+                      <a
+                        href={"/tags/" + key}
+                        class="btn my-2 px-2 py-1 col-sm-auto"
+                        rel="tag"
+                        role="button"
                         style={{
                           color: "#39739D",
                           fontWeight: "450",
@@ -101,7 +107,7 @@ function BadgesTab(props) {
                       >
                         <img src={silver} style={{ blockSize: "10px" }}></img>{" "}
                         {key}
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>
@@ -111,8 +117,11 @@ function BadgesTab(props) {
                 <div>
                   <div class="row">
                     <div class="col-sm-3">
-                      <button
-                        class="my-2 px-2 py-1 col-sm-auto tagblock"
+                      <a
+                        href={"/tags/" + key}
+                        class="btn my-2 px-2 py-1 col-sm-auto"
+                        rel="tag"
+                        role="button"
                         style={{
                           color: "#39739D",
                           fontWeight: "450",
@@ -121,7 +130,7 @@ function BadgesTab(props) {
                       >
                         <img src={bronze} style={{ blockSize: "10px" }}></img>{" "}
                         {key}
-                      </button>
+                      </a>
                     </div>
                   </div>
                 </div>

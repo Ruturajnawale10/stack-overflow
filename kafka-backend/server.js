@@ -12,6 +12,9 @@ import RemoveUpvoteAnswer from "./services/Votes/Answer/RemoveUpvoteAnswer.js";
 import DownvoteAnswer from "./services/Votes/Answer/DownvoteAnswer.js";
 import RemoveDownvoteAnswer from "./services/Votes/Answer/RemoveDownvoteAnswer.js";
 
+import AddBookmark from "./services/Bookmark/AddBookmark.js";
+import RemoveBookmark from "./services/Bookmark/RemoveBookmark.js";
+
 import config from "./configs/config.js";
 import mongoose from "mongoose";
 
@@ -59,6 +62,9 @@ function consumeMsg(payload) {
     case "question_views":
       QuestionViews(payload.data);
       break;
+    case "question_bookmark":
+      handleBookmark(payload);
+      break;
   }
 }
 
@@ -96,6 +102,18 @@ function handleAnswerActions(payload) {
   }
 }
 
+function handleBookmark(payload) {
+  switch (payload.data.type.action) {
+    case "add":
+      AddBookmark(payload.data);
+      break;
+    case "remove":
+      RemoveBookmark(payload.data);
+      break;
+  }
+}
+
 // Kafka Topics
 handleTopicRequest("question_views");
 handleTopicRequest("vote");
+handleTopicRequest("question");

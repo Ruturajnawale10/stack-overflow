@@ -189,17 +189,27 @@ router.post("/bookmark/add", function (req, res) {
   let questionID = req.body.questionID;
   let userID = req.body.userID;
 
-  Users.findOneAndUpdate(
-    { _id: userID },
-    { $push: { bookmarkedQuestionID: questionID } },
-    function (error, question) {
-      if (error) {
-        res.end();
-      } else {
-        res.end();
+  if (config.useKafka) {
+    let type = { artifact: "question_bookmark", action: "add" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+    };
+    kafka("question", data);
+  } else {
+    Users.findOneAndUpdate(
+      { _id: userID },
+      { $push: { bookmarkedQuestionID: questionID } },
+      function (error, question) {
+        if (error) {
+          res.end();
+        } else {
+          res.end();
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.post("/bookmark/remove", function (req, res) {
@@ -207,17 +217,27 @@ router.post("/bookmark/remove", function (req, res) {
   let questionID = req.body.questionID;
   let userID = req.body.userID;
 
-  Users.findOneAndUpdate(
-    { _id: userID },
-    { $pull: { bookmarkedQuestionID: questionID } },
-    function (error, question) {
-      if (error) {
-        res.end();
-      } else {
-        res.end();
+  if (config.useKafka) {
+    let type = { artifact: "question_bookmark", action: "remove" };
+    let data = {
+      questionID: questionID,
+      userID: userID,
+      type: type,
+    };
+    kafka("question", data);
+  } else {
+    Users.findOneAndUpdate(
+      { _id: userID },
+      { $pull: { bookmarkedQuestionID: questionID } },
+      function (error, question) {
+        if (error) {
+          res.end();
+        } else {
+          res.end();
+        }
       }
-    }
-  );
+    );
+  }
 });
 
 router.get("/bookmark/status", function (req, res) {
@@ -258,7 +278,11 @@ router.post("/addasviewed", function (req, res) {
 
   if (config.useKafka) {
     let type = { artifact: "question_views" };
-    let data = { questionID: questionID, clientIdentity: clientIdentity, type: type };
+    let data = {
+      questionID: questionID,
+      clientIdentity: clientIdentity,
+      type: type,
+    };
     kafka("question_views", data);
   } else {
     Views.findOne(

@@ -20,6 +20,7 @@ import Register from "./Register/Register";
 import Logout from "./Logout";
 import Messages from "../components/Messages/Messages.js";
 import PostActivity from "./PostActivity/PostActivity";
+import QuestionEdit from "./QuestionEdit/QuestionEdit";
 
 class Main extends Component {
   render() {
@@ -50,6 +51,7 @@ class Main extends Component {
             <Route path="/allQuestions" element={<AllQuestions />} />
             <Route path="/questions" element={<AllQuestions />} />
             <Route path="/questions/ask" element={<QuestionPosting />} />
+            <Route path="/questions/edit/:questionID" element={<QuestionEdit />} />
             <Route path="posts/:questionID" element={<PostActivity/>}/>
             <Route path="posts/:questionID/:answerID" element={<PostActivity/>}/>
             <Route path="/tags" element={<TagOverview />} />

@@ -10,6 +10,7 @@ import { TiArrowSortedUp } from "react-icons/ti";
 import { TiArrowSortedDown } from "react-icons/ti";
 import { MdOutlineHistory } from "react-icons/md";
 import { FaCheck } from "react-icons/fa";
+import {useNavigate} from "react-router-dom";
 
 function AnswerCard(props) {
   let [tick, setTick] = useState(null);
@@ -21,6 +22,7 @@ function AnswerCard(props) {
   const [warningBannerCommentDiv, setWarningBannerCommentDiv] = useState(null);
 
   let userID = localStorage.getItem("userID");
+  let navigate = useNavigate();
 
   let noVote = "#a9acb0";
   let vote = "darkorange";
@@ -74,7 +76,7 @@ function AnswerCard(props) {
       <div class="row">
         {props.answer.comments.map((comment) => (
           <div key={comment} id="commentcard">
-            <CommentCard comment={comment} />
+            <CommentCard comment={comment} date={comment.date}/>
           </div>
         ))}
       </div>
@@ -234,6 +236,7 @@ function AnswerCard(props) {
                 size={39}
                 fill="#a9acb0"
                 style={{ marginTop: "10px" }}
+                onClick={(e)=> {navigate(`/posts/${props.answer.questionID}/${props.answer._id}`)}}
               />
             </div>
           </div>

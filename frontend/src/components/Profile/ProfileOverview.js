@@ -9,6 +9,8 @@ import ActivityTab from "./ActivityTab";
 import moment from "moment";
 function ProfileOverview(props) {
   const [key, setKey] = useState("profile");
+  const [tags, setTags] = useState([]);
+  const [scores, setScores] = useState([]);
   const [userID, setUserID] = useState(localStorage.getItem("userID"));
   const [profile, setProfile] = useState([]);
   const [notOwnerID, setNotOwnerID] = useState(
@@ -16,6 +18,9 @@ function ProfileOverview(props) {
   );
   useEffect(() => {
     var data;
+    var data1;
+    var myTags = [];
+    var myScores = {};
     if (notOwnerID.length == 0) {
       data = {
         userID,
@@ -36,6 +41,41 @@ function ProfileOverview(props) {
         console.log("Error retrieving profile");
       }
     });
+
+    async function fetchData() {
+      data1 = data;
+      const request = await axios
+        .post("/user/profile/tags", data)
+        .then((response) => {
+          if (response) {
+            setTags(response.data);
+            myTags = response.data;
+            axios
+              .post("/user/profile/tags/scores", { data1, myTags })
+              .then((response) => {
+                if (response) {
+                  setScores(response.data);
+                  myScores = response.data;
+                  axios
+                    .post("/user/profile/update/badges", { data1, myScores })
+                    .then((response) => {
+                      if (response) {
+                        console.log(response.data);
+                      } else {
+                        console.log("Error retrieving profile");
+                      }
+                    });
+                } else {
+                  console.log("Error calculating  scores");
+                }
+              });
+          } else {
+            console.log("Error getting tags");
+          }
+        });
+      console.log(request);
+    }
+    fetchData();
   }, []);
   if (userID == notOwnerID) {
     return (

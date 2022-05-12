@@ -1,5 +1,5 @@
 "use strict";
-import Views from "../models/ViewsModel.js";
+import Views from "../../models/ViewsModel.js";
 
 async function handle_request(msg) {
   console.log("In Kafka handle request:" + JSON.stringify(msg));

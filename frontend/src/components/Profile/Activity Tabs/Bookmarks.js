@@ -31,7 +31,7 @@ function BookmarksTab() {
         console.log(response.data[0]);
         setQuestions(response.data[0]);
       } else {
-        console.log("Error retrieving questions");
+        console.log("Error retrieving bookmarks");
       }
     });
   }, []);
@@ -48,7 +48,7 @@ function BookmarksTab() {
                   class="col-sm-2"
                   style={{ height: "17px", width: "100px" }}
                 >
-                  <p style={{ fontSize: "13px" }}>
+                  <p style={{ fontSize: "13px", color: "green" }}>
                     {question.answers.length} answers
                   </p>
                 </div>
@@ -65,7 +65,9 @@ function BookmarksTab() {
                   class="col-sm-2"
                   style={{ height: "17px", width: "100px" }}
                 >
-                  <p style={{ fontSize: "13px" }}>{question.viewCount} views</p>
+                  <p style={{ fontSize: "13px", color: "orange" }}>
+                    {question.viewCount} views
+                  </p>
                 </div>
                 <div class="row">
                   <a

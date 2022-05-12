@@ -56,7 +56,7 @@ function QuestionsTab() {
                   class="col-sm-2"
                   style={{ height: "17px", width: "100px" }}
                 >
-                  <p style={{ fontSize: "13px" }}>
+                  <p style={{ fontSize: "13px", color: "green" }}>
                     {question.answers.length} answers
                   </p>
                 </div>

@@ -10,7 +10,7 @@ import silver from "../../images/silver.png";
 import bronze from "../../images/bronze.png";
 
 
-function ProfileOverview({userID, date}) {
+function ProfileOverview({type, userID, date}) {
   const [displayName, setDisplayName] = useState(null);
   const [reputation, setReputation] = useState(null);
   const [goldBadges, setGoldBadges] = useState(null);
@@ -44,7 +44,9 @@ function ProfileOverview({userID, date}) {
       <div class="my-1 container">
         <div class="row">
           <div class="col-md-12" style={{ height: "28px" }}>
-            <p style={{ textAlign: "left", color: "#8f9294" }}>asked {moment(date).format('MMMM Do YYYY, h:mm:ss a')}</p>
+            <p style={{ textAlign: "left", color: "#8f9294" }}>
+                {type === "question" ? "asked " : "answered " }{moment(date).format('MMMM D, YYYY HH:mm')}
+              </p>
           </div>
         </div>
         <div class="row">

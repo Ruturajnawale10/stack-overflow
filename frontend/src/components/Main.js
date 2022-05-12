@@ -19,6 +19,7 @@ import UserSearch from "./Users/UserSearch";
 import Register from "./Register/Register";
 import Logout from "./Logout";
 import Messages from "../components/Messages/Messages.js";
+import PostActivity from "./PostActivity/PostActivity";
 
 class Main extends Component {
   render() {
@@ -49,6 +50,8 @@ class Main extends Component {
             <Route path="/allQuestions" element={<AllQuestions />} />
             <Route path="/questions" element={<AllQuestions />} />
             <Route path="/questions/ask" element={<QuestionPosting />} />
+            <Route path="posts/:questionID" element={<PostActivity/>}/>
+            <Route path="posts/:questionID/:answerID" element={<PostActivity/>}/>
             <Route path="/tags" element={<TagOverview />} />
             <Route path="/user" element={<UserSearch />} />
             <Route path="/profile" element={<ProfileOverview />} />

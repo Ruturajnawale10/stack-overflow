@@ -18,6 +18,10 @@ var usersSchema = new Schema(
     bronzeBadges: { type: [String] },
     questionsAskedID: { type: [String] },
     answeredQuestionID: { type: [String] },
+    title: { type: String },
+    aboutMe: { type: String },
+    fullName: { type: String },
+
   },
   {
     versionKey: false,

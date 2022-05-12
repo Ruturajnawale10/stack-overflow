@@ -15,9 +15,10 @@ function Messages() {
   const [profile, setProfile] = useState(null);
   const [alenght, setAlength] = useState(null);
   const [input, setSearchValue] = useState('');
+  const [sendvalue, setSendValue] = useState('');
   let answersData='';
   //var input ="";
-  var sendvalue ="";
+  //var sendvalue ="";
  //var alenght=0;
   useEffect(() => {
 
@@ -78,7 +79,8 @@ function Messages() {
  
 
   const handleChangemessage = (e) => {
-	sendvalue= e.target.value;
+	setSendValue(e.target.value);
+	
  }
   const handleSearch = () => {
 	if(input.length >0){   

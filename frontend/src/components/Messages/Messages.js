@@ -6,6 +6,7 @@ import { NavLink as Link } from 'react-router-dom';
 import axios from 'axios';
 import "../../App.css";
 import OnlineUsers from "./OnlineUsers";
+import moment from 'moment';
 function Messages() {
   const [answers, setAnswers] = useState(null);
   const [mymessage, setMyMessage] = useState(null);
@@ -89,13 +90,14 @@ function Messages() {
 		  console.log("inside handle")
 			var user ={}
 			 //user['data']['items'] = response.data.items[input];
+
 			 const arrayWithFilterObjects= response.data.filter((o) => o.displayName === input);
 			 user['data'] = {'item': arrayWithFilterObjects}
 			 //user['data']['item'] = arrayWithFilterObjects;
 			 console.log("find")
 			 console.log(arrayWithFilterObjects)
 			 console.log("find")
-	
+	if(arrayWithFilterObjects.length>0){
 				 setOnlineUsers(
 				<div class="row">
 				  {//user.data.map((online) => (
@@ -106,6 +108,7 @@ function Messages() {
 				  
 				</div>
 			  );
+	}
   
 		} else {
 		  console.log("Error retrieving profiles");
@@ -124,10 +127,22 @@ function Messages() {
 		  console.log(response);
 		  console.log("inside messages response")
 
-		   var allresponses = response.data[0]
+		   //var allresponses = response.data[0]
+		   var allr = [...new Set([...response.data[0] ,...response.data[1]])];
+		   
+		   console.log("Before")
+		   console.log(allr)
+		   console.log("Before")
+		   allr.sort((a,b) => Date.parse(moment(b.createdAt).format()) - Date.parse(moment(a.createdAt).format()))
+		   allr.reverse();
+		   console.log("After")
+		   console.log(allr)
+		   console.log("After")
+		   
+		   //var sortedArray = allr.sort((a,b) => Date.parse(a.createdAt) - Date.parse(b.createdAt));
 		  setAnswers(
 			<div class="row">
-			  {response.data[0].map((answer) => (
+			  {allr.map((answer) => (
 				<div key={answer} id="answercard">
 				  <AnswerCard item={answer} />
 				</div>
@@ -135,6 +150,7 @@ function Messages() {
 			</div>
 			
 		  );
+		  /*
 		  setMyMessage(
 			<div class="row">
 			  {response.data[1].map((message) => (
@@ -144,7 +160,7 @@ function Messages() {
 			  ))}
 			</div>
 			
-		  );
+		  );*/
 
 
 
@@ -205,11 +221,23 @@ function Messages() {
 			   console.log("inside messages response")
 			 console.log(response);
 			 console.log("inside messages response")
-   
-   
+			//var allr = []
+			//allr.concat(response.data[0],response.data[1])
+		  //var allresponses = response.data[0]
+		  var allr = [...new Set([...response.data[0] ,...response.data[1]])];
+		   
+		  console.log("Before")
+		  console.log(allr)
+		  console.log("Before")
+		  allr.sort((a,b) => Date.parse(moment(b.createdAt).format()) - Date.parse(moment(a.createdAt).format()))
+		  allr.reverse();
+		  console.log("After")
+		  console.log(allr)
+		  console.log("After")
+		  
 			 setAnswers(
 				<div class="row">
-				  {response.data[0].map((answer) => (
+				  {allr.map((answer) => (
 					<div key={answer} id="answercard">
 					  <AnswerCard item={answer} />
 					</div>
@@ -217,6 +245,8 @@ function Messages() {
 				</div>
 				
 			  );
+
+			  /*
 			  setMyMessage(
 				<div class="row">
 				  {response.data[1].map((message) => (
@@ -226,7 +256,7 @@ function Messages() {
 				  ))}
 				</div>
 				
-			  );
+			  );*/
    
    
    

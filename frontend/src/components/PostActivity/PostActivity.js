@@ -3,14 +3,14 @@ import {Button, Row, Col, ListGroup} from "react-bootstrap";
 import {useNavigate, Navigate, Link, useParams} from "react-router-dom";
 import MDEditor, {commands} from "@uiw/react-md-editor";
 import { FaCheck } from "react-icons/fa";
+import {BiRightArrow} from "react-icons/bi";
 import moment from 'moment';
-
 import axios from "axios";
 
 
 const PostActivity = () => {
     let navigate = useNavigate();
-    let {questionID, answerID} = useParams();
+    const {questionID, answerID} = useParams();
     let userID = localStorage.getItem("userID");
 
     const [question, setQuestion] = useState(null);

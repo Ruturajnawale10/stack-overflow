@@ -11,8 +11,8 @@ function AnswerCard(props) {
   return (
     <div class="chat-message-right pb-4">
     <div>
-      <img src="https://bootdey.com/img/Content/avatar/avatar5.png" class="rounded-circle mr-1" alt="Chris Wood" width="40" height="40"></img>
-      {props.item.toUser}
+     
+      {props.item.fromUser}
       <div class="text-muted small text-nowrap mt-2">  {props.item.createdAt}</div>
     </div>
     <div class="flex-shrink-1 bg-light rounded py-2 px-3 mr-3">

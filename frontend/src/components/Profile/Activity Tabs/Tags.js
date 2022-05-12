@@ -71,8 +71,11 @@ function TagsTab(props) {
                 <div>
                   <div class="row">
                     <div class="col-sm-3">
-                      <button
-                        class="my-2 px-2 py-1 col-sm-auto tagblock"
+                      <a
+                        href={"/tags/" + key}
+                        class="btn my-2 px-2 py-1 col-sm-auto"
+                        rel="tag"
+                        role="button"
                         style={{
                           color: "#39739D",
                           fontWeight: "450",
@@ -80,7 +83,7 @@ function TagsTab(props) {
                         }}
                       >
                         {key}
-                      </button>
+                      </a>
                     </div>
 
                     <div class="col-sm-3">
@@ -98,8 +101,11 @@ function TagsTab(props) {
                 <div>
                   <div class="row">
                     <div class="col-sm-3">
-                      <button
-                        class="my-2 px-2 py-1 col-sm-auto tagblock"
+                      <a
+                        href={"/tags/" + key}
+                        class="btn my-2 px-2 py-1 col-sm-auto"
+                        rel="tag"
+                        role="button"
                         style={{
                           color: "#39739D",
                           fontWeight: "450",
@@ -107,7 +113,7 @@ function TagsTab(props) {
                         }}
                       >
                         {key}
-                      </button>
+                      </a>
                     </div>
 
                     <div class="col-sm-3">
@@ -125,8 +131,11 @@ function TagsTab(props) {
                 <div>
                   <div class="row">
                     <div class="col-sm-3">
-                      <button
-                        class="my-2 px-2 py-1 col-sm-auto tagblock"
+                      <a
+                        href={"/tags/" + key}
+                        class="btn my-2 px-2 py-1 col-sm-auto"
+                        rel="tag"
+                        role="button"
                         style={{
                           color: "#39739D",
                           fontWeight: "450",
@@ -134,7 +143,7 @@ function TagsTab(props) {
                         }}
                       >
                         {key}
-                      </button>
+                      </a>
                     </div>
 
                     <div class="col-sm-3">

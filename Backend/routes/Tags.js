@@ -81,10 +81,10 @@ router.post("/addQuestion", function (req, res) {
     mysql.escape(tag);
     
   connPool.query(sqlQuerry, function (err, result) {
-    console.log("result is : " + JSON.stringify(result));
+    //console.log("result is : " + JSON.stringify(result));
     let tagRow = result[0];
     let noOfQuestions = tagRow.noOfQuestions;
-    console.log("initial noOfQuestions is : " + noOfQuestions);
+    //console.log("initial noOfQuestions is : " + noOfQuestions);
 
     var updateQuerry =
       "UPDATE TAGS SET `noOfQuestions` = " +
@@ -93,7 +93,7 @@ router.post("/addQuestion", function (req, res) {
       mysql.escape(tag) +
       ");";
 
-    console.log("updateQuerry  is : ", updateQuerry);
+    //console.log("updateQuerry  is : ", updateQuerry);
     connPool.query(updateQuerry, function (err, result) {
       if (err) {
         console.log(err);
@@ -102,6 +102,39 @@ router.post("/addQuestion", function (req, res) {
       }
     });
   });
+});
+
+
+router.post("/removeQuestion", function (req, res) {
+  console.log("Inside removeQuestion to tag POST Request");
+  const tag = req.body.tag;
+
+  let sqlQuerry =
+  "SELECT * FROM TAGS WHERE tagName = " +
+  mysql.escape(tag);
+  
+connPool.query(sqlQuerry, function (err, result) {
+  //console.log("result is : " + JSON.stringify(result));
+  let tagRow = result[0];
+  let noOfQuestions = tagRow.noOfQuestions;
+  //console.log("initial noOfQuestions is : " + noOfQuestions);
+
+  var updateQuerry =
+    "UPDATE TAGS SET `noOfQuestions` = " +
+    mysql.escape(noOfQuestions - 1 ) +
+    " WHERE (`tagName` = " +
+    mysql.escape(tag) +
+    ");";
+
+ // console.log("updateQuerry  is : ", updateQuerry);
+  connPool.query(updateQuerry, function (err, result) {
+    if (err) {
+      console.log(err);
+    } else {
+      res.status(200).send(result);
+    }
+  });
+});
 });
 
 router.get("/getTagByName", function (req, res) {

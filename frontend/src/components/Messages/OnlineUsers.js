@@ -3,10 +3,10 @@ import "../../App.css";
 
 function OnlineUsers(props) {
 
-  console.log("inside onlineusers")
-  console.log(props)
- console.log(props.item.displayName)
-  console.log("inside onlineusers")
+  //console.log("inside onlineusers")
+ // console.log(props)
+ //console.log(props.item.displayName)
+ // console.log("inside onlineusers")
   return(
     <a href="#" class="list-group-item list-group-item-action border-0">
     <div class="badge bg-success float-right">5</div>

@@ -84,16 +84,20 @@ router.post("/addQuestion", function (req, res) {
     //console.log("result is : " + JSON.stringify(result));
     let tagRow = result[0];
     let noOfQuestions = tagRow.noOfQuestions;
-    //console.log("initial noOfQuestions is : " + noOfQuestions);
+    let noOfWeeksQuestions = tagRow.noOfWeeksQuestions;
+    let noOfTodaysQuestions = tagRow.noOfTodaysQuestions;
+    console.log("initial noOfQuestions is : " + noOfQuestions);
 
     var updateQuerry =
-      "UPDATE TAGS SET `noOfQuestions` = " +
-      mysql.escape(noOfQuestions + 1 ) +
-      " WHERE (`tagName` = " +
+      "UPDATE TAGS SET " 
+      + "`noOfQuestions` = " + mysql.escape(noOfQuestions + 1 )
+      + ", `noOfWeeksQuestions` = " + mysql.escape(noOfWeeksQuestions + 1 )
+      + ", `noOfTodaysQuestions` = " + mysql.escape(noOfTodaysQuestions + 1 )
+      + " WHERE (`tagName` = " +
       mysql.escape(tag) +
       ");";
 
-    //console.log("updateQuerry  is : ", updateQuerry);
+    console.log("updateQuerry  is : ", updateQuerry);
     connPool.query(updateQuerry, function (err, result) {
       if (err) {
         console.log(err);
@@ -117,16 +121,20 @@ connPool.query(sqlQuerry, function (err, result) {
   //console.log("result is : " + JSON.stringify(result));
   let tagRow = result[0];
   let noOfQuestions = tagRow.noOfQuestions;
-  //console.log("initial noOfQuestions is : " + noOfQuestions);
+    let noOfWeeksQuestions = tagRow.noOfWeeksQuestions;
+    let noOfTodaysQuestions = tagRow.noOfTodaysQuestions;
+    console.log("initial noOfQuestions is : " + noOfQuestions);
 
-  var updateQuerry =
-    "UPDATE TAGS SET `noOfQuestions` = " +
-    mysql.escape(noOfQuestions - 1 ) +
-    " WHERE (`tagName` = " +
-    mysql.escape(tag) +
-    ");";
+    var updateQuerry =
+      "UPDATE TAGS SET " 
+      + "`noOfQuestions` = " + mysql.escape(noOfQuestions - 1 )
+      + ", `noOfWeeksQuestions` = " + mysql.escape(noOfWeeksQuestions - 1 )
+      + ", `noOfTodaysQuestions` = " + mysql.escape(noOfTodaysQuestions - 1 )
+      + " WHERE (`tagName` = " +
+      mysql.escape(tag) +
+      ");";
 
- // console.log("updateQuerry  is : ", updateQuerry);
+ console.log("updateQuerry  is : ", updateQuerry);
   connPool.query(updateQuerry, function (err, result) {
     if (err) {
       console.log(err);

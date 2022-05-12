@@ -1,5 +1,6 @@
 "use strict";
 import Views from "../../models/ViewsModel.js";
+import Questions from "../../models/QuestionModel.js";
 
 async function handle_request(msg) {
   console.log("In Kafka handle request:" + JSON.stringify(msg));
@@ -16,20 +17,36 @@ async function handle_request(msg) {
         return;
       } else {
         if (views.clientIdentity.includes(clientIdentity)) {
-          console.log(
-            "client IP address/userID is already included in question's view's list"
-          );
           return;
         } else {
           console.log(
             "Adding this client IP address/userID in question's views"
           );
-          Views.updateOne(
+          Views.findOneAndUpdate(
             { questionID: questionID },
             { $push: { clientIdentity: clientIdentity } },
-            { upsert: true },
+            { upsert: true, new: true },
             function (error, views) {
-              return;
+              if (error) {
+                return;
+              } else {
+                let totalViews = Number(views.clientIdentity.length);
+                Questions.updateOne(
+                  {
+                    _id: questionID,
+                  },
+                  {
+                    viewCount: totalViews,
+                  },
+                  function (error, question) {
+                    if (error) {
+                      return;
+                    } else {
+                      return;
+                    }
+                  }
+                );
+              }
             }
           );
         }

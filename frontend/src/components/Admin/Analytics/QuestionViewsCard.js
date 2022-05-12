@@ -9,7 +9,7 @@ function QuestionViewCard(props) {
         </div>
         <div class="col-md-8" style={{ marginTop: "10px" }}>
           <h4>
-            <a href="#" id="link">
+            <a href={"/questions/" + props.question._id} id="link">
               {props.question.title}
             </a>
           </h4>

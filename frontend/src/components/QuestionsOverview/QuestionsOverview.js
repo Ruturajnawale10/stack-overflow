@@ -17,6 +17,7 @@ import { BsBookmarkStarFill } from "react-icons/bs";
 import { MdOutlineHistory } from "react-icons/md";
 
 function QuestionsOverview() {
+  const [askedByUserID, setAskedByUserID] = useState(null);
   const [answer, setAnswer] = useState("");
   const [answers, setAnswers] = useState(null);
   const [answerCount, setAnswerCount] = useState(null);
@@ -61,6 +62,7 @@ function QuestionsOverview() {
       .then((response) => {
         setDescription(response.data.description);
         setTitle(response.data.title);
+        setAskedByUserID(response.data.askedByUserID);
         setAnswerCount(response.data.answers.length);
         setVoteCount(
           response.data.upVotes.length - response.data.downVotes.length
@@ -93,7 +95,7 @@ function QuestionsOverview() {
             ))}
           </div>
         );
-
+              
         setProfile(
           <ProfileOverview
             type="question"
@@ -385,6 +387,13 @@ function QuestionsOverview() {
             <div class="row" style={{ marginTop: "10px", marginLeft: "20px" }}>
               {tags}
             </div>
+
+            {
+              (askedByUserID === userID) && 
+              <div class="py-4"  style={{ marginTop: "10px", marginLeft: "20px" }}>
+                <Button onClick={(e) => {navigate(`/questions/edit/${questionID}`)}}style={{color: "black", backgroundColor: "white", borderColor: "white"}}><u>Edit Question</u></Button>
+              </div>
+            }
 
             <div class="row" style={{ marginTop: "30px", marginLeft: "65%" }}>
               {profile}

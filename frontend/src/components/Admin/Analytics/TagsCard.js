@@ -9,7 +9,7 @@ function TagsCard(props) {
         </div>
         <div class="col-md-8" style={{ marginTop: "10px" }}>
           <h4>
-            <a href="#" id="link">
+            <a href={"/tags/" + props.tag.tagName} id="link">
               {props.tag.tagName}
             </a>
             <div class="col-md-8"> <h6>{props.tag.description}</h6></div>

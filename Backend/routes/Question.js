@@ -555,4 +555,45 @@ router.get("/getQuestionByTag", function (req, res) {
   });
 });
 
+
+
+router.put("/edit_question", checkAuth, function (req, res) {
+  console.log("Inside Questions PUT Request");
+
+  const { 
+    userID,
+    questionID,
+    title, 
+    body, 
+    tags,
+    reason
+  } = req.body;
+
+  const activityLog = {
+    date: new Date(),
+    what: "history",
+    byUserID: userID,
+    license: "CC BY-SA 4.0",
+    comment: reason
+  };
+  
+  Questions.findOneAndUpdate(
+    { _id: questionID },
+    {
+      title: title,
+      description: body,
+      tags: tags,
+      modifiedDate: new Date(),
+      $push: {activity: activityLog}},
+    function (error, question) {
+      if(error){
+        res.status(400).send(error);
+      }else{
+        res.status(200).send(question);
+      }
+    }
+    
+  );
+});
+
 export default router;

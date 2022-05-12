@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import WarningBanner from "../WarningBanners/WarningBanner.js";
 import { useNavigate } from "react-router-dom";
 import "../../App.css";
 
@@ -7,14 +8,24 @@ function AddTag() {
   const [tagName, setTagName] = useState(null);
   const [tagDescription, setTagDescription] = useState(null);
   var [redirectVar, setRedirectVar] = useState(null);
+  const [warningBannerDiv, setWarningBannerDiv] = useState(null);
   let navigate = useNavigate();
 
   const submitData = (e) => {
-    axios.post("/admin/tags/add", {
-      tagName: tagName,
-      tagDescription: tagDescription,
-    });
-    setRedirectVar(navigate("../tags", { replace: true }));
+    axios
+      .post("/admin/tags/add", {
+        tagName: tagName,
+        tagDescription: tagDescription,
+      })
+      .then((res) => {
+        if (res.data === "DUPLICATE") {
+          setWarningBannerDiv(
+            <WarningBanner msg="Tag already present in system" />
+          );
+        } else {
+          setRedirectVar(navigate("../tags", { replace: true }));
+        }
+      });
   };
 
   return (
@@ -23,6 +34,7 @@ function AddTag() {
       style={{ border: "3px solid #666666", marginTop: "50px" }}
     >
       {redirectVar}
+      {warningBannerDiv}
       <h2>Add a new tag</h2>
       <label for="tagname">Name of the tag</label>
       <input
@@ -32,6 +44,7 @@ function AddTag() {
         onChange={(e) => {
           setTagName(e.target.value);
         }}
+        autoFocus
       />
 
       <br></br>

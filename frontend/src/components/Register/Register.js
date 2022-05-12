@@ -63,7 +63,7 @@ class Register extends Component {
             <Form onSubmit={this.handleSubmit}>
             <Form.Group className="mb-3" controlId="formDisplayName">
               <Form.Label>Display name</Form.Label>
-              <Form.Control type="text" placeholder="Enter Display Name" name="displayName" value={this.state.displayName} onChange={this.handleChange}  />
+              <Form.Control type="text" placeholder="Enter Display Name" name="displayName" value={this.state.displayName} onChange={this.handleChange}  autoFocus/>
             </Form.Group>
             <br/>
             <Form.Group className="mb-3" controlId="formBasicEmail">

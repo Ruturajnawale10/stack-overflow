@@ -13,7 +13,7 @@ router.post("/tags/add", function (req, res) {
   connPool.query(sql, [tagName, tagDescription], function (err, result) {
     if (err || result.length === 0) {
       console.log("Error occured is : " + err);
-      res.end();
+      res.send("DUPLICATE");
     } else {
       console.log("query executed successfully");
       res.writeHead(200, {

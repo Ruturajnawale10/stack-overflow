@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "../../../App.css";
 function UserCard(props) {
+  var handleUserPage = (e) => {
+    localStorage.setItem("notOwnerID", props.user._id);
+  };
+
   return (
     <div>
       <div class="row" style={{ marginTop: "10px" }}>
@@ -9,7 +13,12 @@ function UserCard(props) {
         </div>
         <div class="col-md-8" style={{ marginTop: "10px" }}>
           <h4>
-            <a href="#" id="link">
+            <a
+              href="/profile"
+              onClick={handleUserPage}
+              value={props.user._id}
+              id="link"
+            >
               {props.user.displayName}
             </a>
             <div class="col-md-8">

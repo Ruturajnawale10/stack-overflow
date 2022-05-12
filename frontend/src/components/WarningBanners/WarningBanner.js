@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import "../../App.css";
 
-function ProfileOverview(props) {
+function WarningBanner(props) {
     const [display, setDisplay] = useState({display:"block"});
   return (
     <div>
@@ -11,4 +11,4 @@ function ProfileOverview(props) {
   );
 }
 
-export default ProfileOverview;
+export default WarningBanner;

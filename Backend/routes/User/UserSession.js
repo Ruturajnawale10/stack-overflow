@@ -54,7 +54,7 @@ router.post("/login", async function (req, res) {
     console.log("querry executed and result is : ");
     if (err || user.length === 0) {
       console.log("Error occured is : " + err);
-      return;
+      res.status(200).send("Email not registered");
     } else {
       if (user) {
         const result = Object.values(JSON.parse(JSON.stringify(user)));
@@ -90,7 +90,11 @@ router.post("/login", async function (req, res) {
                 });
             }
           });
+        } else {
+          res.status(200).send("Login failed");
         }
+      } else {
+        res.status(200).send("Email not registered");
       }
     }
   });

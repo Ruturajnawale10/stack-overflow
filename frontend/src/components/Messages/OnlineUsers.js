@@ -12,7 +12,7 @@ function OnlineUsers(props) {
     <div class="badge bg-success float-right"></div>
     <div class="d-flex align-items-start">
     
-      <img src ={props.item.profileImageName} class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40"></img>
+      <img src= {props.item.profileImageName} class="rounded-circle mr-1" alt="Vanessa Tucker" width="40" height="40"></img>
       <div class="flex-grow-1 ml-3">
        {props.item.displayName}
         <div class="small"><span class="fas fa-circle chat-online"></span> </div>

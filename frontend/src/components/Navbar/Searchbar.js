@@ -24,7 +24,7 @@ const SearchBar = () => {
                 //search for user
                 const inputs = input.split(":");
                 const userID = inputs[1] || null ;
-                //console.log("search type: user >>>  user:", userID);
+                console.log("search type: user >>>  user:", userID);
                 navigate(`/search/user/${userID}`)
             }else if(input[0] === '"' && input[input.length - 1] === '"'){
                 //search with a phrase

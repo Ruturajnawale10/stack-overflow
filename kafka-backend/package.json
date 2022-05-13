@@ -14,7 +14,7 @@
     "aws-sdk": "^2.1119.0",
     "jsonwebtoken": "^8.5.1",
     "kafka-node": "^5.0.0",
-    "mongoose": "^6.3.0",
+    "mongoose": "^6.3.2",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0"
   }

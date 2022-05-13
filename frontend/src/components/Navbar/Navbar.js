@@ -34,11 +34,20 @@ class Navbar extends Component {
   render() {
     let loggedInDiv = null;
     let loggedOutDiv = null;
+    let loggedInDiv2 = null;
     if (localStorage.getItem("token")) {
       loggedOutDiv = (
         <NavButton>
           <NavButtonLink to="/logout">Logout</NavButtonLink>
         </NavButton>
+      );
+      loggedInDiv2 = (
+        <NavMenu>
+          <NavbarLink onClick={this.handleProfileClick} to="/profile">
+            Profile
+          </NavbarLink>
+          <NavbarLink to="/messages">My Messages</NavbarLink>
+        </NavMenu>
       );
     } else {
       loggedOutDiv = (
@@ -57,12 +66,8 @@ class Navbar extends Component {
         <NavbarLink to="/">
           <NavBarLogoImage src="https://stackoverflow.design/assets/img/logos/so/logo-stackoverflow.png"></NavBarLogoImage>
         </NavbarLink>
-        <NavMenu>
-          <NavbarLink onClick={this.handleProfileClick} to="/profile">
-            Profile
-          </NavbarLink>
-          <NavbarLink to="/messages">My Messages</NavbarLink>
-        </NavMenu>
+        {loggedInDiv2}
+
         <NavbarSearch
           onClick={(e) =>
             this.setState((prevState) => ({ check: !prevState.check }))

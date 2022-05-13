@@ -85,7 +85,7 @@ class Navbar extends Component {
               </Top>
               <Bottom>
                 <NavButton>
-                  <NavButtonLink to="/ask">Ask a Question</NavButtonLink>
+                  <NavButtonLink to="/questions/ask">Ask a Question</NavButtonLink>
                 </NavButton>
               </Bottom>
             </SearchHelp>

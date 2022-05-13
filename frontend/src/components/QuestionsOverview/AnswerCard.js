@@ -46,6 +46,17 @@ function AnswerCard(props) {
       userID: props.answer.userID,
       acceptedAnswerID: props.answer.acceptedAnswerID,
     });
+    console.log("answered by : " + props.answer.userID);
+      console.log("questionTitle by : " + props.answer.questionTitle);
+      console.log("userID by : " + userID);
+      axios.post("/userActivity/addUserActivity", {
+        questionID: props.answer.questionID,
+        userID: props.answer.userID,
+        points: 15,
+        event: "markedAsAcceptedAnswer",
+        date: new Date(),
+        questionTitle: props.answer.questionTitle,
+      });
     window.location.reload();
   };
 
@@ -124,6 +135,17 @@ function AnswerCard(props) {
         answerID: props.answer._id,
         answeredByUserID: props.answer.userID,
       });
+      console.log("answered by : " + props.answer.userID);
+      console.log("questionTitle by : " + props.answer.questionTitle);
+      console.log("userID by : " + userID);
+      axios.post("/userActivity/addUserActivity", {
+        questionID: props.answer.questionID,
+        userID: props.answer.userID,
+        points: 5,
+        event: "answerUpVote",
+        date: new Date(),
+        questionTitle: props.answer.questionTitle,
+      });
       if (voteDownStatus === vote) {
         setVoteDownStatus(noVote);
         setVoteCount(voteCount + 2);
@@ -159,6 +181,17 @@ function AnswerCard(props) {
         userID: userID,
         answerID: props.answer._id,
         answeredByUserID: props.answer.userID,
+      });
+      console.log("answered by : " + props.answer.userID);
+      console.log("questionTitle by : " + props.answer.questionTitle);
+      console.log("userID by : " + userID);
+      axios.post("/userActivity/addUserActivity", {
+        questionID: props.answer.questionID,
+        userID: props.answer.userID,
+        points: -5,
+        event: "answerDownVote",
+        date: new Date(),
+        questionTitle: props.answer.questionTitle,
       });
       if (voteUpStatus === vote) {
         setVoteUpStatus(noVote);

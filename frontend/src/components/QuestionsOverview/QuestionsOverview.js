@@ -81,6 +81,7 @@ function QuestionsOverview() {
                     questionID: questionID,
                     acceptedAnswerID: response.data.acceptedAnswerID,
                     questionAskedByUserID: response.data.askedByUserID,
+                    questionTitle: response.data.title,
                   }}
                 />
               </div>
@@ -186,12 +187,15 @@ function QuestionsOverview() {
         questionID: questionID,
         userID: userID,
       });
+      console.log("asked by : " + askedByUserID);
+      console.log("userID by : " + userID);
       axios.post("/userActivity/addUserActivity", {
         questionID: questionID,
-        userID: userID,
+        userID: askedByUserID,
         points: 10,
         event: "questionUpVote",
         date: new Date(),
+        questionTitle: title,
       });
 
       setVoteUpStatus(vote);
@@ -224,12 +228,15 @@ function QuestionsOverview() {
         questionID: questionID,
         userID: userID,
       });
+      console.log("asked by : " + askedByUserID);
+      console.log("userID by : " + userID);
       axios.post("/userActivity/addUserActivity", {
         questionID: questionID,
-        userID: userID,
+        userID: askedByUserID,
         points: -10,
         event: "questionDownVote",
         date: new Date(),
+        questionTitle: title,
       });
       setVoteDownStatus(vote);
       setVoteCount(voteCount - 1);

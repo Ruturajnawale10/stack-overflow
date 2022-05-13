@@ -16,6 +16,8 @@ function ProfileOverview({type, userID, date}) {
   const [goldBadges, setGoldBadges] = useState(null);
   const [silverBadges, setSilverBadges] = useState(null);
   const [bronzeBadges, setBronzeBadges] = useState(null);
+  const [profile, setProfile] = useState([]);
+
 
   var handleUserPage = (e) => {
     e.preventDefault();
@@ -36,6 +38,7 @@ function ProfileOverview({type, userID, date}) {
         setGoldBadges(response.data.goldBadges.length);
         setSilverBadges(response.data.silverBadges.length);
         setBronzeBadges(response.data.bronzeBadges.length);
+        setProfile(response.data);
       });
   }, []);
 
@@ -51,7 +54,7 @@ function ProfileOverview({type, userID, date}) {
         </div>
         <div class="row">
           <div class="col-md-3">
-            <img src={profileImage} style={{ blockSize: "50px" }}></img>
+            <img src={profile.profileImageName} style={{ blockSize: "50px" }}></img>
           
           </div>
           <div class="col-md-9">

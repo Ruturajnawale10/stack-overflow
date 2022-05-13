@@ -24,7 +24,7 @@ const InputTags = ({tags, setTags}) => {
             console.log('input.length > 0')
             getSuggestions();
         }else{
-            console.log('input.length == 0')
+            //console.log('input.length == 0')
             setSuggestions([]);
         }
         //console.log('new suggestions:', suggestions);
@@ -93,6 +93,7 @@ const InputTags = ({tags, setTags}) => {
                 {tags.map((tag) => {
                     return(
                         <Button 
+                            key={tag}
                             value={tag}
                             style={{color: "#39739D", backgroundColor: "#E1ECF4", marginLeft:"8px", borderColor:"#E1ECF4"}} 
                             onClick={removeTagHandler} 
@@ -115,6 +116,7 @@ const InputTags = ({tags, setTags}) => {
                     suggestions.map(suggestion =>{
                         return(
                             <Button 
+                                key={suggestion.tagName}
                                 className="mx-1 text-start"
                                 value={suggestion.tagName}
                                 style={{color: "#39739D", backgroundColor: "#E1ECF4", borderColor:"#E1ECF4"}}           

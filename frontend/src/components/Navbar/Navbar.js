@@ -14,6 +14,7 @@ import {
   ColumnOne,
   ColumnTwo,
 } from "./NavbarElements";
+import SearchBar from "./Searchbar";
 
 class Navbar extends Component {
   constructor(props) {
@@ -67,7 +68,8 @@ class Navbar extends Component {
             this.setState((prevState) => ({ check: !prevState.check }))
           }
         >
-          <SearchInput></SearchInput>
+          <SearchBar/>
+          {/**<SearchInput></SearchInput>*/}
           {this.state.check ? (
             <SearchHelp>
               <Top>
@@ -75,11 +77,8 @@ class Navbar extends Component {
                   <p>[tag] search within a tag</p>
                   <p>user: 1234 search by author</p>
                   <p>"Words here" exact phrase</p>
-                  <p>collective:"Name" collective content</p>
                 </ColumnOne>
                 <ColumnTwo>
-                  <p>answers: 0 unanswered questions</p>
-                  <p>score: 3 posts with a 3+ score</p>
                   <p>is: question type of post</p>
                   <p>isaccepted:yes search within status</p>
                 </ColumnTwo>

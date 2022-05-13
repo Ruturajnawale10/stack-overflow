@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
+import axios from "axios";
 import {Modal, Button, Container, Row, Col, Form, Card} from "react-bootstrap";
 import {useNavigate, useParams, Link} from "react-router-dom";
 import MDEditor, {commands} from "@uiw/react-md-editor";
 import {FiAlertCircle} from "react-icons/fi"
-
 import InputTags from "../QuestionPosting/InputTags";
-import axios from "axios";
+
 
 
 const QuestionEdit = () => {
@@ -28,13 +28,19 @@ const QuestionEdit = () => {
     const [userID, setUserID] = useState(null);
 
     useEffect(() => {
-        //Get userID
+        //Get userID & set it; else redirect to login page
         if(localStorage.getItem("userID")){
             setUserID(localStorage.getItem("userID"));
         }else{
             navigate('/login?redirectfrom=/questions/ask');
         }
-        
+
+        //Check if userID matches question creator's ID; redirect back to question they are not the same
+        //they should not be allowed to edit question
+        if(userID && question && userID !== question.askedByUserID){
+            navigate(`/questions/${questionID}`);
+        }
+      
         //get question data
         if(!question){
             axios.get("/question/overview", {
@@ -50,7 +56,7 @@ const QuestionEdit = () => {
                 }
             })
         }
-    }, []);
+    }, [question, userID]);
 
     const submitHandler = (e) => {
         e.preventDefault();
@@ -102,13 +108,13 @@ const QuestionEdit = () => {
                             console.log(response);
                     }})
             })
-            /**
-             todo: ? Does an edit need a reapproval?
+
             let isImageInserted = question.body.includes("![]");
             edit.isWaitingForReview = isImageInserted;
+            
             axios.defaults.headers.common["authorization"] =
                 localStorage.getItem("token");
-             */
+            
             axios.put("/question/edit_question", 
                 edit
             ).then((response) => {
@@ -235,7 +241,7 @@ const QuestionEdit = () => {
                                 <Form.Control 
                                     type="text" 
                                     value={reason}
-                                    placeholder="Briefly explain your changes (corrected spelling, fixed grammar, improved formatting" 
+                                    placeholder="Briefly explain your changes (corrected spelling, fixed grammar, improved formatting)" 
                                     onChange={(e)=>{setReason(e.target.value)}}
                                 />
                                 {reasonWarning && <div style={{color: 'red'}}><FiAlertCircle/>&emsp;Reason must be at least 10 characters.</div>}

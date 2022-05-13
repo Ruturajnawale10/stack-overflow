@@ -4,6 +4,7 @@ import {useNavigate, Navigate, Link, useParams} from "react-router-dom";
 import MDEditor, {commands} from "@uiw/react-md-editor";
 import { FaCheck } from "react-icons/fa";
 import {BiRightArrow} from "react-icons/bi";
+import {TiMediaPlay} from "react-icons/ti"
 import moment from 'moment';
 import axios from "axios";
 
@@ -42,10 +43,10 @@ const PostActivity = () => {
         if(question && events.length === 0){
             //if answerID exist, this is an answer post
             if(answerID){
-                sortAnswerEvents(question);
+                addAnswerEvents(question);
             //if answerID doesn't exist, this is a question post    
             }else{
-                sortQuestionEvents(question);
+                addQuestionEvents(question);
             }
         }
         
@@ -57,7 +58,7 @@ const PostActivity = () => {
         
     }, [question, events])
 
-    const sortAnswerEvents = (question) => {
+    const addAnswerEvents = (question) => {
         //get answer data
         const answer = question.answers.filter(answer => answer._id === answerID)[0];
         setAnswer(answer);
@@ -98,12 +99,13 @@ const PostActivity = () => {
         })
     }
 
-    const sortQuestionEvents = (question) => {
+    const addQuestionEvents = (question) => {
         axios
         .get("/user/profile", {
             params: { userID: question.askedByUserID },
         })
         .then((response) => {
+            //add initial question
             const event = {
                 eventID: questionID,
                 userID: question.askedByUserID,
@@ -114,6 +116,22 @@ const PostActivity = () => {
                 comment: "",
             }
             setEvents(events => [...events, event]);
+
+            //add edits of initial question
+            question.activity.forEach(activity => {
+                const event = {
+                    eventID: activity._id,
+                    userID: activity.byUserID,
+                    when: activity.date,
+                    what: activity.what,
+                    by: response.data.displayName,
+                    license: activity.license,
+                    comment: activity.comment,
+                }
+                console.log("ACTIVTY", activity)
+    
+                setEvents(events => [...events, event]);
+            })
         });
 
         //add all answers with 'answer' labels as event
@@ -151,6 +169,7 @@ const PostActivity = () => {
             setEvents(events => [...events, event]);
             
         })
+
     }
 
     return(
@@ -188,7 +207,7 @@ const PostActivity = () => {
                 {
                     sortedEvents.map(event => {
                         return(
-                            <ListGroup.Item>
+                            <ListGroup.Item key={event.eventID}>
                                 <Row >
                                     <Col xs={2} className="text-end">
                                         {!toggleDateFormat && moment(event.when).fromNow()}
@@ -196,7 +215,7 @@ const PostActivity = () => {
                                     </Col>
                                     <Col xs={2}>
                                         <Row>
-                                        <Col xs={4}>
+                                        <Col xs={5}>
                                             {event.what === "history" && 
                                                 <Button size="sm" className="px-1 " style={{color: "black", backgroundColor: "lightgrey", borderColor: "lightgrey"}} disabled={true}>{event.what}</Button>
                                             }
@@ -210,7 +229,8 @@ const PostActivity = () => {
                                             }
                                         </Col>
                                         <Col>
-                                            {(event.what === "history" && answerID === undefined) && <div>asked</div>}
+                                            {(event.what === "history" && questionID === event.eventID && answerID === undefined) && <div>asked</div>}
+                                            {(event.what === "history" && questionID !== event.eventID && answerID === undefined) && <div>  <TiMediaPlay size={28} style={{color: "lightgrey"}}/>edited</div>}
                                             {(event.what === "history" && answerID !== undefined) && <div>answered</div>}
                                             {event.what === "comment" && <div>added</div>}
                                         </Col>

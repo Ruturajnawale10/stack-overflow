@@ -556,6 +556,42 @@ router.get("/getQuestionByTag", function (req, res) {
   });
 });
 
+router.get("/getQuestionByUserID", function (req, res) {
+  console.log("Inside getQuestionUserID GET Request");
+  const {userID} = req.query;
+  Questions.find({ askedByUserID: userID }, function (error, questions) {
+    if (error) {
+      res.status(400).send();
+    } else {
+      console.log("questions : " + questions);
+      res.status(200).send(questions);
+    }
+  });
+});
+
+router.get("/getQuestionByExactPhrase", function (req, res) {
+  console.log("Inside getQuestionByExactPhrase GET Request");
+  const {phrase} = req.query;
+
+  console.log("phrase:", phrase);
+  
+  Questions.find({ 
+    $or: [ 
+        { title: {$regex: phrase, $options: "$i"}},
+        { description: {$regex: phrase, $options: "$i"}}
+    ] 
+  },   
+    function (error, questions) {
+    if (error) {
+      res.status(400).send();
+    } else {
+      console.log("questions : " + questions);
+      res.status(200).send(questions);
+    }
+  });
+});
+
+
 router.put("/edit_question", checkAuth, function (req, res) {
   console.log("Inside Questions PUT Request");
 
@@ -587,5 +623,8 @@ router.put("/edit_question", checkAuth, function (req, res) {
     }
   );
 });
+
+
+
 
 export default router;

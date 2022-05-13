@@ -8,6 +8,8 @@ import axios from "axios";
 function ProfileOverview(props) {
   const [displayName, setDisplayName] = useState(null);
   const [reputation, setReputation] = useState(null);
+  const [profile, setProfile] = useState([]);
+
 
   let date = new Date(props.question.modifiedDate);
  
@@ -27,8 +29,11 @@ function ProfileOverview(props) {
         params: { userID: props.question.askedByUserID },
       })
       .then((response) => {
+
         setDisplayName(response.data.displayName);
         setReputation(response.data.reputation);
+        setProfile(response.data);
+
       });
   }, []);
 
@@ -37,7 +42,7 @@ function ProfileOverview(props) {
       <Row>
         <p style={{ textAlign: "right", color: "black" }}>
           <img
-            src={profileImage}
+            src={profile.profileImageName}
             style={{ height: "20px", width: "20px" }}
           ></img>{" "}
           <a href="/profile" onClick={handleUserPage} value={props.question.askedByUserID} id="link">

@@ -48,23 +48,26 @@ export const NavbarSearch = styled.div`
 
 export const SearchHelp = styled.div`
     position: absolute;
-    top: 51px;
+    top: 45px;
+    right: 15px;
     width: 95%;
     flex: 1; 
     display:flex;
-    opacity: 1
     flex-direction: column;
+    opacity: 1
     padding: 10px 20px;
-    border-radius: 25px;
+    border-radius: 5px;
     background: #fcfcfc;
-    border: 2px solid grey;
+    border: 0.5px solid grey;
 `;
 
 export const Top = styled.div`
     display:flex;
+    padding: 15px 0px 15px 15px;
 `
 export const Bottom = styled.div`
     display:flex;
+    padding: 0px 15px 15px 15px
 `
 
 export const ColumnOne = styled.div`

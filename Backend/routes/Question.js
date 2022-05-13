@@ -625,6 +625,72 @@ router.put("/edit_question", checkAuth, function (req, res) {
 });
 
 
+router.post("/searchQuestion",function(req,res){
+  console.log("Inside Search in Question GET REQUEST");
+  let searchTerm = req.body.searchTerm;
+  console.log(searchTerm)
+  const searchRegEx = new RegExp(searchTerm,'i')
+  Questions.find({ title: searchRegEx},function(error,questions){
+    if(error){
+      res.status(400).send();
+    } else {
+      console.log("questions: "+questions);
+
+      res.status(200).send(questions);
+    }
+  })
+})
+
+router.post("/searchQuestionAnswers",function(req,res){
+  console.log("Inside Search in Question's Answers GET REQUEST");
+  let searchTerm = req.body.searchTerm;
+  console.log(searchTerm)
+  const searchRegEx = new RegExp(searchTerm,'i')
+  // Questions.find({ answers: { description: searchRegEx}},function(error,questions){
+    Questions.find({answers:{$elemMatch:{description: searchRegEx}}},function(error,questions){
+    if(error){
+      res.status(400).send();
+    } else {
+      console.log("questions: "+questions);
+
+      res.status(200).send(questions);
+    }
+  })
+})
+
+
+router.post("/searchQuestionByStatus",function(req,res){
+  console.log("Inside Search in Question's Answers by status GET REQUEST");
+  let searchTerm = req.body.searchTerm;
+  console.log(searchTerm)
+  const searchRegEx = new RegExp(searchTerm,'i')
+  // Questions.find({ answers: { description: searchRegEx}},function(error,questions){
+    Questions.find({title:searchRegEx,acceptedAnswerID:{$ne:null}},function(error,questions){
+    if(error){
+      res.status(400).send();
+    } else {
+      console.log("questions: "+questions);
+
+      res.status(200).send(questions);
+    }
+  })
+})
+
+router.post("/searchQuestionAndAnswer",function(req,res){
+  console.log("Inside Search in Question's Answers by status GET REQUEST");
+  let searchTerm = req.body.searchTerm;
+  const searchRegEx = new RegExp(searchTerm,'i')
+  Questions.find({$or:[{title:searchRegEx},{answers:{$elemMatch:{description: searchRegEx}}}]},function(error,questions){
+    if(error){
+      res.status(400).send();
+    }
+    else {
+      console.log("questions: "+questions);
+
+      res.status(200).send(questions)
+    }
+  })
+})
 
 
 export default router;

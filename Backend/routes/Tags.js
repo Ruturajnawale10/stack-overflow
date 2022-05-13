@@ -193,6 +193,7 @@ router.post("/removeQuestion", function (req, res) {
   const tag = req.body.tag;
 
   let sqlQuerry =
+  
   "SELECT * FROM TAGS WHERE tagName = " +
   mysql.escape(tag);
   

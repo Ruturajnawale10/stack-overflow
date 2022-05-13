@@ -128,7 +128,7 @@ const PostActivity = () => {
                     license: activity.license,
                     comment: activity.comment,
                 }
-                console.log("ACTIVTY", activity)
+                //console.log("ACTIVTY", activity)
     
                 setEvents(events => [...events, event]);
             })

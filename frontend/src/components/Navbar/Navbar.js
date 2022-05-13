@@ -79,7 +79,7 @@ class Navbar extends Component {
                   <p>"Words here" exact phrase</p>
                 </ColumnOne>
                 <ColumnTwo>
-                  <p>is: question type of post</p>
+                  <p>is:question type of post</p>
                   <p>isaccepted:yes search within status</p>
                 </ColumnTwo>
               </Top>

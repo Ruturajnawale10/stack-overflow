@@ -66,8 +66,10 @@ class Navbar extends Component {
         <NavbarLink to="/">
           <NavBarLogoImage src="https://stackoverflow.design/assets/img/logos/so/logo-stackoverflow.png"></NavBarLogoImage>
         </NavbarLink>
-        {loggedInDiv2}
-
+        <NavMenu>
+          {localStorage.getItem("token") && <NavbarLink onClick={this.handleProfileClick} to="/profile">Profile</NavbarLink>}
+          {localStorage.getItem("token") && <NavbarLink to="/messages">My Messages</NavbarLink>}
+        </NavMenu>
         <NavbarSearch
           onClick={(e) =>
             this.setState((prevState) => ({ check: !prevState.check }))

@@ -43,7 +43,7 @@ class Navbar extends Component {
   handleSubmit = (e) => {
     console.log(this.state.query)
     let final_query = this.state.query;
-
+    
     // search via Tag
     if(final_query.slice(1,4) === "tag" || final_query.slice(1,4) === "TAG" ){
       var n1 = final_query.lastIndexOf(']');
@@ -74,6 +74,65 @@ class Navbar extends Component {
         }
       });
     }
+
+    //search via type (Question/Answer)
+    if(final_query.slice(0,2) === "is" || final_query.slice(0,2) === "IS"){
+      var n = final_query.lastIndexOf(':');
+      var result = final_query.substring(n+1)
+      var phrase = result.split(" ")[1] 
+      var type = result.split(" ")[0]
+      // console.log("this is the result" + result.trim());
+      console.log("this is the type",type)
+      console.log("this is the search query",phrase)
+      const data = {"searchTerm": phrase}
+      if(type==="question" || type==="QUESTION"){
+        axios.post("/question/searchQuestion",data).then((response)=>{
+          if(response){
+            console.log(response.data);
+          }else{
+            console.log("Error retrieving question")
+          }
+        })
+      }
+      if(type==="answer" || type==="ANSWER"){
+        axios.post("/question/searchQuestionAnswers",data).then((response)=>{
+          if(response){
+            console.log(response.data);
+          }else{
+            console.log("Error retrieving question")
+          }
+        })
+      }
+    }
+
+  //search via isaccepted
+  if(final_query.slice(0,10) === "isaccepted" || final_query.slice(0,10) === "ISACCEPTED"){
+    var n = final_query.lastIndexOf(':')
+    var result  = final_query.substring(n+1)
+    var phrase = result.split(" ")[1]
+    var acceptedStatus = result.split(" ")[0]
+    const data = {"searchTerm": phrase}
+    console.log("Payload is:",data)
+    axios.post("/question/searchQuestionByStatus", data).then((response) => {
+      if (response) {
+        console.log(response.data);
+      } else {
+        console.log("Error retrieving questions");
+      }
+    });
+    
+  }
+  else{
+    var phrase = final_query
+    const data = {"searchTerm": phrase}
+    axios.post("/question/searchQuestionAndAnswer",data).then((response)=>{
+      if(response){
+        console.log(response.data); 
+      }else{
+        console.log("Error retrieving question")
+      }
+    })  
+  }
 
   }
   render() {
@@ -119,13 +178,10 @@ class Navbar extends Component {
                 <ColumnOne>
                   <p>[tag] search within a tag</p>
                   <p>user: 1234 search by author</p>
-                  <p>"Words here" exact phrase</p>
-                  <p>collective:"Name" collective content</p>
+                  <p>"words here" exact phrase</p>
                 </ColumnOne>
                 <ColumnTwo>
-                  <p>answers: 0 unanswered questions</p>
-                  <p>score: 3 posts with a 3+ score</p>
-                  <p>is: question type of post</p>
+                  <p>is:question type of post</p>
                   <p>isaccepted:yes search within status</p>
                 </ColumnTwo>
               </Top>

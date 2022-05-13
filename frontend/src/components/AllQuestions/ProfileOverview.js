@@ -12,6 +12,11 @@ function ProfileOverview(props) {
 
 
   let date = new Date(props.question.modifiedDate);
+  let modifiedStatus = props.question.creationDate !== props.question.modifiedDate;
+  let datestatus = "asked";
+  if (modifiedStatus) {
+    datestatus = "modified";
+  }
  
   let today = moment(date, "MMMM Do, YYYY @ h:mm:ss").fromNow();
 
@@ -48,8 +53,8 @@ function ProfileOverview(props) {
           <a href="/profile" onClick={handleUserPage} value={props.question.askedByUserID} id="link">
             {displayName}
           </a>{" "}
-          <p style={{ fontWeight: "bold", display: "inline" }}>
-            {reputation} &emsp; asked {today}
+          <p style={{ fontWeight: "bold", display: "inline", color: "#03030390" }}>
+            {reputation} &emsp; {datestatus} {today}
           </p>
         </p>
       </Row>

@@ -8,8 +8,6 @@ const InputTags = ({tags, setTags}) => {
     const [availableTags, setAvailableTags] = useState([]);
     const [suggestions, setSuggestions] = useState([]);
     
-    //Mock tag for displaying tags
-    const tempTags = ['mongoDb', 'javascript', 'compilers', 'python', 'perl', 'React', 'C++', 'C', 'C#']
 
     useEffect(() => {
 

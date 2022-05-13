@@ -595,7 +595,15 @@ router.get("/getQuestionByExactPhrase", function (req, res) {
 router.put("/edit_question", checkAuth, function (req, res) {
   console.log("Inside Questions PUT Request");
 
-  const { userID, questionID, title, body, tags, reason } = req.body;
+  const { 
+    userID,
+    questionID,
+    title, 
+    body, 
+    tags,
+    reason,
+    isWaitingForReview
+  } = req.body;
 
   const activityLog = {
     date: new Date(),
@@ -612,8 +620,8 @@ router.put("/edit_question", checkAuth, function (req, res) {
       description: body,
       tags: tags,
       modifiedDate: new Date(),
-      $push: { activity: activityLog },
-    },
+      $push: {activity: activityLog},
+      isWaitingForReview: isWaitingForReview},
     function (error, question) {
       if (error) {
         res.status(400).send(error);

@@ -17,7 +17,7 @@ function TagCard(props) {
       <div className="card-body">
         <div></div>
         <div class="d-flex jc-space-between col-md-auto">
-          <div class="flex--item tagblock">
+          <div class="flex--item tagblock px-2">
             <a
               href={"/tags/" + tag.tagName}
               class="post-tag"

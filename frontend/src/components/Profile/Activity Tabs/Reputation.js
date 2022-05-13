@@ -15,14 +15,14 @@ function ReputationTab(props) {
     axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
 
     axios
-      .get("/user/profile", { params: {userID: localStorage.getItem("userID") } })
+      .get("/user/profile", { params: {userID: localStorage.getItem("notOwnerID") } })
       .then((response)=>{
         console.log("userDetails are : " + JSON.stringify(response.data));
         setUser(response.data);
       });
 
 
-    axios.get("/userActivity", { params: {userID: localStorage.getItem("userID") } })
+    axios.get("/userActivity", { params: {userID: localStorage.getItem("notOwnerID") } })
     .then((response)=>{
       let inputUserActivity = response.data;
       console.log("userActivity is : " + JSON.stringify(inputUserActivity));

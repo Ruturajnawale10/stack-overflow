@@ -20,7 +20,7 @@ function TagOverview() {
 
   const handlePopularSort =(e)=>{
 
-    axios.get('http://localhost:3001/tags/popular')
+    axios.get('/tags/popular')
     .then(res => {
         if(res){
             console.log("tags popular data is : " + JSON.stringify(res.data));
@@ -33,7 +33,7 @@ function TagOverview() {
 
   const handleNameSort =(e)=>{
       
-    axios.get('http://localhost:3001/tags/name',{type:"hi"})
+    axios.get('/tags/name',{type:"hi"})
     .then(res => {
         if(res){
             console.log(res.data)
@@ -47,7 +47,7 @@ function TagOverview() {
 
   const handleNewSort =(e)=>{
       
-    axios.get('http://localhost:3001/tags/new',{type:"hi"})
+    axios.get('/tags/new',{type:"hi"})
     .then(res => {
         if(res){
             console.log(res.data)

@@ -489,7 +489,7 @@ router.post("/answer/addaccepted", function (req, res) {
 
 router.post("/post_question", checkAuth, function (req, res) {
   console.log("Inside Questions POST Request");
-  const { userID, title, body, tags } = req.body;
+  const { userID, title, body, tags, isWaitingForReview } = req.body;
 
   const question = new Questions({
     title: title,
@@ -505,6 +505,7 @@ router.post("/post_question", checkAuth, function (req, res) {
     answers: [],
     acceptedAnswerID: null,
     activity: [],
+    isWaitingForReview: isWaitingForReview,
   });
 
   question.save(function (error, result) {
@@ -594,23 +595,16 @@ router.get("/getQuestionByExactPhrase", function (req, res) {
 router.put("/edit_question", checkAuth, function (req, res) {
   console.log("Inside Questions PUT Request");
 
-  const { 
-    userID,
-    questionID,
-    title, 
-    body, 
-    tags,
-    reason
-  } = req.body;
+  const { userID, questionID, title, body, tags, reason } = req.body;
 
   const activityLog = {
     date: new Date(),
     what: "history",
     byUserID: userID,
     license: "CC BY-SA 4.0",
-    comment: reason
+    comment: reason,
   };
-  
+
   Questions.findOneAndUpdate(
     { _id: questionID },
     {
@@ -618,15 +612,15 @@ router.put("/edit_question", checkAuth, function (req, res) {
       description: body,
       tags: tags,
       modifiedDate: new Date(),
-      $push: {activity: activityLog}},
+      $push: { activity: activityLog },
+    },
     function (error, question) {
-      if(error){
+      if (error) {
         res.status(400).send(error);
-      }else{
+      } else {
         res.status(200).send(question);
       }
     }
-    
   );
 });
 

@@ -72,6 +72,7 @@ mongoose.connect(
 // API Routes imports
 import UserSession from "./routes/User/UserSession.js";
 import UserProfile from "./routes/User/UserProfile.js";
+import UserActivity from "./routes/User/UserActivity.js";
 import Question from "./routes/Question.js";
 import Tags from "./routes/Tags.js";
 import Vote from "./routes/Vote.js";
@@ -81,6 +82,7 @@ import Messages from "./routes/Messages.js";
 // API Routes
 app.use("/user", UserSession);
 app.use("/user/profile", UserProfile);
+app.use("/userActivity", UserActivity);
 app.use("/vote", Vote);
 app.use("/question", Question);
 app.use("/tags",  Tags);

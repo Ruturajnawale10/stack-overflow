@@ -54,12 +54,14 @@ function Messages() {
 		       setOnlineUsers(
               <div class="row">
                 {response.data.map((online) => (
-                  <div key={online} id="answercard">
+                  <div key={online} onClick={handleClick} id="asf"  data-value ="aaaaaaa"  >
                     <OnlineUsers item={online} />
                   </div>
                 ))}
               </div>
             );
+
+			
 
       } else {
         console.log("Error retrieving profiles");
@@ -76,7 +78,62 @@ function Messages() {
     //this.input.setSt= e.target.value;
 	setSearchValue(e.target.value);
   }
- 
+  const handleClick = (e) => {
+    //this.input.setSt= e.target.value;
+	setSearchValue(e.target.firstChild.textContent);
+	var htmlvalues = String(e.target);
+	
+	  //get messages between two users
+	  var data ={'from':localStorage.getItem('userName'),'to':e.target.firstChild.textContent}
+	  axios.post("/messages/getMessage",data).then((response) => {
+		console.log("inside messages")
+		console.log(data)
+		
+		console.log(e.target.firstChild.textContent)
+		console.log(e.target)
+		//myString.replace(/<[^>]*>?/gm, '');
+		console.log(e.target.getAttribute('value-data'))
+		console.log("inside messages")
+		if (response) {
+			console.log("inside messages response")
+		  console.log(response);
+		  console.log("inside messages response")
+
+		   //var allresponses = response.data[0]
+		   var allr = [...new Set([...response.data[0] ,...response.data[1]])];
+		   
+		   console.log("Before")
+		   console.log(allr)
+		   console.log("Before")
+		   allr.sort((a,b) => Date.parse(moment(b.createdAt).format()) - Date.parse(moment(a.createdAt).format()))
+		   allr.reverse();
+		   console.log("After")
+		   console.log(allr)
+		   console.log("After")
+		   
+		   //var sortedArray = allr.sort((a,b) => Date.parse(a.createdAt) - Date.parse(b.createdAt));
+		  setAnswers(
+			<div class="row">
+			  {allr.map((answer) => (
+				<div key={answer}  id="answercard">
+				  <AnswerCard item={answer} />
+				</div>
+			  ))}
+			</div>
+			
+		  );
+
+
+
+
+
+
+		} else {
+		  console.log("Error retrieving profiles");
+		}
+	  });
+
+  }
 
   const handleChangemessage = (e) => {
 	setSendValue(e.target.value);
@@ -103,7 +160,7 @@ function Messages() {
 				 setOnlineUsers(
 				<div class="row">
 				  {//user.data.map((online) => (
-					<div key={arrayWithFilterObjects[0]} id="answercard">
+					<div key={arrayWithFilterObjects[0]} id="answer"  onClick={handleClick} value={online.displayName}>
 					  <OnlineUsers item={arrayWithFilterObjects[0]} />
 					</div>
 		}
@@ -118,60 +175,73 @@ function Messages() {
 	  });
 
 
-	  //get messages between two users
-	  var data ={'from':localStorage.getItem('userName'),'to':input}
-	  axios.post("/messages/getMessage",data).then((response) => {
-		console.log("inside messages")
-		console.log(data)
-		console.log("inside messages")
-		if (response) {
-			console.log("inside messages response")
-		  console.log(response);
-		  console.log("inside messages response")
-
-		   //var allresponses = response.data[0]
-		   var allr = [...new Set([...response.data[0] ,...response.data[1]])];
-		   
-		   console.log("Before")
-		   console.log(allr)
-		   console.log("Before")
-		   allr.sort((a,b) => Date.parse(moment(b.createdAt).format()) - Date.parse(moment(a.createdAt).format()))
-		   allr.reverse();
-		   console.log("After")
-		   console.log(allr)
-		   console.log("After")
-		   
-		   //var sortedArray = allr.sort((a,b) => Date.parse(a.createdAt) - Date.parse(b.createdAt));
-		  setAnswers(
-			<div class="row">
-			  {allr.map((answer) => (
-				<div key={answer} id="answercard">
-				  <AnswerCard item={answer} />
-				</div>
-			  ))}
-			</div>
+	  var data ={'from':localStorage.getItem('userName'),'to':input,'content':sendvalue}
+	  console.log("send data")
+	  console.log(data)
+	  console.log("send data")
+	  axios.post("/messages/addMessage",data).then((response) => {
+		  if (response) {
+			console.log("inside send handle")
+			console.log(response);
+			console.log("inside send handle")
+  
+		   //get messages between two users
+		   var data ={'from':localStorage.getItem('userName'),'to':input}
+		   axios.post("/messages/getMessage",data).then((response) => {
+			 console.log("inside messages")
+			 console.log(data)
+			 console.log("inside messages")
+			 if (response) {
+				 console.log("inside messages response")
+			   console.log(response);
+			   console.log("inside messages response")
+			  //var allr = []
+			  //allr.concat(response.data[0],response.data[1])
+			//var allresponses = response.data[0]
+			var allr = [...new Set([...response.data[0] ,...response.data[1]])];
+			 
+			console.log("Before")
+			console.log(allr)
+			console.log("Before")
+			allr.sort((a,b) => Date.parse(moment(b.createdAt).format()) - Date.parse(moment(a.createdAt).format()))
+			allr.reverse();
+			console.log("After")
+			console.log(allr)
+			console.log("After")
 			
-		  );
-		  /*
-		  setMyMessage(
-			<div class="row">
-			  {response.data[1].map((message) => (
-				<div key={message} id="answercard">
-				  <MyMessage item={message} />
-				</div>
-			  ))}
-			</div>
-			
-		  );*/
-
-
-
-
-
-		} else {
-		  console.log("Error retrieving profiles");
-		}
-	  });
+			   setAnswers(
+				  <div class="row">
+					{allr.map((answer) => (
+					  <div key={answer} id="answercard">
+						<AnswerCard item={answer} />
+					  </div>
+					))}
+				  </div>
+				  
+				);
+  
+				/*
+				setMyMessage(
+				  <div class="row">
+					{response.data[1].map((message) => (
+					  <div key={message} id="answercard">
+						<MyMessage item={message} />
+					  </div>
+					))}
+				  </div>
+				  
+				);*/
+	 
+	 
+	 
+			 } else {
+			   console.log("Error retrieving profiles");
+			 }
+		   });
+		  } else {
+			console.log("Error retrieving profiles");
+		  }
+		});
 
 
 	}else{
@@ -185,7 +255,7 @@ function Messages() {
 					 setOnlineUsers(
 					<div class="row">
 					  {response.data.map((online) => (
-						<div key={online} id="answercard">
+						<div key={online} id="answercard" onClick={handleClick} value={online.displayName}>
 						  <OnlineUsers item={online} />
 						</div>
 					  ))}
@@ -290,7 +360,7 @@ function Messages() {
 					<div class="px-4 d-none d-md-block">
 						<div class="d-flex align-items-center">
 							<div class="flex-grow-1">
-								<input type="text" class="form-control my-3" placeholder="Search..." onChange={ handleChange } ></input>
+								<input type="text" class="form-control my-3" placeholder="Search..." onChange={ handleChange } value={input} ></input>
 								<button
 								 onClick={handleSearch}
                   class="btn btn-primary m-2">

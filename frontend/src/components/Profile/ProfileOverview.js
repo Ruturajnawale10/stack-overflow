@@ -34,13 +34,6 @@ function ProfileOverview(props) {
         userID: localStorage.getItem("notOwnerID"),
       };
     }
-    axios.get("/user/profile", { params: data }).then((response) => {
-      if (response) {
-        setProfile(response.data);
-      } else {
-        console.log("Error retrieving profile");
-      }
-    });
 
     async function fetchData() {
       data1 = data;
@@ -76,6 +69,13 @@ function ProfileOverview(props) {
       console.log(request);
     }
     fetchData();
+    axios.get("/user/profile", { params: data }).then((response) => {
+      if (response) {
+        setProfile(response.data);
+      } else {
+        console.log("Error retrieving profile");
+      }
+    });
   }, []);
   if (userID == notOwnerID) {
     return (

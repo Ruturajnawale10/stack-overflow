@@ -4,7 +4,10 @@ import axios from "axios";
 import gold from "../../images/gold.jpg";
 import silver from "../../images/silver.png";
 import bronze from "../../images/bronze.png";
-
+import bronzeBadgeLogo from "../../images/bronzeBadgeLogo.jpg";
+import silverBadgeLogo from "../../images/silverBadgeLogo.jpg";
+import goldBadgeLogo from "../../images/goldBadgeLogo.jpg";
+import Badges from "./Badges";
 function ProfileTab(props) {
   const [profile, setProfile] = useState([]);
   const [userID, setUserID] = useState(localStorage.getItem("userID"));
@@ -16,6 +19,9 @@ function ProfileTab(props) {
   const [askedNum, setAsked] = useState(0);
   const [answeredNum, setAnswered] = useState(0);
   const [reachNum, setReach] = useState(0);
+  const [bronzeNum, setBronze] = useState(0);
+  const [silverNum, setSilver] = useState(0);
+  const [goldNum, setGold] = useState(0);
   useEffect(() => {
     var data;
     var data1;
@@ -36,6 +42,7 @@ function ProfileTab(props) {
     }
 
     data1 = data;
+
     axios.post("/user/profile/tags", data).then((response) => {
       if (response) {
         setTags(response.data);
@@ -54,14 +61,7 @@ function ProfileTab(props) {
         console.log("Error getting tags");
       }
     });
-    axios.get("/user/profile", { params: data }).then((response) => {
-      if (response) {
-        console.log(response.data);
-        setProfile(response.data);
-      } else {
-        console.log("Error retrieving questions");
-      }
-    });
+
     axios
       .get("/user/profile/questions/asked", { params: data })
       .then((response) => {
@@ -92,6 +92,15 @@ function ProfileTab(props) {
           console.log("Error retrieving reach");
         }
       });
+    setTimeout(function () {}, 3000);
+    axios.get("/user/profile", { params: data }).then((response) => {
+      if (response) {
+        console.log(response.data);
+        setProfile(response.data);
+      } else {
+        console.log("Error retrieving questions");
+      }
+    });
   }, []);
   return (
     <div>
@@ -114,7 +123,8 @@ function ProfileTab(props) {
         <p>{profile.aboutMe}</p>
       </div>
       <h4>Badges</h4>
-      <div class="container p-3 border"></div>
+      <Badges />
+
       <h4>Top Tags</h4>
       <div class="container p-3 border">
         {Object.keys(scores).length === 0 && (

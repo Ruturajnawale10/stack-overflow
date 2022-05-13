@@ -46,18 +46,19 @@ class Navbar extends Component {
     let final_query = this.state.query;
 
     // search via Tag
-    if(final_query.slice(1,4) === "tag" || final_query.slice(1,4) === "TAG" ){
+    if(final_query.slice(0,1) === "["){
       var n1 = final_query.lastIndexOf(']');
-      var result1 = final_query.substring(n1 + 1);
+      var result1 = final_query.substring(1, n1);
       console.log(result1 + " this is tag result");
       const data1 = {"tag": result1.trim()};
-      axios.post("/user/profile/questions", data1).then((response) => {
-        if (response) {
-          console.log(response.data);
-        } else {
-          console.log("Error retrieving questions");
-        }
-      });
+      window.location = "/tags/" + result1;
+      // axios.post("/user/profile/questions", data1).then((response) => {
+      //   if (response) {
+      //     console.log(response.data);
+      //   } else {
+      //     console.log("Error retrieving questions");
+      //   }
+      // });
     }
 
      // search via User

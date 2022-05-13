@@ -24,7 +24,7 @@ router.get("/all", function (req, res) {
     }
   });
 });
-router.post("/questions", function (req, res) {
+router.post("/questions", checkAuth, function (req, res) {
   console.log("Inside Questions Activity Tab GET Request");
   console.log(req.body.userID);
   console.log(req.body.user);
@@ -129,7 +129,7 @@ router.get("/bookmarks", function (req, res) {
   );
 });
 
-router.post("/tags", function (req, res) {
+router.post("/tags", checkAuth, function (req, res) {
   console.log("Inside tags put Request");
 
   let userID = req.body.userID;
@@ -143,7 +143,7 @@ router.post("/tags", function (req, res) {
   });
 });
 
-router.post("/tags/scores", function (req, res) {
+router.post("/tags/scores", checkAuth, function (req, res) {
   console.log("Inside tags Score Request");
   let myTags = req.body.myTags;
   let userID = req.body.data1.userID;
@@ -181,7 +181,7 @@ router.post("/tags/scores", function (req, res) {
   }, 1000);
 });
 
-router.post("/update/badges", function (req, res) {
+router.post("/update/badges", checkAuth, function (req, res) {
   console.log("Inside badges put Request");
   console.log(req.body);
   let myBadges = req.body.myScores;
@@ -291,7 +291,7 @@ router.get("/questions/answered", function (req, res) {
   );
 });
 
-router.post("/updateUser", (req,res) =>{
+router.post("/updateUser", checkAuth, (req,res) =>{
   console.log("Inside updateUser for user : " + req.body.id);
   console.log("Request object for update User " + JSON.stringify(req.body));
   let user = {

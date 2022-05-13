@@ -184,7 +184,7 @@ router.get("/overview", function (req, res) {
   });
 });
 
-router.post("/bookmark/add", function (req, res) {
+router.post("/bookmark/add", checkAuth, function (req, res) {
   console.log("Inside Add Bookmark POST  Request");
   let questionID = req.body.questionID;
   let userID = req.body.userID;
@@ -212,7 +212,7 @@ router.post("/bookmark/add", function (req, res) {
   }
 });
 
-router.post("/bookmark/remove", function (req, res) {
+router.post("/bookmark/remove", checkAuth, function (req, res) {
   console.log("Inside Remove Bookmark POST  Request");
   let questionID = req.body.questionID;
   let userID = req.body.userID;
@@ -352,7 +352,7 @@ router.get("/viewcount", function (req, res) {
   );
 });
 
-router.post("/comment/add", function (req, res) {
+router.post("/comment/add", checkAuth, function (req, res) {
   console.log("Inside Add comment to question POST Request");
   const { questionID, userID, userName, comment } = req.body;
 
@@ -376,7 +376,7 @@ router.post("/comment/add", function (req, res) {
   );
 });
 
-router.post("/answer/comment/add", function (req, res) {
+router.post("/answer/comment/add", checkAuth, function (req, res) {
   console.log("Inside Add comment to answer POST Request");
   const { questionID, userID, userName, answerID, comment } = req.body;
 
@@ -399,7 +399,7 @@ router.post("/answer/comment/add", function (req, res) {
   );
 });
 
-router.post("/answer/add", function (req, res) {
+router.post("/answer/add", checkAuth, function (req, res) {
   console.log("Inside Add answer to question POST Request");
   const { description, questionID, userID } = req.body;
 
@@ -441,7 +441,7 @@ router.post("/answer/add", function (req, res) {
   });
 });
 
-router.post("/answer/addaccepted", function (req, res) {
+router.post("/answer/addaccepted", checkAuth, function (req, res) {
   console.log("Inside Add as accepted answer POST Request");
   const { questionID, answerID, acceptedAnswerID, userID } = req.body;
 

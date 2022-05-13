@@ -6,7 +6,7 @@ import Users from "../models/UserModel.js";
 import kafka from "../kafka/client.js";
 import config from "../configs/config.js";
 
-router.post("/question/upvote", function (req, res) {
+router.post("/question/upvote", checkAuth, function (req, res) {
   console.log("Inside Upvote POST Request");
   const { questionID, userID } = req.body;
 
@@ -43,7 +43,7 @@ router.post("/question/upvote", function (req, res) {
   }
 });
 
-router.post("/question/removeupvote", function (req, res) {
+router.post("/question/removeupvote",checkAuth, function (req, res) {
   console.log("Inside remove Upvote Request");
   let questionID = req.body.questionID;
   let userID = req.body.userID;
@@ -81,7 +81,7 @@ router.post("/question/removeupvote", function (req, res) {
   }
 });
 
-router.post("/question/downvote", function (req, res) {
+router.post("/question/downvote", checkAuth, function (req, res) {
   console.log("Inside downvote POST Request");
   let questionID = req.body.questionID;
   let userID = req.body.userID;
@@ -119,7 +119,7 @@ router.post("/question/downvote", function (req, res) {
   }
 });
 
-router.post("/question/removedownvote", function (req, res) {
+router.post("/question/removedownvote", checkAuth, function (req, res) {
   console.log("Inside remove downvote POST Request");
   let questionID = req.body.questionID;
   let userID = req.body.userID;
@@ -177,7 +177,7 @@ router.get("/question/status", function (req, res) {
   });
 });
 
-router.post("/answer/upvote", function (req, res) {
+router.post("/answer/upvote", checkAuth, function (req, res) {
   console.log("Inside Upvote POST Request");
   const { questionID, userID, answerID, answeredByUserID } = req.body;
 
@@ -216,7 +216,7 @@ router.post("/answer/upvote", function (req, res) {
   }
 });
 
-router.post("/answer/removeupvote", function (req, res) {
+router.post("/answer/removeupvote", checkAuth, function (req, res) {
   console.log("Inside remove Upvote Request");
   const { questionID, userID, answerID, answeredByUserID } = req.body;
 
@@ -255,7 +255,7 @@ router.post("/answer/removeupvote", function (req, res) {
   }
 });
 
-router.post("/answer/downvote", function (req, res) {
+router.post("/answer/downvote", checkAuth, function (req, res) {
   console.log("Inside downvote POST Request");
   const { questionID, userID, answerID, answeredByUserID } = req.body;
 
@@ -294,7 +294,7 @@ router.post("/answer/downvote", function (req, res) {
   }
 });
 
-router.post("/answer/removedownvote", function (req, res) {
+router.post("/answer/removedownvote", checkAuth, function (req, res) {
   console.log("Inside remove downvote POST Request");
   const { questionID, userID, answerID, answeredByUserID } = req.body;
 

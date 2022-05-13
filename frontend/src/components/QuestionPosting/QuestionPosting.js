@@ -60,7 +60,7 @@ const QuestionPosting = () => {
             setBodyWarning(false);
             setTagsWarning(false);
 
-            let isImageInserted = question.body.includes("![]");
+            let isImageInserted = body.includes("![]");
             question.isWaitingForReview = isImageInserted;
             axios.defaults.headers.common["authorization"] =
                 localStorage.getItem("token");

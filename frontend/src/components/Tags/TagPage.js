@@ -198,9 +198,10 @@ function TagPage() {
               aria-label="Basic outlined example"
             >
               <form>
+
                 <button
                   className="btn btn-primary m-2"
-                  formAction="./questions/ask"
+                  formAction="/questions/ask"
                 >
                   {" "}
                   Ask Question{" "}

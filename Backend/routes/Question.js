@@ -23,7 +23,7 @@ router.get("/interesting", function (req, res) {
   Questions.find(
     { isWaitingForReview: false },
     null,
-    { sort: { creationDate: -1 } },
+    { sort: { modifiedDate: -1 } },
     function (error, question) {
       if (error) {
         res.status(400).send();

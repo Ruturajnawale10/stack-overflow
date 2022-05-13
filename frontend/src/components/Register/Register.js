@@ -1,7 +1,13 @@
-import React, { Component } from "react";
-import { Form, Container } from "react-bootstrap";
+import React, { Component, useState } from "react";
+import { Form, Container, Alert, Row, Col } from "react-bootstrap";
 import Button from 'react-bootstrap/Button';
 import axios from "axios";
+import DangerWarningBanner from "../WarningBanners/DangerWarningBanner.js";
+import { useNavigate, useLocation, Link } from "react-router-dom";
+
+
+const validPassword = new RegExp('^(?=.*?[A-Za-z])(?=.*?[0-9]).{8,}$');
+
 class Register extends Component {
   
   constructor(props){
@@ -10,7 +16,10 @@ class Register extends Component {
       displayName: "",
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      DangerWarningBanner: "",
+      passwordValid: false
+
     };
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -31,8 +40,12 @@ class Register extends Component {
 
     const {displayName, email, password, confirmPassword} = this.state; 
 
+    console.log(validPassword.test(password));
+
     const user = {displayName: displayName, email: email, password: password}
     console.log(user)
+
+    if(validPassword.test(password)){
     axios.post("/user/register", {
       email: email,
       password: password,
@@ -44,16 +57,41 @@ class Register extends Component {
   })
   .catch(error => {
     console.log(error.response)
-  });;
-
-  };
-
+  });
+  }
+  else{
+    console.log("made it here");
+    this.setState({passwordValid: true});
+    }
+}
+  
   render() {
 
     return ( 
-      
     <div>
         <Container>
+        {this.state.DangerWarningBanner}
+        {this.state.passwordValid && (
+          <Row>
+            <Col></Col>
+            <Col xs={6}>
+              <Alert
+                style={{
+                  color: "black",
+                  backgroundColor: "cornsilk",
+                  borderColor: "darkgoldenrod",
+                }}
+                className="text-center"
+              >
+                <h5>
+                  Not a valid password. Please try again!
+                </h5>
+                <p>Passwords must contain at least eight characters, including at least 1 letter and 1 number.</p>
+              </Alert>
+            </Col>
+            <Col></Col>
+          </Row>
+          )}
         <div class="container" style={{width:"40%"}}>
             <br />
         <div>

@@ -60,14 +60,6 @@ const QuestionEdit = () => {
 
     const submitHandler = (e) => {
         e.preventDefault();
-        const edit = {
-            userID: userID,
-            questionID: questionID,
-            title: title,
-            body: body,
-            tags: tags,
-            reason: reason,
-        };
         
         if(title.length < 15 || body.length < 30 || tags.length === 0 || reason.length < 10){
             if(title.length < 15){
@@ -96,42 +88,68 @@ const QuestionEdit = () => {
             setTagsWarning(false);
             setReasonWarning(false);
 
-            //remove all tags from original question
-            question.tags.forEach(tag => {
-                const data = {
-                    tag: tag
-                };
-                axios.post("/tags/removeQuestion", 
-                    data
-                    ).then((response) => {
-                        if(response.status === 200){
-                            console.log(response);
-                    }})
-            })
 
-            let isImageInserted = question.body.includes("![]");
-            edit.isWaitingForReview = isImageInserted;
+            let isImageInserted = body.includes("![]");
+
+            const edit = {
+                userID: userID,
+                questionID: questionID,
+                title: title,
+                body: body,
+                tags: tags,
+                reason: reason,
+                isWaitingForReview: isImageInserted
+            };
             
-            axios.defaults.headers.common["authorization"] =
-                localStorage.getItem("token");
+            axios.defaults.headers.common["authorization"] = localStorage.getItem("token");
             
             axios.put("/question/edit_question", 
                 edit
             ).then((response) => {
                 if(response.status === 200){
-                    //on successful edit of question 
-                    //add new tags to count  + redirect to that question page
-                    tags.forEach(tag => {
-                        const data = {
-                            tag: tag
-                        };
-                        axios.post("/tags/addQuestion", 
-                        data
-                        ).then((response) => {
-                            if(response.status === 200){
-                                console.log(response);
-                        }})
+                    //on successful edit of question, keep tag count for tags that are the same
+                    //only +/- tag count if tag was removed or added to avoid race condition
+
+                    //only remove all tags from original question if save was successful
+                    question.tags.forEach(tag => {
+                        //check if tag is in array of new tags
+                        //only REMOVE 1 from tag count if it does not exist where indexOf() === -1
+                        if(tags.indexOf(tag) === -1 ){
+                            const data = {
+                                tag: tag
+                            };
+                            axios.post("/tags/removeQuestion", 
+                                data
+                            ).then((response) => {
+                                if(response.status === 200){
+                                    console.log("tag: ", tag, "is removed with reponse", response);
+                                }else{
+                                    console.log("ERROR: tag: ", tag, "is removed with reponse", response);
+                                }
+                            })
+                        }
                     })
+
+                    //then add new tags to count  + redirect to that question page
+                    tags.forEach(tag => {
+                        //check if tag is in array of old tags
+                        //only ADD 1 to tag count if it does not exist where indexOf() === -1
+                        if(question.tags.indexOf(tag) === -1 ){
+                            const data = {
+                                tag: tag
+                            };
+                            axios.post("/tags/addQuestion", 
+                            data
+                            ).then((response) => {
+                                if(response.status === 200){
+                                    console.log("tag: ", tag, "is added with reponse", response);
+                                }else{
+                                    console.log("ERROR: tag: ", tag, "is added with reponse", response);
+                                }
+                            })
+                        }
+                    })
+
                     navigate(`/questions/${response.data._id}`);
                 }
             })

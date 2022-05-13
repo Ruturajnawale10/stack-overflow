@@ -107,7 +107,7 @@ const QuestionPosting = () => {
                     No account? You can <Link  to="/register"> register here.</Link>
                 </Modal.Body>
             </Modal>
-            <div style={{backgroundColor: "whitesmoke"}}>
+            <div style={{backgroundColor: ""}}>
                 <Container className="py-5 px-3" >
                     <Row>
                         <h2>Ask a public question</h2>

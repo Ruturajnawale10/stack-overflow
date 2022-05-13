@@ -24,7 +24,7 @@ const SearchBar = () => {
                 //search for user
                 const inputs = input.split(":");
                 const userID = inputs[1] || null ;
-                //console.log("search type: user >>>  user:", userID);
+                console.log("search type: user >>>  user:", userID);
                 navigate(`/search/user/${userID}`)
             }else if(input[0] === '"' && input[input.length - 1] === '"'){
                 //search with a phrase
@@ -32,10 +32,27 @@ const SearchBar = () => {
                 navigate(`/search/phrase/${phrase}`)
             }else if(input.split(":")[0] === "is"){
                 const inputs = input.split(":");
-                const type = inputs[1] || null ;
-                navigate(`/search/type/${type}`)
+                const type = inputs[1].split(" ")[0] || null ;
+                const phrase = inputs[1].split(" ")[1]
+                console.log("type",type)
+                if(type==="question"){
+                    navigate(`/search/Questiontype/${phrase}`)
+                }
+                else{
+                    navigate(`/search/AnswerType/${phrase}`)
+                }
             }else if(input.split(":")[0] === "isaccepted"){
-                
+                const inputs = input.split(":");
+                const type = inputs[1].split(" ")[0] || null;
+                const phrase = inputs[1].split(" ")[1]
+                if(type==="yes"){
+                    navigate(`/search/status/${phrase}`)
+                }
+                else{
+                    navigate(`/search/statusNo/${phrase}`)
+                }
+                console.log(type)
+
             }
         }
 
@@ -52,7 +69,10 @@ const SearchBar = () => {
                         type="text" 
                         placeholder="Search..." 
                         value={input}
-                        onChange={(e) => {setInput(e.target.value)}}
+                        onChange={(e) => {
+                            setInput(e.target.value)
+                            console.log(e.target.value)
+                        }}
                     />
                 </Form.Group>
                 </Col>

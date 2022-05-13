@@ -46,11 +46,8 @@ const Search = () => {
             })
         }else if(type === "phrase"){
             const phrase = input;
-            axios.get("/question/getQuestionByExactPhrase", {
-                params: {
-                    phrase: phrase
-                }
-            }).then((response) => {
+            const data = {"searchTerm": phrase}
+            axios.post("/question/searchQuestionAndAnswer",data).then((response) => {
                 if(response.status === 200){
                     const questionData = response.data;
                     console.log("QuestionData", questionData)
@@ -68,10 +65,13 @@ const Search = () => {
                 }
             })
 
-        }else if(type === "type"){
+        }else if(type === "Questiontype"){
             const postType = input;
+            const data = {"searchTerm":input}
+            console.log("here in question type")
+            console.log(data)
             // get all questions? 
-            axios.get("/question/interesting").then((res) => {
+            axios.post("/question/searchQuestion",data).then((res) => {
                 if (res) {
                   const questionData = res.data;
                   setResultCount(res.data.length);
@@ -87,10 +87,83 @@ const Search = () => {
                 } else {
                 }
             });
-        }else if(type === "status"){
+        }
+        else if(type=== "AnswerType"){
+          const postType = input;
+            const data = {"searchTerm":input}
+            console.log("here in question type")
+            console.log(data)
+            // get all questions? 
+            axios.post("/question/searchQuestionAnswers",data).then((res) => {
+                if (res) {
+                  const questionData = res.data;
+                  setResultCount(res.data.length);
+                  setQuestions(
+                    <div class="row">
+                      {questionData.map((question) => (
+                        <div key={question} id="QuestionCard">
+                          <QuestionCard question={question} />
+                        </div>
+                      ))}
+                    </div>
+                  );
+                } else {
+                }
+            });
+
+        }
+        else if(type === "status"){
             const status = input;
+            const postType = input;
+            const data = {"searchTerm":input}
+            console.log("here in question type")
+            console.log(data)
+            // get all questions? 
+            axios.post("/question/searchQuestionByStatus", data).then((res) => {
+                if (res) {
+                  const questionData = res.data;
+                  setResultCount(res.data.length);
+                  setQuestions(
+                    <div class="row">
+                      {questionData.map((question) => (
+                        <div key={question} id="QuestionCard">
+                          <QuestionCard question={question} />
+                        </div>
+                      ))}
+                    </div>
+                  );
+                } else {
+                }
+            });
+
             
         }
+        else if(type === "statusNo"){
+          const status = input;
+          const postType = input;
+          const data = {"searchTerm":input}
+          console.log("here in question type")
+          console.log(data)
+          // get all questions? 
+          axios.post("/question/searchQuestionByStatusNo", data).then((res) => {
+              if (res) {
+                const questionData = res.data;
+                setResultCount(res.data.length);
+                setQuestions(
+                  <div class="row">
+                    {questionData.map((question) => (
+                      <div key={question} id="QuestionCard">
+                        <QuestionCard question={question} />
+                      </div>
+                    ))}
+                  </div>
+                );
+              } else {
+              }
+          });
+
+          
+      }
 
     }, [])
 

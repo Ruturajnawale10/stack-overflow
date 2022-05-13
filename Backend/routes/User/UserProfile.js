@@ -137,7 +137,7 @@ router.post("/tags/scores", function (req, res) {
 
 router.post("/update/badges", function (req, res) {
   console.log("Inside badges put Request");
-  console.log(req.body);
+
   let myBadges = req.body.myScores;
   let userID = req.body.data1.userID;
   Users.updateOne(
@@ -245,7 +245,7 @@ router.get("/questions/answered", function (req, res) {
   );
 });
 
-router.post("/updateUser", (req,res) =>{
+router.post("/updateUser", (req, res) => {
   console.log("Inside updateUser for user : " + req.body.id);
   console.log("Request object for update User " + JSON.stringify(req.body));
   let user = {
@@ -254,26 +254,341 @@ router.post("/updateUser", (req,res) =>{
     title: req.body.title,
     profileImageName: req.body.profileImageName,
     aboutMe: req.body.aboutMe,
-    fullName: req.body.fullName
+    fullName: req.body.fullName,
   };
 
-  Users.findOneAndUpdate( { _id : req.body.id } , user, {new: true} , (err, updatedUser)=>{
-    console.log("inside find and update")
-    console.log("updatedUser " +  updatedUser)
-    if (err) {
-      console.log("Error occoured while updating user is " + err);
-      return;
+  Users.findOneAndUpdate(
+    { _id: req.body.id },
+    user,
+    { new: true },
+    (err, updatedUser) => {
+      console.log("inside find and update");
+      console.log("updatedUser " + updatedUser);
+      if (err) {
+        console.log("Error occoured while updating user is " + err);
+        return;
+      }
+      if (updatedUser) {
+        console.log("updated use is " + updatedUser);
+        res.writeHead(200, {
+          "Content-Type": "application/json",
+        });
+        res.end(JSON.stringify(updatedUser));
+      }
     }
-    if(updatedUser){
-      console.log("updated use is " + updatedUser);
-      res.writeHead(200, {
-        "Content-Type": "application/json",
-      });
-      res.end(JSON.stringify(updatedUser));
-    }
-  });
-
+  );
 });
 
+router.post("/top/bronze/badges", function (req, res) {
+  console.log("top bronze badges");
+  let myTags = req.body.myTags;
+  let userID = req.body.data1.userID;
+  let scores = [];
+  let myScores = {};
+  myTags.map((tag) => {
+    Questions.find(
+      { askedByUserID: userID, tags: tag },
+      { upVotes: 1, _id: 0 },
+      function (error, questions) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          var total = 0;
 
+          for (var i = 0; i < questions.length; i++) {
+            total = total + questions[i].upVotes.length;
+          }
+          myScores[tag] = total;
+          scores.push(total);
+        }
+      }
+    );
+  });
+  setTimeout(function () {
+    var mySorted = Object.fromEntries(
+      Object.entries(myScores).sort((a, b) => b[1] - a[1])
+    );
+    let bronze = [];
+    let silver = [];
+    let gold = [];
+    var i = 0;
+    var j = 0;
+    var k = 0;
+    Object.keys(mySorted).map((key, index) => {
+      if (mySorted[key] > 20) {
+        if (i < 3) {
+          gold.push([key]);
+          i = i + 1;
+        }
+      } else if (mySorted[key] > 10 && mySorted[key] <= 20) {
+        if (j < 3) {
+          silver.push([key]);
+          j = j + 1;
+        }
+      } else {
+        if (k < 3) {
+          bronze.push([key]);
+          k = k + 1;
+        }
+      }
+    });
+
+    return res.status(200).send(JSON.stringify(bronze));
+    //return res.status(200).send(JSON.stringify(allresult));
+  }, 1000);
+});
+router.post("/top/silver/badges", function (req, res) {
+  console.log("Inside top silver badges");
+  let myTags = req.body.myTags;
+  let userID = req.body.data1.userID;
+  let scores = [];
+  let myScores = {};
+  myTags.map((tag) => {
+    Questions.find(
+      { askedByUserID: userID, tags: tag },
+      { upVotes: 1, _id: 0 },
+      function (error, questions) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          var total = 0;
+
+          for (var i = 0; i < questions.length; i++) {
+            total = total + questions[i].upVotes.length;
+          }
+          myScores[tag] = total;
+          scores.push(total);
+        }
+      }
+    );
+  });
+  setTimeout(function () {
+    var mySorted = Object.fromEntries(
+      Object.entries(myScores).sort((a, b) => b[1] - a[1])
+    );
+    let bronze = [];
+    let silver = [];
+    let gold = [];
+    var i = 0;
+    var j = 0;
+    var k = 0;
+    Object.keys(mySorted).map((key, index) => {
+      if (mySorted[key] > 20) {
+        if (i < 3) {
+          gold.push([key]);
+          i = i + 1;
+        }
+      } else if (mySorted[key] > 10 && mySorted[key] <= 20) {
+        if (j < 3) {
+          silver.push([key]);
+          j = j + 1;
+        }
+      } else {
+        if (k < 3) {
+          bronze.push([key]);
+          k = k + 1;
+        }
+      }
+    });
+
+    return res.status(200).send(JSON.stringify(silver));
+    //return res.status(200).send(JSON.stringify(allresult));
+  }, 1000);
+});
+router.post("/top/gold/badges", function (req, res) {
+  console.log("top gold badges");
+  let myTags = req.body.myTags;
+  let userID = req.body.data1.userID;
+  let scores = [];
+  let myScores = {};
+  myTags.map((tag) => {
+    Questions.find(
+      { askedByUserID: userID, tags: tag },
+      { upVotes: 1, _id: 0 },
+      function (error, questions) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          var total = 0;
+
+          for (var i = 0; i < questions.length; i++) {
+            total = total + questions[i].upVotes.length;
+          }
+          myScores[tag] = total;
+          scores.push(total);
+        }
+      }
+    );
+  });
+  setTimeout(function () {
+    var mySorted = Object.fromEntries(
+      Object.entries(myScores).sort((a, b) => b[1] - a[1])
+    );
+    let bronze = [];
+    let silver = [];
+    let gold = [];
+    var i = 0;
+    var j = 0;
+    var k = 0;
+    Object.keys(mySorted).map((key, index) => {
+      if (mySorted[key] > 20) {
+        if (i < 3) {
+          gold.push([key]);
+          i = i + 1;
+        }
+      } else if (mySorted[key] > 10 && mySorted[key] <= 20) {
+        if (j < 3) {
+          silver.push([key]);
+          j = j + 1;
+        }
+      } else {
+        if (k < 3) {
+          bronze.push([key]);
+          k = k + 1;
+        }
+      }
+    });
+
+    return res.status(200).send(JSON.stringify(gold));
+    //return res.status(200).send(JSON.stringify(allresult));
+  }, 1000);
+});
+router.post("/bronze/total", function (req, res) {
+  console.log("Inside bronze total");
+  let myTags = req.body.myTags;
+  let userID = req.body.data1.userID;
+  let scores = [];
+  let myScores = {};
+  myTags.map((tag) => {
+    Questions.find(
+      { askedByUserID: userID, tags: tag },
+      { upVotes: 1, _id: 0 },
+      function (error, questions) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          var total = 0;
+
+          for (var i = 0; i < questions.length; i++) {
+            total = total + questions[i].upVotes.length;
+          }
+          myScores[tag] = total;
+          scores.push(total);
+        }
+      }
+    );
+  });
+  setTimeout(function () {
+    var mySorted = Object.fromEntries(
+      Object.entries(myScores).sort((a, b) => b[1] - a[1])
+    );
+    let bronze = [];
+    let silver = [];
+    let gold = [];
+    Object.keys(mySorted).map((key, index) => {
+      if (mySorted[key] > 20) {
+        gold.push([key]);
+      } else if (mySorted[key] > 10 && mySorted[key] <= 20) {
+        silver.push([key]);
+      } else {
+        bronze.push([key]);
+      }
+    });
+
+    return res.status(200).send(JSON.stringify(bronze.length));
+    //return res.status(200).send(JSON.stringify(allresult));
+  }, 1000);
+});
+router.post("/silver/total", function (req, res) {
+  console.log("Inside silver total");
+  let myTags = req.body.myTags;
+  let userID = req.body.data1.userID;
+  let scores = [];
+  let myScores = {};
+  myTags.map((tag) => {
+    Questions.find(
+      { askedByUserID: userID, tags: tag },
+      { upVotes: 1, _id: 0 },
+      function (error, questions) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          var total = 0;
+
+          for (var i = 0; i < questions.length; i++) {
+            total = total + questions[i].upVotes.length;
+          }
+          myScores[tag] = total;
+          scores.push(total);
+        }
+      }
+    );
+  });
+  setTimeout(function () {
+    var mySorted = Object.fromEntries(
+      Object.entries(myScores).sort((a, b) => b[1] - a[1])
+    );
+    let bronze = [];
+    let silver = [];
+    let gold = [];
+    Object.keys(mySorted).map((key, index) => {
+      if (mySorted[key] > 20) {
+        gold.push([key]);
+      } else if (mySorted[key] > 10 && mySorted[key] <= 20) {
+        silver.push([key]);
+      } else {
+        bronze.push([key]);
+      }
+    });
+
+    return res.status(200).send(JSON.stringify(silver.length));
+    //return res.status(200).send(JSON.stringify(allresult));
+  }, 1000);
+});
+router.post("/gold/total", function (req, res) {
+  console.log("Inside gold total");
+  let myTags = req.body.myTags;
+  let userID = req.body.data1.userID;
+  let scores = [];
+  let myScores = {};
+  myTags.map((tag) => {
+    Questions.find(
+      { askedByUserID: userID, tags: tag },
+      { upVotes: 1, _id: 0 },
+      function (error, questions) {
+        if (error) {
+          res.status(400).send();
+        } else {
+          var total = 0;
+
+          for (var i = 0; i < questions.length; i++) {
+            total = total + questions[i].upVotes.length;
+          }
+          myScores[tag] = total;
+          scores.push(total);
+        }
+      }
+    );
+  });
+  setTimeout(function () {
+    var mySorted = Object.fromEntries(
+      Object.entries(myScores).sort((a, b) => b[1] - a[1])
+    );
+    let bronze = [];
+    let silver = [];
+    let gold = [];
+    Object.keys(mySorted).map((key, index) => {
+      if (mySorted[key] > 20) {
+        gold.push([key]);
+      } else if (mySorted[key] > 10 && mySorted[key] <= 20) {
+        silver.push([key]);
+      } else {
+        bronze.push([key]);
+      }
+    });
+
+    return res.status(200).send(JSON.stringify(gold.length));
+    //return res.status(200).send(JSON.stringify(allresult));
+  }, 1000);
+});
 export default router;

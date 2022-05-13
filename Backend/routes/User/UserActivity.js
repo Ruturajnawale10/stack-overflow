@@ -5,16 +5,15 @@ import UserActivity from "../../models/UserActivityModel.js";
 
 router.get("/", function (req, res) {
     const inputUserId = req.query.userID;
+    console.log("input user id : " + inputUserId);
 
-    UserActivity.find({ userId: inputUserId },null, { sort: { date: -1 } }, function (error, userActivity) {
+    UserActivity.find({ userID: inputUserId }, function (error, userActivity) {
         if (error) {
           res.status(400).send();
         } else {
           res.status(200).send(userActivity);
         }
-      });
-  
-    
+      }).sort({date: -1});
 });
 
 router.post("/addUserActivity", (req, res) =>{
@@ -27,7 +26,8 @@ router.post("/addUserActivity", (req, res) =>{
         points: req.body.points,
         event: req.body.event,
         userID: req.body.userID,
-        questionID: req.body.questionID
+        questionID: req.body.questionID,
+        questionTitle: req.body.questionTitle,
     });
 
     inputUserActivity.save((error, userActivity) => {

@@ -186,6 +186,14 @@ function QuestionsOverview() {
         questionID: questionID,
         userID: userID,
       });
+      axios.post("/userActivity/addUserActivity", {
+        questionID: questionID,
+        userID: userID,
+        points: 10,
+        event: "questionUpVote",
+        date: new Date(),
+      });
+
       setVoteUpStatus(vote);
       setVoteCount(voteCount + 1);
       if (voteDownStatus === vote) {
@@ -215,6 +223,13 @@ function QuestionsOverview() {
       axios.post("/vote/question/downvote", {
         questionID: questionID,
         userID: userID,
+      });
+      axios.post("/userActivity/addUserActivity", {
+        questionID: questionID,
+        userID: userID,
+        points: -10,
+        event: "questionDownVote",
+        date: new Date(),
       });
       setVoteDownStatus(vote);
       setVoteCount(voteCount - 1);

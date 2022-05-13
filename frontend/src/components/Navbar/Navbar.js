@@ -58,10 +58,8 @@ class Navbar extends Component {
           <NavBarLogoImage src="https://stackoverflow.design/assets/img/logos/so/logo-stackoverflow.png"></NavBarLogoImage>
         </NavbarLink>
         <NavMenu>
-          <NavbarLink onClick={this.handleProfileClick} to="/profile">
-            Profile
-          </NavbarLink>
-          <NavbarLink to="/messages">My Messages</NavbarLink>
+          {localStorage.getItem("token") && <NavbarLink onClick={this.handleProfileClick} to="/profile">Profile</NavbarLink>}
+          {localStorage.getItem("token") && <NavbarLink to="/messages">My Messages</NavbarLink>}
         </NavMenu>
         <NavbarSearch
           onClick={(e) =>
